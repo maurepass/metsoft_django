@@ -1,0 +1,112 @@
+{% extends 'offers/base.html' %}
+
+{% block content %}
+    <div class="text-center my-3">
+        <h1>Rejestr detali</h1>
+    </div>
+
+    <table id="table" class="table table-bordered table-sm table-hover" style="width: 100%">
+        <thead>
+            <tr>
+                <th>Nr oferty</th>
+                <th>Nazwa</th>
+                <th>Nr rysunku</th>
+                <th>Materiał</th>
+                <th>Ciężar [kg]</th>
+                <th>Il. szt.</th>
+                <th>Uzysk[%]</th>
+                <th>St. tr.</th>
+                <th>Model</th>
+                <th>Obr cieplna</th>
+                <th>Obr. mech.</th>
+                <th>Tolerancje</th>
+                <th>Pochylenia</th>
+                <th>Atest</th>
+                <th>Odb. odlewu</th>
+                <th>Klasa jakości</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>Nr oferty</th>
+                <th>Nazwa</th>
+                <th>Nr rysunku</th>
+                <th>Materiał</th>
+                <th>Ciężar [kg]</th>
+                <th>Il. szt.</th>
+                <th>Uzysk[%]</th>
+                <th>St. tr.</th>
+                <th>Model</th>
+                <th>Obr cieplna</th>
+                <th>Obr. mech.</th>
+                <th>Tolerancje</th>
+                <th>Pochylenia</th>
+                <th>Atest</th>
+                <th>Odb. odlewu</th>
+                <th>Klasa jakości</th>
+            </tr>
+        </tfoot>
+
+    </table>
+{% endblock content %}
+
+{% block scripts %}
+    <script defer>
+        $(document).ready( function () {
+            $('#table').DataTable({
+                lengthMenu: [ [25, 50, 100, 200, 500], [25, 50, 100, 200, 500] ],
+                order: [[0, 'desc']],
+                serverSide: true,
+                processing: true,
+                language: { "processing": "Ładowanie strony" },
+                ajax: '/offers/api/details/?format=datatables',
+                columns: [
+                    { data: 'offer',
+                        "fnCreatedCell":function(nTd, sData, oData, iRow, iCol){
+                            $(nTd).html('<a href="/offers/' + sData.id + '/details" >' + sData.offer_no +'</a>');
+                        }
+                    },
+                    { data: 'cast_name' },
+                    { data: 'drawing_no' },
+                    { data: 'mat.material' },
+                    { data: 'cast_weight' },
+                    { data: 'pieces_amount' },
+                    { data: 'yeld' },
+                    { data: 'difficulty' },
+                    { data: 'pattern' },
+                    { data: 'heat_treat' },
+                    { data: 'machining.machining' },
+                    { data: 'tolerances' },
+                    { data: 'tapers' },
+                    { data: 'atest' },
+                    { data: 'required' },
+                    { data: 'quality_class' },
+                ],
+            });
+
+            //Kod do wyszukiwania po kolumnach
+
+            // Setup - add a text input to each footer cell
+            $('#table tfoot th').each( function () {
+                var title = $(this).text();
+                $(this).html( '<input type="text" placeholder="Szukaj '+title+'" />' );
+            } );
+
+            // DataTable
+            var table = $('#table').DataTable();
+
+            // Apply the search
+            table.columns().every( function () {
+                var that = this;
+
+                $( 'input', this.footer() ).on( 'keyup change', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                            .search( this.value )
+                            .draw();
+                    }
+                } );
+            } );
+        } );
+    </script>
+{% endblock scripts %}

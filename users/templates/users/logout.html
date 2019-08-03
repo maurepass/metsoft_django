@@ -1,0 +1,20 @@
+{% extends 'offers/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-4" align="center">
+        <h2>Zostałeś wylogowany</h2>
+    <div class="border-top pt-3">
+        <small class="text-muted">
+            <a href="{% url 'login' %}">Zaloguj sie ponownie</a>
+        </small>
+    </div>
+</div>
+
+{% endblock content %}
+
+
+
+
+
+

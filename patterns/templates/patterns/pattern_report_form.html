@@ -1,0 +1,14 @@
+{% extends 'offers/base.html' %}
+
+{% block content %}
+    <form method="POST" class="fieldset" target="_blank">
+        {% csrf_token %}
+        <fieldset>
+            <legend>Dane do raportu</legend>
+            <ul>
+                {{ form.as_ul }}
+                <button class="btn btn-outline-secondary">Generuj</button>
+            </ul>
+        </fieldset>
+    </form>
+{% endblock content %}

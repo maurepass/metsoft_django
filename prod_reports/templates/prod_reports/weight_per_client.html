@@ -1,0 +1,44 @@
+{% extends 'offers/base.html' %}
+
+{% block content %}
+    <div class="text-center my-3">
+        <h2>Waga odlewów w produkcji wg klientów</h2>
+        <h5 class="alert-info">Zawyżony ponieważ dużo odlewów już wysłanych nie posiada potwierdzonej operacji wysyłki</h5>
+    </div>
+
+    <table class="table table-bordered table-sm table-hover" style="width:50%; margin:auto">
+        <thead>
+            <tr>
+                <th>Lp</th>
+                <th>Klient</th>
+                <th>Nowe [kg]</th>
+                <th>Zaplanowane [kg]</th>
+                <th>Zalane [kg]</th>
+                <th>Odebrane [kg]</th>
+                <th>Łączna waga [kg]</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for obj in objects %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ obj.customer }}</td>
+                    <td class="text-right">{{ obj.nowe|floatformat:"0" }}</td>
+                    <td class="text-right">{{ obj.planowanie|floatformat:"0" }}</td>
+                    <td class="text-right">{{ obj.zalane|floatformat:"0" }}</td>
+                    <td class="text-right">{{ obj.odebrane|floatformat:"0" }}</td>
+                    <td class="text-right">{{ obj.razem|floatformat:"0" }}</td>
+                </tr>
+            {% endfor %}
+            <tr class="text-right">
+                <td>--</td>
+                <td class="text-left">RAZEM</td>
+                <td>{{ sums.nowe|floatformat:0 }}</td>
+                <td>{{ sums.planowanie|floatformat:0 }}</td>
+                <td>{{ sums.zalane|floatformat:0 }}</td>
+                <td>{{ sums.odebrane|floatformat:0 }}</td>
+                <td>{{ sums.razem|floatformat:0 }}</td>
+            </tr>
+        </tbody>
+    </table>
+{% endblock content %}

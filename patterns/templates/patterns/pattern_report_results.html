@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>METsoft - Raport</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            /*width: 50%; */
+            border: 1px solid #0c0c0c;
+            table-layout: auto;
+            margin: 0 auto;
+            font-size: 12px;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 2px;
+            border: 1px solid #23527c ;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        h2 {
+            text-align: center;
+            margin: 0;
+            font-size: 20px;
+        }
+    </style>
+
+</head>
+<body>
+    <h2>Modele firm:
+        {% for item in customers %}
+            {{ item.customer }};
+        {% endfor %}
+    </h2>
+    <table width=640px>
+        <tr>
+            <th>Lp</th>
+            <th>Klient</th>
+            <th>Nazwa rysunku</th>
+            <th>Nazwa modelu</th>
+            <th>Ilość m2</th>
+            <th>Ostatnie zlecenie (rok)</th>
+            <th>Okres nieużywania modelu (m-ce)</th>
+        </tr>
+
+        {% for obj in objects %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ obj.customer }}</td>
+                <td>{{ obj.drawing_number }}</td>
+                <td>{{ obj.pattern_name }}</td>
+                <td class="text-right">{{ obj.area|floatformat:"2" }}</td>
+                <td>{{ obj.last_order|date:"Y-m-d" }}</td>
+                <td class="text-right">{{ obj.get_not_using_time|default_if_none:"" }}</td>
+            </tr>
+        {% endfor %}
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>Razem</td>
+            <td class="text-right">{{ total_area.total_area|floatformat:"2" }}</td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{% extends 'offers/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="text-center mt-4">
+        <form method="POST">
+        {% csrf_token %}
+       {{ form|crispy }}
+        <button class="btn btn-outline-info">Zapisz</button>
+    </form>
+</div>
+
+{% endblock content %}

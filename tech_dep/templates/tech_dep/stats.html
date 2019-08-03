@@ -1,0 +1,84 @@
+{% extends 'offers/base.html' %}
+{% load tech_dep_extras %}
+
+{% block content %}
+
+    <form action='stats' method="POST" class="fieldset" >
+        {% csrf_token %}
+        <fieldset >
+            <legend>Wybierz okres</legend>
+                <ul>
+                    {{ form.as_p}}
+                </ul>
+                <button class="btn btn-outline-secondary">Generuj</button>
+        </fieldset>
+    </form>
+
+    <table class="table table-bordered table-stirped table-hover" style="width:50%; margin:auto">
+        <tr>
+            <th>Technolog</th>
+            <th>Il. ofert</th>
+            <th>Śr. dni / oferta</th>
+            <th>W terminie</th>
+            <th>Ilość odlewów</th>
+        </tr>
+        {% for tech_stat in tech_stats %}
+            <tr>
+                <td>{{ tech_stat.tech }}</td>
+                <td class="text-right">{{ tech_stat.amount }}</td>
+                <td class="text-right">{{ tech_stat.avg_days|divide:tech_stat.amount|floatformat:1 }}</td>
+                <td class="text-right">
+                    {{ tech_stat.in_time }}
+                    ( {{ tech_stat.in_time|percent:tech_stat.amount }} %)
+                </td>
+                <td class="text-right">{{ tech_stat.det_amt }}</td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td>RAZEM:</td>
+            <td class="text-right">{{ of_amt }}</td>
+            <td>----</td>
+            <td class="text-right">
+                {{ in_time_amt }}
+                ({{ in_time_amt|percent:of_amt }} %)
+            </td>
+            <td class="text-right">{{ det_amt }}</td>
+        </tr>
+    </table>
+    <br>
+
+    <table class="table table-bordered table-striped table-hover" style="width:50%; margin:auto">
+        <tr>
+            <th>Gr. kalk.</th>
+            <th>Il. detali</th>
+        </tr>
+        {% for detail_item in detail_stats %}
+            <tr>
+                <td>{{ detail_item.mat_group }}</td>
+                <td>{{ detail_item.amount }}</td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td>RAZEM:</td>
+            <td>{{ det_mat_amt }}</td>
+        </tr>
+    </table>
+    <br>
+
+    <table class="table table-bordered table-striped table-hover" style="width:50%; margin:auto">
+        <tr>
+            <th>Status</th>
+            <th>Il. ofert</th>
+        </tr>
+        {% for item in statuses_stats %}
+            <tr>
+                <td>{{ item.status }}</td>
+                <td>{{ item.amount }}</td>
+            </tr>
+        {% endfor %}
+        <tr>
+            <td>RAZEM:</td>
+            <td>{{ of_stat_amt }}</td>
+        </tr>
+    </table>
+{% endblock content %}

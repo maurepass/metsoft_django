@@ -1,0 +1,81 @@
+{% extends 'offers/base.html' %}
+
+{% block content %}
+<div class="text-center my-4" id="offers_info">
+    <a>Oferta nr: {{ offer.offer_no }}</a>
+    <a>Klient: {{ offer.client }} </a>
+    <a>Marketing: {{ offer.user_mark }} </a>
+    <a>Technologia: {{ offer.user_tech }}</a>
+</div>
+
+<form method="GET" action="{% url 'detail-create' offer.pk %}">
+    <input class="btn btn-outline-info" value="Staliwo - dodaj odlew" name="steel" type="submit">
+    <input class="btn btn-outline-info" value="Żeliwo - dodaj odlew" name="iron" type="submit">
+</form>
+
+<!--<a class="btn btn-outline-info" href="{% url 'detail-create' offer.pk %}">Dodaj nowy odlew</a>-->
+
+        <table class="table table-bordered table-sm table-hover">
+            <tr>
+                <th>ID</th>
+                <th>Nazwa</th>
+                <th>Nr rysunku</th>
+                <th>Materiał</th>
+                <th>Ciężar [kg]</th>
+                <th>Il. szt.</th>
+                <th>Uzysk[%]</th>
+                <th>St. tr.</th>
+                <th>Model</th>
+                <th>Obr cieplna</th>
+                <th>Obr. mech.</th>
+                <th>Tolerancje</th>
+                <th>Pochylenia</th>
+                <th>Atest</th>
+                <th>Odb. odlewu</th>
+                <th>Klasa jakości</th>
+                <th>Skrzynie [m]</th>
+                <th>Inne</th>
+                <th>Chromit</th>
+                <th>Edytuj</th>
+                <th>Usuń</th>
+            </tr>
+            {% for detail in details %}
+                <tr>
+                    <td>{{ detail.id }}</td>
+                    <td>{{ detail.cast_name }}</td>
+                    <td>{{ detail.drawing_no }}</td>
+                    <td>{{ detail.mat.material }}</td>
+                    <td>{{ detail.cast_weight|default_if_none:"" }}</td>
+                    <td>{{ detail.pieces_amount }}</td>
+                    <td>{{ detail.yeld }}</td>
+                    <td>{{ detail.difficulty }}</td>
+                    <td>{{ detail.pattern }}</td>
+                    <td>{{ detail.heat_treat }}</td>
+                    <td>{{ detail.machining.machining }}</td>
+                    <td>{{ detail.tolerances }}</td>
+                    <td>{{ detail.tapers }}</td>
+                    <td>{{ detail.atest }}</td>
+                    <td>{{ detail.required }}</td>
+                    <td>{{ detail.quality_class|default_if_none:"" }}</td>
+                    <td>{{ detail.boxes|default_if_none:"" }}</td>
+                    <td>{{ detail.others|default_if_none:"" }}</td>
+                    <td>{{ detail.fr_chromite|default_if_none:"" }}</td>
+                    <td><a href="{% url 'detail-update' offer.pk detail.id %}">Edytuj</a></td>
+                    <td><a href="{% url 'detail-delete' offer.pk detail.id %}">Usuń</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+<div class="container text-center">
+    <form method="POST">
+        {% csrf_token %}
+        <div>
+            <input class="btn btn-outline-info" name="new_notices" value="Wstaw domyślne uwagi" type="submit">
+        </div>
+        {{ offer_form.notices }}
+        <hr>
+        {{ offer_form.status }}
+        <button class="btn btn-outline-info">Zapisz</button>
+    </form>
+</div>
+
+{% endblock content %}

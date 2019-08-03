@@ -1,0 +1,21 @@
+{% extends 'offers/base.html' %}
+{% block content %}
+    <form class="fieldset" method="POST">
+        {% csrf_token %}
+        <br>
+        <fieldset>
+            {% if form.instance.pk  %}
+                        <legend>EDYCJA</legend>
+            {% else %}
+                        <legend>DODAJ NOWY ODLEW</legend>
+            {% endif %}
+            <ul>
+                {{ form.as_ul }}
+                <input class="btn btn-outline-info" type="submit", name="save-detail" value="Zapisz">
+                {% if form.instance.pk %}
+                    <input class="btn btn-outline-info" type="submit" name="new-detail" value="Dodaj nowy detal">
+                {% endif %}
+            </ul>
+        </fieldset>
+    </form>
+{% endblock content %}

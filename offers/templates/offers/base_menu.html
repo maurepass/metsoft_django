@@ -1,0 +1,115 @@
+{% load static %}
+<!doctype html>
+<html lang="pl-PL">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/custom.css'%}">
+    {% block css %} {% endblock css %}
+
+    <title>Django - METsoft</title>
+</head>
+    <body>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+          <a class="navbar-brand" href="#">METsoft</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample04" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarsExample04">
+            <ul class="navbar-nav mr-auto">
+<!--                {% if 'offers' in request.path %}-->
+                    <li class="nav-item"><a class="nav-link" href="{% url 'offers' %}">Oferty</a></li>
+<!--                {% endif %}-->
+                <li class="nav-item"><a class="nav-link" href="http://192.168.1.185/"  target="_blade">Kokila</a></li>
+<!--                {% if 'offers' in request.path %}-->
+                    {% if perms.tech_dep %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'orders-index' %}">Zlecenia</a></li>
+                    {% endif %}
+<!--                {% endif %}-->
+<!--                {% if 'offers' in request.path %}-->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Raporty</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown04">
+                            <a class="dropdown-item"  href="{% url 'monitoring-in-work' %}" >Monitoring odlewów w produkcji</a>
+                            <a class="dropdown-item" href="{% url 'monitoring-all' %}" >Monitoring odlewów (wszystkie zlecenia)</a>
+                            <a class="dropdown-item" href="{% url 'odbiory' %}">Rejestr odbiorów</a>
+                            <a class="dropdown-item" href="{% url 'zalania' %}">Rejestr zalań</a>
+                            <a class="dropdown-item" href="{% url 'niezgodnosci' %}">Rejestr niezgodnych operacji</a>
+                            <a class="dropdown-item" href="{% url 'zaformowania' %}">Rejestr zaformowań</a>
+                            <a class="dropdown-item" href="{% url 'badania-ndt' %}">Rejestr badań</a>
+                            <a class="dropdown-item" href="{% url 'machining' %}">Rejestr wykonanych obróbek mechanicznych</a>
+                            <a class="dropdown-item" href="{% url 'uwagi' %}" >Rejestr uwag do zatwierdzonych operacji</a>
+                            <a class="dropdown-item" href="{% url 'weight-per-client' %}">Tonaż odlewów do wykonania wg klientów</a>
+                            <a class="dropdown-item" href="{% url 'weight-per-group' %}" >Tonaż odlewów do wykonania wg grup kalkulacyjnych</a>
+                            <a class="dropdown-item" href="{% url 'wybraki' %}">Rejestr wybraków</a>
+                            <a class="dropdown-item" href="{% url 'wagi-odlewow' %}">Rejestr operacji ważenia</a>
+                            <a class="dropdown-item" href="{% url 'magazyn' %}"> Stan magazynowy</a>
+                            <a class="dropdown-item" href="{% url 'inserted-data' %}">Rejest wpisanych danych</a>
+                            <a class="dropdown-item" href="{% url 'uzyski' %}"> Uzyski wg KO</a>
+                        </div>
+                    </li>
+<!--                {% endif %}-->
+<!--                {% if 'offers' in request.path %}-->
+                    <li class="nav-item"><a class="nav-link" href="{% url 'offer-create' %}">Dodaj ofertę</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'details-index' %}">Znajdź detal</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'materials' %}">Lista materiałów</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'tech-stats' %}">Statystyki</a></li>
+<!--                {% endif %}-->
+                <li class="nav-item"><a class="nav-link" href="{% url 'patterns:patterns' %}">Modele</a></li>
+<!--                {% if user.username == 'modelarnia' %}-->
+                {% if perms.patterns.add_pattern %}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'patterns:pattern-create' %}">Dodaj model</a></li>
+                {% enfif %}
+<!--                {% endif %}-->
+<!--                {% if 'patterns' in request.path or not user.is_authenticated %}-->
+                    <li class="nav-item"><a class="nav-link" href="{% url 'patterns:pattern-report' %}">Raport</a></li>
+<!--                {% endif %}-->
+<!--                {% if user.username == 'admin' %}-->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Ustawienia</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown04">
+                            <a class="dropdown-item" href="{% url 'notices'%}">Domyślne uwagi</a>
+                            <a class="dropdown-item" href="/admin/">Admin panel</a>
+                        </div>
+                    </li>
+<!--                {% endif %}-->
+
+            </ul>
+
+            <ul class="navbar-nav justify-content-end">
+                {% if user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="dropdown05" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ user.username }}</a>
+                        <div class="dropdown-menu" aria-labelledby="dropdown05">
+                            <a class="dropdown-item" href="{% url 'logout'%}">Wyloguj</a>
+                            <a class="dropdown-item" href="#">Profil</a>
+                        </div>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Zaloguj</a>
+                    </li>
+                {% endif %}
+            </ul>
+          </div>
+        </nav>
+        {% block content %} {% endblock content %}
+
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+        <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/1.10.18/js/jquery.dataTables.min.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/1.10.18/js/dataTables.bootstrap4.min.js"></script>
+
+        {% block scripts %} {% endblock scripts %}
+    </body>
+</html>

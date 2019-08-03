@@ -1,0 +1,95 @@
+{% extends 'offers/base.html' %}
+
+{% block content %}
+<div class="text-center my-3">
+        <h2>Rejestr zalań</h2>
+</div>
+
+        <table id="raports" class="table table-bordered table-sm table-hover" style="width: 100%">
+            <thead>
+                <tr>
+                    <th>ID odlewu</th>
+                    <th>Numer MET</th>
+                    <th>Klient</th>
+                    <th>Nazwa odlewu</th>
+                    <th>Numer rysunku</th>
+                    <th>Materiał</th>
+                    <th>Gr. kal</th>
+                    <th>Waga odlewu</th>
+                    <th>Nr wytopu</th>
+                    <th>Temp. zal.</th>
+                    <th>Data zalania</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>ID odlewu</th>
+                    <th>Numer MET</th>
+                    <th>Klient</th>
+                    <th>Nazwa odlewu</th>
+                    <th>Numer rysunku</th>
+                    <th>Materiał</th>
+                    <th>Gr. kal</th>
+                    <th>Waga odlewu</th>
+                    <th>Nr wytopu</th>
+                    <th>Temp. zal.</th>
+                    <th>Data zalania</th>
+                </tr>
+            </tfoot>
+        </table>
+
+{% endblock content %}
+
+{% block scripts %}
+
+    <script defer>
+        $(document).ready( function () {
+            $('#raports').DataTable({
+                lengthMenu: [ [25, 50, 100, 200, 500], [25, 50, 100, 200, 500] ],
+                serverSide: true,
+                processing: true,
+                language: { "processing": "Ładowanie strony" },
+                order: [[10, 'desc']],
+                ajax: "/reports/api/zalania/?format=datatables",
+                columns: [
+                    { data: 'cast.id' },
+                    { data: 'cast.porder.numer_met' },
+                    { data: 'cast.customer' },
+                    { data: 'cast.cast_name' },
+                    { data: 'cast.picture_number' },
+                    { data: 'cast.cast_material.materialname' },
+                    { data: 'cast.cast_material.calcgroup' },
+                    { data: 'cast.cast_weight' },
+                    { data: 'parameter_value1' },
+                    { data: 'parameter_value2' },
+                    { data: 'completion_date1' },
+                ]
+            });
+
+            //Kod do wyszukiwania po kolumnach
+
+            // Setup - add a text input to each footer cell
+            $('#raports tfoot th').each( function () {
+                var title = $(this).text();
+                $(this).html( '<input type="text" placeholder="Szukaj '+title+'" />' );
+            } );
+
+            // DataTable
+            var table = $('#raports').DataTable();
+
+            // Apply the search
+            table.columns().every( function () {
+                var that = this;
+
+                $( 'input', this.footer() ).on( 'keyup change', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                            .search( this.value )
+                            .draw();
+                    }
+                } );
+            } );
+        } );
+    </script>
+
+{% endblock scripts %}

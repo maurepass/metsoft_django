@@ -1,0 +1,33 @@
+{% extends 'offers/base.html' %}
+
+{% block content %}
+    <div class="text-center my-3">
+        <h2>Karta modelu</h2>
+    </div>
+
+    <div style="font-size: 22px; text-align:center;padding:20px">
+        <label style="padding:20px">Nazwa firmy:<b>{{ pattern.customer }}</b></label>
+        <label style="padding:20px">Nazwa odlewu:<b>{{ pattern.pattern_name }}</b></label>
+        <label style="padding:20px">Numer rysunku:<b>{{ pattern.drawing_number }}</b></label>
+    </div>
+
+    <table class="table table-bordered table-striped table-sm table-hover" style="width:60%; margin:auto">
+        <thead>
+            <tr>
+                <th>Lp</th>
+                <th>Operacja</th>
+                <th>Data</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for obj in objects %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ obj.status.status }}</td>
+                    <td>{{ obj.date }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock content %}

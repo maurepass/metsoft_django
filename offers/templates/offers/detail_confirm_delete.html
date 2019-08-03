@@ -1,0 +1,14 @@
+{% extends 'offers/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="text-center mt-5">
+    <form method="POST">
+        {% csrf_token %}
+        <h2>Czy na pewno usunąć pozycję z oferty?</h2>
+        <button class="btn btn-outline-danger">TAK</button>
+        <a class="btn btn-outline-info" href="{% url 'offers' %}">Anuluj</a>
+    </form>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,111 @@
+{% extends 'offers/base.html' %}
+
+{% block content %}
+<div class="text-center my-3">
+        <h1>Monitoring - wszystkie odlewy</h1>
+</div>
+
+    <table id="raports" class="table table-bordered table-sm table-hover" style="width: 100%">
+        <thead>
+            <tr>
+                <th>Lp</th>
+                <th>Numer MET</th>
+                <th>Klient</th>
+                <th>Nazwa odlewu</th>
+                <th>Numer rysunku</th>
+                <th>Materiał</th>
+                <th>Waga</th>
+                <th>Technolog</th>
+                <th>Ilość zamówiona</th>
+                <th>Nowe</th>
+                <th>W planowaniu</th>
+                <th>Zalane</th>
+                <th>Odebrane</th>
+                <th>Wysłane</th>
+                <th>WB</th>
+                <th>Anulowane</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th></th>
+                <th>Numer MET</th>
+                <th>Klient</th>
+                <th>Nazwa odlewu</th>
+                <th>Numer rysunku</th>
+                <th>Materiał</th>
+                <th>Waga</th>
+                <th>Technolog</th>
+                <th>Ilość zamówiona</th>
+                <th>Nowe</th>
+                <th>W planowaniu</th>
+                <th>Zalane</th>
+                <th>Odebrane</th>
+                <th>Wysłane</th>
+                <th>WB</th>
+                <th>Anulowane</th>
+            </tr>
+        </tfoot>
+        <tbody>
+            {% for obj in objects %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ obj.porder.numer_met }}</td>
+                    <td>{{ obj.porder.zamawiajacy.company }}</td>
+                    <td>{{ obj.cast_name }}</td>
+                    <td>{{ obj.picture_number }}</td>
+                    <td>{{ obj.cast_mat }}</td>
+                    <td class="text-right">{{ obj.casting_weight|floatformat:"0" }}</td>
+                    <td>{{ obj.tech_generate }}</td>
+                    <td class="text-right">{{ obj.cast_pcs }}</td>
+                    <td class="text-right">{{ obj.nowe|floatformat:"0" }}</td>
+                    <td class="text-right">{{ obj.planowanie|floatformat:"0" }}</td>
+                    <td class="text-right">{{ obj.zalane|floatformat:"0" }}</td>
+                    <td class="text-right">{{ obj.odebrane|floatformat:"0" }}</td>
+                    <td class="text-right">{{ obj.wyslane|floatformat:"0" }}</td>
+                    <td class="text-right">{{ obj.wb|floatformat:"0" }}</td>
+                    <td class="text-right">{{ obj.anulowane|floatformat:"0" }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock content %}
+
+{% block scripts %}
+
+    <script defer>
+        $(document).ready( function () {
+            $('#raports').DataTable({
+                lengthMenu: [ [50, 100, 200, 500], [50, 100, 200, 500] ],
+                processing: true,
+                language: { "processing": "Ładowanie strony" },
+            });
+
+            //Kod do wyszukiwania po kolumnach
+
+            // Setup - add a text input to each footer cell
+            $('#raports tfoot th').each( function () {
+                var title = $(this).text();
+                $(this).html( '<input type="text" placeholder="Szukaj '+title+'" />' );
+            } );
+
+            // DataTable
+            var table = $('#raports').DataTable();
+
+            // Apply the search
+            table.columns().every( function () {
+                var that = this;
+
+                $( 'input', this.footer() ).on( 'keyup change', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                            .search( this.value )
+                            .draw();
+                    }
+                } );
+            } );
+        } );
+    </script>
+
+{% endblock scripts %}

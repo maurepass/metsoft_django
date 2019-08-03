@@ -1,0 +1,129 @@
+{% extends 'offers/base.html' %}
+
+{% block content %}
+<div class="text-center my-3">
+        <h1>Rejestr modeli</h1>
+</div>
+
+        <table id="patterns" class="table table-bordered table-sm table-hover" style="width: 100%">
+            <thead>
+                <tr>
+                    <th>Nazwa firmy</th>
+                    <th>Numer rysunku</th>
+                    <th>Nazwa odlewu</th>
+                    <th>Ostatnie zlecenie</th>
+                    <th>Il. zleceń</th>
+                    <th>Powierz- chnia</th>
+                    <th>Numer ułożenia</th>
+                    <th>Miejsce ułożenia</th>
+                    <th>Materiał</th>
+                    <th>Numer kartoteki</th>
+                    <th>Numer indeksu modelu</th>
+                    <th>Weryfikacja</th>
+                    <th>Uwagi</th>
+                    <th>Data weryfikacji</th>
+                    <th>Nazwisko</th>
+                    <th>Status</th>
+                    <th>Data zmiany statusu</th>
+                    <th>Czas nieużywania modelu</th>
+                    <th>Operacje</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <th>Nazwa firmy</th>
+                    <th>Numer rysunku</th>
+                    <th>Nazwa odlewu</th>
+                    <th>Ostatnie zlecenie</th>
+                    <th>Il. zleceń</th>
+                    <th>Powierz- chnia</th>
+                    <th>Numer ułożenia</th>
+                    <th>Miejsce ułożenia</th>
+                    <th>Materiał</th>
+                    <th>Numer kartoteki</th>
+                    <th>Numer indeksu modelu</th>
+                    <th>Weryfikacja</th>
+                    <th>Uwagi</th>
+                    <th>Data weryfikacji</th>
+                    <th>Nazwisko</th>
+                    <th>Status</th>
+                    <th>Data zmiany statusu</th>
+                    <th>Czas nieużywania modelu</th>
+                    <th>Operacje</th>
+                </tr>
+            </tfoot>
+        </table>
+{% endblock content %}
+
+{% block scripts %}
+     <script defer>
+            $(document).ready( function () {
+                $('#patterns').DataTable({
+                    lengthMenu: [ [25, 50, 100, 200, 500], [25, 50, 100, 200, 500] ],
+                    order: [[18, 'desc']],
+                    serverSide: true,
+                    processing: true,
+                    language: { "processing": "Ładowanie strony" },
+                    ajax: '/patterns/api/patterns/?format=datatables',
+                    columns: [
+                        { data: 'customer', name: 'customer' },
+                        { data: 'drawing_number', name: 'drawing_number' },
+                        { data: 'pattern_name', name: 'pattern_name' },
+                        { data: 'last_order', name: 'last_order' },
+                        { data: 'orders_amount', name: 'orders_amount' },
+                        { data: 'area', name: 'area',
+                            render: $.fn.dataTable.render.number( ' ', ',', 2)
+                        },
+                        { data: 'layer_number', name: 'layer_number' },
+                        { data: 'layer_place', name: 'layer_place' },
+                        { data: 'material', name: 'material' },
+                        { data: 'cart_number', name: 'cart_number' },
+                        { data: 'pattern_index', name: 'pattern_index' },
+                        { data: 'verification', name: 'verification' },
+                        { data: 'remarks', name: 'remarks' },
+                        { data: 'verification_date', name: 'verification_date' },
+                        { data: 'surname', name:'surname'},
+                        { data: 'status.status'},
+                        { data: 'move_in', name:'move_in' },
+                        { data: 'get_not_using_time' },
+                        { data: 'id',
+                            "fnCreatedCell":function(nTd, sData, oData, iRow, iCol){
+                                $(nTd).html('<a class="iframe" href="/patterns/' + sData + '/edit">Edytuj</a><br>' +
+                                            '<a class="iframe" href="/patterns/' + sData + '/status">Status</a><br>' +
+                                            '<a class="iframe" href="/patterns/' + sData + '">Karta</a>');
+                            }
+                        }
+                    ],
+                });
+
+                 //Kod do wyszukiwania po kolumnach
+
+                // Setup - add a text input to each footer cell
+                $('#patterns tfoot th').each( function () {
+                    var title = $(this).text();
+                    $(this).html( '<input type="text" placeholder="Szukaj '+title+'" />' );
+                } );
+
+                // DataTable
+                var table = $('#patterns').DataTable();
+
+                // Apply the search
+                table.columns().every( function () {
+                    var that = this;
+
+                    $( 'input', this.footer() ).on( 'keyup change', function () {
+                        if ( that.search() !== this.value ) {
+                            that
+                                .search( this.value )
+                                .draw();
+                        }
+                    } );
+                } );
+            });
+    </script>
+{% endblock scripts %}
+
+
+<!--                            $(nTd).html(<a class="iframe" href="/patterns/' + sData + '/edit">Edytuj</a><br>' +-->
+<!--                                '<a class="iframe" href="/patterns_status/' + sData + '">Status</a><br>' +-->
+<!--                                '<a class="iframe" href="/patterns/' + sData + '">Karta</a>)-->

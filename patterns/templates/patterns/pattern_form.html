@@ -1,0 +1,19 @@
+{% extends 'offers/base.html' %}
+
+{% block content %}
+    <form class="fieldset" method="POST">
+        {% csrf_token %}
+        <br>
+        <fieldset>
+            {% if form.instance.pk  %}
+                <legend>EDYTUJ MODEL</legend>
+            {% else %}
+                <legend>DODAJ MODEL</legend>
+            {% endif %}
+            <ul>
+                {{ form.as_ul }}
+                <button class="btn btn-outline-info">Zapisz</button>
+            </ul>
+        </fieldset>
+    </form>
+{% endblock content %}

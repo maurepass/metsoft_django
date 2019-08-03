@@ -1,0 +1,14 @@
+{% extends 'offers/base.html' %}
+
+{% block content %}
+    <form method="POST" class="fieldset" >
+        {% csrf_token %}
+        <fieldset >
+            <legend>Znajdź odlew</legend>
+                <ul>
+                    {{ form.as_p}}
+                </ul>
+                <button class="btn btn-outline-secondary">Wyszukaj</button>
+        </fieldset>
+    </form>
+{% endblock content %}

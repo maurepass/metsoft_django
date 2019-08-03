@@ -1,0 +1,26 @@
+{% extends 'offers/base.html' %}
+
+{% block content %}
+
+    <div class="text-center my-3">
+        <h2>Szybka zmiana statusu</h2>
+    </div>
+
+    <div style="font-size: 22px; text-align:center;padding:20px">
+        <label style="padding:20px">Nazwa firmy:<b>{{ pattern.customer }}</b></label>
+        <label style="padding:20px">Nazwa odlewu:<b>{{ pattern.pattern_name }}</b></label>
+        <label style="padding:20px">Numer rysunku:<b>{{ pattern.drawing_number }}</b></label>
+    </div>
+
+    <div style="text-align:center">
+        {% for status in statuses %}
+            <div style="display:inline-block; padding:30px 30px">
+                <form method="POST" action="{% url 'patterns:pattern-status-change' pattern.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="status" value="{{ status.id }}">
+                    <button style="font-size:40px">{{ status.status }}</button>
+                </form>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock content %}

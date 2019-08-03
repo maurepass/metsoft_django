@@ -1,0 +1,20 @@
+{% extends 'offers/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <form class="fieldset" method="POST">
+        {% csrf_token %}
+        <br>
+        <fieldset>
+            {% if form.instance.pk  %}
+                        <legend>EDYTUJ MATERIAŁ</legend>
+            {% else %}
+                        <legend>DODAJ MATERIAŁ</legend>
+            {% endif %}
+            <ul>
+                {{ form|crispy }}
+                <button class="btn btn-outline-info">Zapisz</button>
+            </ul>
+        </fieldset>
+    </form>
+{% endblock content %}

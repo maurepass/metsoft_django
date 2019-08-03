@@ -1,0 +1,96 @@
+{% extends 'offers/base.html' %}
+
+{% block content %}
+    <div class="text-center my-3">
+            <h2>Uzyski wg KO</h2>
+    </div>
+
+    <table id="raports" class="table table-bordered table-sm table-hover" style="width: 100%">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Numer MET</th>
+                <th>Klient</th>
+                <th>Nazwa odlewu</th>
+                <th>Numer rysunku</th>
+                <th>Materiał</th>
+                <th>Technolog</th>
+                <th>Waga</th>
+                <th>Metal</th>
+                <th>Uzysk</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>ID</th>
+                <th>Numer MET</th>
+                <th>Klient</th>
+                <th>Nazwa odlewu</th>
+                <th>Numer rysunku</th>
+                <th>Materiał</th>
+                <th>Technolog</th>
+                <th>Waga</th>
+                <th>Metal</th>
+                <th>Uzysk</th>
+            </tr>
+        </tfoot>
+    </table>
+
+{% endblock content %}
+
+{% block scripts %}
+
+    <script defer>
+        $(document).ready( function () {
+            $('#raports').DataTable({
+                lengthMenu: [ [25, 50, 100, 200, 500], [25, 50, 100, 200, 500] ],
+                serverSide: true,
+                processing: true,
+                language: { "processing": "Ładowanie strony" },
+                order: [[0, 'desc']],
+                ajax: "/reports/api/uzyski/?format=datatables",
+                columns: [
+                    {data: 'id'},
+                    {data: 'porder.numer_met'},
+                    {data: 'customer'},
+                    {data: 'cast_name'},
+                    {data: 'picture_number'},
+                    {data: 'cast_material.materialname', defaultContent: ""},
+                    {data: 'tech_maker', defaultContent: ""},
+                    {data: 'cast_weight'},
+                    {data: 'material_need'},
+                    {data: 'id',
+                        "fnCreatedCell":function(nTd, sData, oData, iRow, iCol){
+                                $(nTd).html(parseFloat(oData.cast_weight * 100 / oData.material_need).toFixed(1) + ' %' );
+                            }
+                    }
+                ]
+            });
+
+            //Kod do wyszukiwania po kolumnach
+
+            // Setup - add a text input to each footer cell
+            $('#raports tfoot th').each( function () {
+                var title = $(this).text();
+                $(this).html( '<input type="text" placeholder="Szukaj '+title+'" />' );
+            } );
+
+            // DataTable
+            var table = $('#raports').DataTable();
+
+            // Apply the search
+            table.columns().every( function () {
+                var that = this;
+
+                $( 'input', this.footer() ).on( 'keyup change', function () {
+                    if ( that.search() !== this.value ) {
+                        that
+                            .search( this.value )
+                            .draw();
+                    }
+                } );
+            } );
+        } );
+    </script>
+
+{% endblock scripts %}
