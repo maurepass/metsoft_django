@@ -5,7 +5,7 @@
         <h1>Znalezione odlewy</h1>
     </div>
 
-    <form method="get" action="{% url 'czas-wykonania' %}">
+    <form method="get" action="{% url 'execution-time' %}">
         <button type=submit style="font-size: 24px">Nowe wyszukiwanie</button>
     </form>
 
@@ -45,15 +45,15 @@
                 <tr>
                     <td>{{ forloop.counter }}</td>
                     <td>{{ obj.id }}</td>
-                    <td>{{ obj.numer_met }}</td>
+                    <td>{{ obj.met_no }}</td>
                     <td>{{ obj.customer }}</td>
                     <td>{{ obj.cast_name }}</td>
                     <td>{{ obj.picture_number }}</td>
                     <td>{{ obj.pc_number }}</td>
                     <td>{{ obj.created_at|date:"Y-m-d" }}</td>
-					<td>{{ obj.zaformowano|date:"Y-m-d" }}</td>
-                    <td>{{ obj.zalane|date:"Y-m-d" }}</td>
-                    <td>{{ obj.odbior|date:"Y-m-d" }}</td>
+					<td>{{ obj.moulding_date|date:"Y-m-d" }}</td>
+                    <td>{{ obj.pouring_date|date:"Y-m-d" }}</td>
+                    <td>{{ obj.finishing_date|date:"Y-m-d" }}</td>
                 </tr>
             {% endfor %}
         </tbody>

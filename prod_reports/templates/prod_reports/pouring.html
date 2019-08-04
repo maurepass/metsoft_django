@@ -50,10 +50,10 @@
                 processing: true,
                 language: { "processing": "Ładowanie strony" },
                 order: [[10, 'desc']],
-                ajax: "/reports/api/zalania/?format=datatables",
+                ajax: "/reports/api/pouring/?format=datatables",
                 columns: [
                     { data: 'cast.id' },
-                    { data: 'cast.porder.numer_met' },
+                    { data: 'cast.porder.met_no' },
                     { data: 'cast.customer' },
                     { data: 'cast.cast_name' },
                     { data: 'cast.picture_number' },

@@ -59,5 +59,6 @@ class DetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Detail
-        fields = ['id', 'offer', 'cast_name', 'drawing_no', 'mat', 'cast_weight', 'pieces_amount', 'yeld', 'difficulty',
-                  'pattern', 'heat_treat', 'machining', 'tolerances', 'tapers', 'atest', 'required', 'quality_class']
+        fields = ['id', 'offer', 'cast_name', 'drawing_no', 'mat', 'cast_weight', 'pieces_amount', 'detail_yield',
+                  'difficulty', 'pattern', 'heat_treat', 'machining', 'tolerances', 'tapers', 'atest', 'required',
+                  'quality_class']

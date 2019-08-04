@@ -5,7 +5,7 @@
             <h1>Rejestr wpisanych danych podczas potwierdzania operacji </h1>
     </div>
 
-    <table id="raports" class="table table-bordered table-sm table-hover" style="width: 100%">
+    <table id="reports" class="table table-bordered table-sm table-hover" style="width: 100%">
         <thead>
             <tr>
                 <th>ID odlewu</th>
@@ -36,18 +36,18 @@
         </tfoot>
         <tbody>
             {% for cast in casts %}
-                {% if cast.nr_odlewu or cast.nr_wytopu or cast.temp_zalewania or cast.waga_odlewu or cast.obr_mech %}
+                {% if cast.cast_no or cast.melting_no or cast.pourint_temp or cast.cast_weight or cast.machining %}
                     <tr>
                         <td>{{ cast.id }}</td>
-                        <td>{{ cast.nr_met }}</td>
+                        <td>{{ cast.met_no }}</td>
                         <td>{{ cast.customer }}</td>
                         <td>{{ cast.cast_name }}</td>
                         <td>{{ cast.picture_number }}</td>
-                        <td>{{ cast.nr_odlewu|default_if_none:"" }}</td>
-                        <td>{{ cast.nr_wytopu|default_if_none:"" }}</td>
-                        <td>{{ cast.temp_zalewania|default_if_none:"" }}</td>
-                        <td>{{ cast.waga_odlewu|default_if_none:"" }}</td>
-                        {% if cast.obr_mech == 1 %}
+                        <td>{{ cast.cast_no|default_if_none:"" }}</td>
+                        <td>{{ cast.melting_no|default_if_none:"" }}</td>
+                        <td>{{ cast.pouring_temp|default_if_none:"" }}</td>
+                        <td>{{ cast.cast_weight|default_if_none:"" }}</td>
+                        {% if cast.machining == 1 %}
                             <td>TAK</td>
                         {% else %}
                             <td></td>
@@ -62,7 +62,7 @@
 {% block scripts %}
     <script defer>
         $(document).ready( function () {
-            $('#raports').DataTable({
+            $('#reports').DataTable({
                 lengthMenu: [ [50, 100, 200, 500], [50, 100, 200, 500] ],
                 processing: true,
                 order: [[0, 'desc']],
@@ -73,13 +73,13 @@
             //Kod do wyszukiwania po kolumnach
 
             // Setup - add a text input to each footer cell
-            $('#raports tfoot th').each( function () {
+            $('#reports tfoot th').each( function () {
                 var title = $(this).text();
                 $(this).html( '<input type="text" placeholder="Szukaj '+title+'" />' );
             } );
 
             // DataTable
-            var table = $('#raports').DataTable();
+            var table = $('#reports').DataTable();
 
             // Apply the search
             table.columns().every( function () {

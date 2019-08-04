@@ -15,7 +15,7 @@ class PorderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Porder
-        fields = ['numer_met']
+        fields = ['met_no']
 
 
 class PocastordSerializer(serializers.ModelSerializer):

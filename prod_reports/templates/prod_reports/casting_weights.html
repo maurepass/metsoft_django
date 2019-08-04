@@ -48,10 +48,10 @@
                 processing: true,
                 language: { "processing": "Ładowanie strony" },
                 order: [[9, 'desc']],
-                ajax: "/reports/api/wagi-odlewow/?format=datatables",
+                ajax: "/reports/api/casting-weights/?format=datatables",
                 columns: [
                     { data: 'cast.id' },
-                    { data: 'cast.porder.numer_met' },
+                    { data: 'cast.porder.met_no' },
                     { data: 'cast.customer' },
                     { data: 'cast.cast_name' },
                     { data: 'cast.picture_number' },

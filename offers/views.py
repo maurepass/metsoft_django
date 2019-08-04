@@ -1,4 +1,4 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render, reverse
@@ -154,13 +154,13 @@ class DetailCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         initial['atest'] = '3.1 wg PN-EN 10204'
 
         if 'steel' in self.request.GET:
-            initial['yeld'] = 50
+            initial['detail_yield'] = 50
             initial['fr_chormite'] = 1
             initial['tolerances'] = 'ISO 8062-DCTG13 RMAG H'
             initial['heat_treat'] = 'normalizacja'
 
         if 'iron' in self.request.GET:
-            initial['yeld'] = 75
+            initial['detail_yield'] = 75
             initial['fr_chormite'] = 0
             initial['tolerances'] = 'ISO 8062-DCTG12 RMAG H'
             initial['heat_treat'] = 'brak'

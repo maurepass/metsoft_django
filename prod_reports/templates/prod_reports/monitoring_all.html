@@ -50,21 +50,21 @@
             {% for obj in objects %}
                 <tr>
                     <td>{{ forloop.counter }}</td>
-                    <td>{{ obj.numer_met }}</td>
+                    <td>{{ obj.met_no }}</td>
                     <td>{{ obj.customer }}</td>
                     <td>{{ obj.cast_name }}</td>
                     <td>{{ obj.picture_number }}</td>
                     <td>{{ obj.cast_mat }}</td>
                     <td class="text-right">{{ obj.casting_weight|floatformat:"0" }}</td>
-                    <td>{{ obj.tech_generate }}</td>
+                    <td>{{ obj.tech_maker }}</td>
                     <td class="text-right">{{ obj.cast_pcs }}</td>
-                    <td class="text-right">{{ obj.nowe|floatformat:"0" }}</td>
-                    <td class="text-right">{{ obj.planowanie|floatformat:"0" }}</td>
-                    <td class="text-right">{{ obj.zalane|floatformat:"0" }}</td>
-                    <td class="text-right">{{ obj.odebrane|floatformat:"0" }}</td>
-                    <td class="text-right">{{ obj.wyslane|floatformat:"0" }}</td>
-                    <td class="text-right">{{ obj.wb|floatformat:"0" }}</td>
-                    <td class="text-right">{{ obj.anulowane|floatformat:"0" }}</td>
+                    <td class="text-right">{{ obj.new|floatformat:"0" }}</td>
+                    <td class="text-right">{{ obj.planned|floatformat:"0" }}</td>
+                    <td class="text-right">{{ obj.poured|floatformat:"0" }}</td>
+                    <td class="text-right">{{ obj.finished|floatformat:"0" }}</td>
+                    <td class="text-right">{{ obj.sent|floatformat:"0" }}</td>
+                    <td class="text-right">{{ obj.scraped|floatformat:"0" }}</td>
+                    <td class="text-right">{{ obj.cancelled|floatformat:"0" }}</td>
                 </tr>
             {% endfor %}
         </tbody>

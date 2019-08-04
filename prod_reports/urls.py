@@ -4,35 +4,35 @@ from rest_framework import routers
 from . import views
 
 router = routers.DefaultRouter()
-router.register(r'badania-ndt', views.BadaniaNDTViewSet, 'badania-ndt')
-router.register(r'magazyn', views.MagazynViewSet, 'magazyn')
-router.register(r'niezgodnosci', views.NiezgodnosciViewSet, 'niezgodnosci')
-router.register(r'odbiory', views.OdbioryViewSet, 'odbiory')
-router.register(r'uwagi', views.UwagiViewSet, 'uwagi')
-router.register(r'wagi-odlewow', views.WagiOdlewowViewSet, 'wagi-odlewow')
-router.register(r'zaformowane', views.ZaformowaniaViewSet, 'zaformowane')
+router.register(r'non-destructive-testing', views.NonDestructiveTestingViewSet, 'non-destructive-testing')
+router.register(r'casts-in-stock', views.CastsInStockViewSet, 'casts-in-stock')
+router.register(r'nonconformity', views.NonconformityViewSet, 'nonconformity')
+router.register(r'finished', views.FinishedViewSet, 'finished')
+router.register(r'remarks', views.RemarksViewSet, 'remarks')
+router.register(r'casting-weights', views.CastingWeightsViewSet, 'casting-weights')
+router.register(r'molding', views.MoldingViewSet, 'molding')
 router.register(r'machining', views.MachiningViewSet, 'machining')
-router.register(r'wybraki', views.WybrakiViewSet, 'wybraki')
-router.register(r'uzyski', views.UzyskiViewSet, 'uzyski')
-router.register(r'zalania', views.ZalaniaViewSet, 'zalania')
+router.register(r'scraps', views.ScrapsViewSet, 'scraps')
+router.register(r'yields', views.YieldsViewSet, 'yields')
+router.register(r'pouring', views.PouringViewSet, 'pouring')
 
 urlpatterns = [
     re_path('^api/', include(router.urls)),
-    path('czas-wykonania/', views.czas_wykonania, name='czas-wykonania'),
-    path('odbiory/', views.odbiory, name='odbiory'),
-    path('zalania/', views.zalania, name='zalania'),
-    path('niezgodnosci/', views.niezgodnosci, name='niezgodnosci'),
-    path('uwagi/', views.uwagi, name='uwagi'),
+    path('execution-time/', views.execution_time, name='execution-time'),
+    path('finished/', views.finished, name='finished'),
+    path('pouring/', views.pouring, name='pouring'),
+    path('nonconformity/', views.nonconformity, name='nonconformity'),
+    path('remarks/', views.remarks, name='remarks'),
     path('weight-per-client/', views.weight_per_client, name='weight-per-client'),
     path('weight-per-group/', views.weight_per_group, name='weight-per-group'),
-    path('wybraki/', views.wybraki, name='wybraki'),
-    path('wagi-odlewow/', views.wagi_odlewow, name='wagi-odlewow'),
+    path('scraps/', views.scraps, name='scraps'),
+    path('casting-weights/', views.casting_weights, name='casting-weights'),
     path('monitoring-in-work/', views.monitoring_in_work, name='monitoring-in-work'),
     path('monitoring-all/', views.monitoring_all, name='monitoring-all'),
-    path('magazyn/', views.magazyn, name='magazyn'),
-    path('zaformowane/', views.zaformowania, name='zaformowane'),
-    path('badania-ndt/', views.badania_ndt, name='badania-ndt'),
+    path('casts-in-stock/', views.casts_in_stock, name='casts-in-stock'),
+    path('molding/', views.molding, name='molding'),
+    path('non-destructive-testing/', views.non_destructive_testing, name='non-destructive-testing'),
     path('machining/', views.machining, name='machining'),
-    path('uzyski/', views.uzyski, name='uzyski'),
+    path('yields/', views.yields, name='yields'),
     path('inserted-data/', views.inserted_data, name='inserted-data'),
 ]

@@ -44,10 +44,10 @@
                 processing: true,
                 language: { "processing": "Ładowanie strony" },
                 order: [[0, 'desc']],
-                ajax: "/reports/api/wybraki/?format=datatables",
+                ajax: "/reports/api/scraps/?format=datatables",
                 columns: [
                     { data: 'id' },
-                    { data: 'porder.numer_met' },
+                    { data: 'porder.met_no' },
                     { data: 'customer' },
                     { data: 'cast_name' },
                     { data: 'picture_number' },

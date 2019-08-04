@@ -47,7 +47,7 @@ class DetailCreateForm(forms.ModelForm):
     class Meta:
         model = Detail
         fields = ('cast_name', 'drawing_no', 'mat', 'draw_weight', 'cast_weight', 'pieces_amount',
-                  'yeld', 'difficulty', 'pattern', 'heat_treat', 'machining', 'tolerances', 'tapers',
+                  'detail_yield', 'difficulty', 'pattern', 'heat_treat', 'machining', 'tolerances', 'tapers',
                   'atest', 'required', 'quality_class', 'boxes', 'others', 'fr_chromite')
 
 

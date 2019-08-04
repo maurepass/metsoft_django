@@ -4,61 +4,61 @@ from django.db.models import F, Max, Q, Sum
 from django.shortcuts import render
 from rest_framework import viewsets
 
-from .forms import CzasWykonaniaForm
+from .forms import ExecutionTimeForm
 from .models import Cast, Operation
 from .serializers import CastSerializer, OperationSerializer
 
 
-def zalania(request):
-    return render(request, 'prod_reports/zalania.html')
+def pouring(request):
+    return render(request, 'prod_reports/pouring.html')
 
 
-class ZalaniaViewSet(viewsets.ModelViewSet):
+class PouringViewSet(viewsets.ModelViewSet):
     queryset = Operation.objects.filter(opdict=6)
     serializer_class = OperationSerializer
 
 
-def zaformowania(request):
-    return render(request, 'prod_reports/zaformowania.html')
+def molding(request):
+    return render(request, 'prod_reports/molding.html')
 
 
-class ZaformowaniaViewSet(viewsets.ModelViewSet):
+class MoldingViewSet(viewsets.ModelViewSet):
     queryset = Operation.objects.filter(opdict=5)
     serializer_class = OperationSerializer
 
 
-def odbiory(request):
-    return render(request, 'prod_reports/odbiory.html')
+def finished(request):
+    return render(request, 'prod_reports/finished.html')
 
 
-class OdbioryViewSet(viewsets.ModelViewSet):
+class FinishedViewSet(viewsets.ModelViewSet):
     queryset = Operation.objects.filter(opdict=38)
     serializer_class = OperationSerializer
 
 
-def uwagi(request):
-    return render(request, 'prod_reports/uwagi.html')
+def remarks(request):
+    return render(request, 'prod_reports/remarks.html')
 
 
-class UwagiViewSet(viewsets.ModelViewSet):
+class RemarksViewSet(viewsets.ModelViewSet):
     queryset = Operation.objects.filter(notes__regex=r'\w+')
     serializer_class = OperationSerializer
 
 
-def badania_ndt(request):
-    return render(request, 'prod_reports/badania_ndt.html')
+def non_destructive_testing(request):
+    return render(request, 'prod_reports/non_destructive_testing.html')
 
 
-class BadaniaNDTViewSet(viewsets.ModelViewSet):
+class NonDestructiveTestingViewSet(viewsets.ModelViewSet):
     queryset = Operation.objects.filter(opdict__in=[10, 21, 22, 24, 25, 26, 28, 56])
     serializer_class = OperationSerializer
 
 
-def niezgodnosci(request):
-    return render(request, 'prod_reports/niezgodnosci.html')
+def nonconformity(request):
+    return render(request, 'prod_reports/nonconformity.html')
 
 
-class NiezgodnosciViewSet(viewsets.ModelViewSet):
+class NonconformityViewSet(viewsets.ModelViewSet):
     queryset = Operation.objects.filter(accordance=3)
     serializer_class = OperationSerializer
 
@@ -69,15 +69,15 @@ def inserted_data(request):
         .values('cast')
         .annotate(
             id=Max('cast_id'),
-            nr_met=Max('cast__porder__numer_met'),
+            met_no=Max('cast__porder__met_no'),
             customer=Max('cast__customer'),
             cast_name=Max('cast__cast_name'),
             picture_number=Max('cast__picture_number'),
-            nr_odlewu=Max('parameter_value1', filter=Q(opdict_id=5)),
-            nr_wytopu=Max('parameter_value1', filter=Q(opdict_id=6)),
-            temp_zalewania=Max('parameter_value2', filter=Q(opdict_id=6)),
-            waga_odlewu=Max('parameter_value1', filter=Q(opdict_id=51) or Q(opdict_id=43)),
-            obr_mech=Max('accordance', filter=Q(opdict_id=91)),
+            cast_no=Max('parameter_value1', filter=Q(opdict_id=5)),
+            metling_no=Max('parameter_value1', filter=Q(opdict_id=6)),
+            pouring_temp=Max('parameter_value2', filter=Q(opdict_id=6)),
+            cast_weight=Max('parameter_value1', filter=Q(opdict_id=51) or Q(opdict_id=43)),
+            machining=Max('accordance', filter=Q(opdict_id=91)),
         )
         .order_by('-cast_id')[:5000]
     )
@@ -85,20 +85,20 @@ def inserted_data(request):
     return render(request, 'prod_reports/inserted_data.html', {'casts': casts})
 
 
-def magazyn(request):
-    return render(request, 'prod_reports/magazyn.html')
+def casts_in_stock(request):
+    return render(request, 'prod_reports/casts_in_stock.html')
 
 
-class MagazynViewSet(viewsets.ModelViewSet):
+class CastsInStockViewSet(viewsets.ModelViewSet):
     queryset = Cast.objects.filter(cast_status=3)
     serializer_class = CastSerializer
 
 
-def wagi_odlewow(request):
-    return render(request, 'prod_reports/wagi_odlewow.html')
+def casting_weights(request):
+    return render(request, 'prod_reports/casting_weights.html')
 
 
-class WagiOdlewowViewSet(viewsets.ModelViewSet):
+class CastingWeightsViewSet(viewsets.ModelViewSet):
     queryset = Operation.objects.filter(opdict=51)
     serializer_class = OperationSerializer
 
@@ -112,34 +112,34 @@ class MachiningViewSet(viewsets.ModelViewSet):
     serializer_class = OperationSerializer
 
 
-def wybraki(request):
-    return render(request, 'prod_reports/wybraki.html')
+def scraps(request):
+    return render(request, 'prod_reports/scraps.html')
 
 
-class WybrakiViewSet(viewsets.ModelViewSet):
+class ScrapsViewSet(viewsets.ModelViewSet):
     queryset = Cast.objects.filter(cast_status=5)
     serializer_class = CastSerializer
 
 
-def uzyski(request):
-    return render(request, 'prod_reports/uzyski.html')
+def yields(request):
+    return render(request, 'prod_reports/yields.html')
 
 
-class UzyskiViewSet(viewsets.ModelViewSet):
+class YieldsViewSet(viewsets.ModelViewSet):
     queryset = Cast.objects.filter(pc_number=1)
     serializer_class = CastSerializer
 
 
 def monitoring_all(request):
     objects = Cast.monitoring()
-    return render(request, 'prod_reports/monitoring_in_work.html', {'objects': objects})
+    return render(request, 'prod_reports/monitoring_all.html', {'objects': objects})
 
 
 def monitoring_in_work(request):
-    objects = list(Cast.monitoring().filter(cast_pcs__gt=F('wyslane') + F('anulowane') + F('odebrane')))
+    objects = list(Cast.monitoring().filter(cast_pcs__gt=F('sent') + F('cancelled') + F('finished')))
 
     for obj in objects:
-        time = obj['termin_klienta'] - datetime.date.today()
+        time = obj['customer_date'] - datetime.date.today()
         obj['time'] = time.days
 
     return render(request, 'prod_reports/monitoring_in_work.html', {'objects': objects})
@@ -152,24 +152,24 @@ def weight_per_client(request):
         .filter(cast_status__in=[1, 2, 3, 7])
         .values('customer')
         .annotate(
-            nowe=Sum('cast_weight', filter=Q(cast_status=1)),
-            planowanie=Sum('cast_weight', filter=Q(cast_status=7)),
-            zalane=Sum('cast_weight', filter=Q(cast_status=2)),
-            odebrane=Sum('cast_weight', filter=Q(cast_status=3)),
-            razem=Sum('cast_weight')
+            new=Sum('cast_weight', filter=Q(cast_status=1)),
+            planned=Sum('cast_weight', filter=Q(cast_status=7)),
+            poured=Sum('cast_weight', filter=Q(cast_status=2)),
+            finished=Sum('cast_weight', filter=Q(cast_status=3)),
+            all=Sum('cast_weight')
         )
-        .order_by('-razem')
+        .order_by('-all')
     )
 
     sums = (
         Cast.objects
         .filter(cast_status__in=[1, 2, 3, 7])
         .aggregate(
-            nowe=Sum('cast_weight', filter=Q(cast_status=1)),
-            planowanie=Sum('cast_weight', filter=Q(cast_status=7)),
-            zalane=Sum('cast_weight', filter=Q(cast_status=2)),
-            odebrane=Sum('cast_weight', filter=Q(cast_status=3)),
-            razem=Sum('cast_weight')
+            new=Sum('cast_weight', filter=Q(cast_status=1)),
+            planned=Sum('cast_weight', filter=Q(cast_status=7)),
+            poured=Sum('cast_weight', filter=Q(cast_status=2)),
+            finished=Sum('cast_weight', filter=Q(cast_status=3)),
+            all=Sum('cast_weight')
         )
     )
 
@@ -190,17 +190,17 @@ def weight_per_group(request):
         .order_by('mat_calc_group')
     )
 
-    total_weight = Cast.objects.filter(cast_status__in=[1, 2, 7]).aggregate(razem=sum('cast_weight'))
+    total_weight = Cast.objects.filter(cast_status__in=[1, 2, 7]).aggregate(weight_sum=Sum('cast_weight'))
 
     context = {
         "objects": objects,
-        "total": total_weight
+        "total": total_weight['weight_sum']
     }
 
     return render(request, 'prod_reports/weight_per_group.html', context)
 
 
-def czas_wykonania(request):
+def execution_time(request):
     if request.method == 'POST':
         met_number = request.POST['met_number']
         company = request.POST['company']
@@ -211,7 +211,7 @@ def czas_wykonania(request):
             casts = (
                 Operation.objects
                 .filter(
-                    cast__porder__numer_met__icontains=met_number,
+                    cast__porder__met_no__icontains=met_number,
                     cast__customer__icontains=company,
                     cast__cast_name__icontains=cast_name,
                     cast__picture_number__icontains=picture_number
@@ -219,17 +219,17 @@ def czas_wykonania(request):
                 .values('cast')
                 .annotate(
                     id=Max('cast__id'),
-                    numer_met=Max('cast__porder__numer_met'),
+                    met_no=Max('cast__porder__met_no'),
                     customer=Max('cast__customer'),
                     cast_name=Max('cast__cast_name'),
                     picture_number=Max('cast__picture_number'),
                     pc_number=Max('parameter_value1', filter=Q(opdict_id=5)),
                     created_at=Max('cast__created_at'),
-                    zaformowano=Max('completion_date1', filter=Q(opdict_id=5)),
-                    zalane=Max('completion_date1', filter=Q(opdict_id=6)),
-                    odbior=Max('completion_date1', filter=Q(opdict_id=38)),
+                    moulding_date=Max('completion_date1', filter=Q(opdict_id=5)),
+                    pouring_date=Max('completion_date1', filter=Q(opdict_id=6)),
+                    finishing_date=Max('completion_date1', filter=Q(opdict_id=38)),
                 )
             )
-            return render(request, 'prod_reports/czas_wykonania_results.html', {'objects': casts})
+            return render(request, 'prod_reports/execution_time_results.html', {'objects': casts})
 
-    return render(request, 'prod_reports/czas_wykonania_form.html', {'form': CzasWykonaniaForm()})
+    return render(request, 'prod_reports/execution_time_form.html', {'form': ExecutionTimeForm()})

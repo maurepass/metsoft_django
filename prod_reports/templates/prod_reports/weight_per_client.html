@@ -23,21 +23,21 @@
                 <tr>
                     <td>{{ forloop.counter }}</td>
                     <td>{{ obj.customer }}</td>
-                    <td class="text-right">{{ obj.nowe|floatformat:"0" }}</td>
-                    <td class="text-right">{{ obj.planowanie|floatformat:"0" }}</td>
-                    <td class="text-right">{{ obj.zalane|floatformat:"0" }}</td>
-                    <td class="text-right">{{ obj.odebrane|floatformat:"0" }}</td>
-                    <td class="text-right">{{ obj.razem|floatformat:"0" }}</td>
+                    <td class="text-right">{{ obj.new|floatformat:"0" }}</td>
+                    <td class="text-right">{{ obj.planned|floatformat:"0" }}</td>
+                    <td class="text-right">{{ obj.poureed|floatformat:"0" }}</td>
+                    <td class="text-right">{{ obj.finished|floatformat:"0" }}</td>
+                    <td class="text-right">{{ obj.all|floatformat:"0" }}</td>
                 </tr>
             {% endfor %}
             <tr class="text-right">
                 <td>--</td>
                 <td class="text-left">RAZEM</td>
-                <td>{{ sums.nowe|floatformat:0 }}</td>
-                <td>{{ sums.planowanie|floatformat:0 }}</td>
-                <td>{{ sums.zalane|floatformat:0 }}</td>
-                <td>{{ sums.odebrane|floatformat:0 }}</td>
-                <td>{{ sums.razem|floatformat:0 }}</td>
+                <td>{{ sums.new|floatformat:0 }}</td>
+                <td>{{ sums.planned|floatformat:0 }}</td>
+                <td>{{ sums.poured|floatformat:0 }}</td>
+                <td>{{ sums.finished|floatformat:0 }}</td>
+                <td>{{ sums.all|floatformat:0 }}</td>
             </tr>
         </tbody>
     </table>

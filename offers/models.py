@@ -228,7 +228,7 @@ class Detail(models.Model):
     draw_weight = models.IntegerField(blank=True, null=True, verbose_name='Ciężar rysunkowy [kg]')
     cast_weight = models.IntegerField(blank=True, null=True, verbose_name='Ciężar surowego odlewu [kg]')
     pieces_amount = models.CharField(max_length=100, blank=True, null=True, verbose_name='Ilość sztuk', default=1)
-    yeld = models.IntegerField(blank=True, null=True, verbose_name='Uzysk')
+    detail_yield = models.IntegerField(blank=True, null=True, verbose_name='Uzysk', db_column='yeld')
     difficulty = models.IntegerField(blank=True, null=True,
                                      verbose_name='Stopień trudności',
                                      default=2,

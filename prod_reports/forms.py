@@ -1,7 +1,7 @@
 from django import forms
 
 
-class CzasWykonaniaForm(forms.Form):
+class ExecutionTimeForm(forms.Form):
     met_number = forms.CharField(label='Nr MET', required=False)
     company = forms.CharField(label='Klient', required=False)
     cast_name = forms.CharField(label='Nazwa odlewu', required=False)

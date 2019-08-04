@@ -98,11 +98,11 @@ class Material(models.Model):
 class Porder(models.Model):
     opis_zlecenia = models.CharField(max_length=128)
     numer_oferty = models.CharField(max_length=32)
-    numer_met = models.CharField(db_column='numer_MET', max_length=16)  # Field name made lowercase.
+    met_no = models.CharField(db_column='numer_MET', max_length=16)  # Field name made lowercase.
     data_zamowienia = models.DateField(blank=True, null=True)
     zamawiajacy = models.ForeignKey(Customer, on_delete=models.DO_NOTHING, db_column='zamawiajacy')
     nr_zamowienia = models.CharField(max_length=32)
-    termin_klienta = models.DateField(blank=True, null=True)
+    customer_date = models.DateField(blank=True, null=True, db_column='termin_klienta')
     termin_realizacji = models.DateField(blank=True, null=True)
     wprowadzajacy = models.CharField(max_length=20, db_column='wprowadzajacy_id')
     data_przekwzt = models.DateField(blank=True, null=True)
@@ -230,22 +230,22 @@ class Cast(models.Model):
             Cast.objects
             .values('pocastord__id')
             .annotate(
-                numer_met=Max('porder__numer_met'),
+                met_no=Max('porder__met_no'),
                 customer=Max('customer'),
                 cast_name=Max('cast_name'),
                 picture_number=Max('picture_number'),
                 cast_mat=Max('cast_material__materialname'),
                 casting_weight=Max('cast_weight'),
                 tech_maker=Max('tech_maker'),
-                termin_klienta=Max('porder__termin_klienta'),
+                customer_date=Max('porder__customer_date'),
                 cast_pcs=Max('pocastord__cast_pcs'),
-                nowe=Count('cast_weight', filter=Q(cast_status=1)),
-                planowanie=Count('cast_weight', filter=Q(cast_status=7)),
-                zalane=Count('cast_weight', filter=Q(cast_status=2)),
-                odebrane=Count('cast_weight', filter=Q(cast_status=3)),
-                wyslane=Count('cast_weight', filter=Q(cast_status=6)),
-                wb=Count('cast_weight', filter=Q(cast_status=5)),
-                anulowane=Count('cast_weight', filter=Q(cast_status=4)),
+                new=Count('cast_weight', filter=Q(cast_status=1)),
+                planned=Count('cast_weight', filter=Q(cast_status=7)),
+                poured=Count('cast_weight', filter=Q(cast_status=2)),
+                finished=Count('cast_weight', filter=Q(cast_status=3)),
+                sent=Count('cast_weight', filter=Q(cast_status=6)),
+                scraped=Count('cast_weight', filter=Q(cast_status=5)),
+                cancelled=Count('cast_weight', filter=Q(cast_status=4)),
             )
             .order_by('-pocastord__id')
         )
