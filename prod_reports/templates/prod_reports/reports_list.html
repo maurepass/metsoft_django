@@ -1,0 +1,27 @@
+{% extends 'offers/base.html' %}
+
+{% block content %}
+    <div class="table_title">Lista raportów</div>
+    <div class="menu-raporty">
+        <ul>
+            <li><a href="{% url 'monitoring-in-work' %}" >Monitoring odlewów w produkcji</a></li>
+            <li><a href="{% url 'monitoring-all' %}" >Monitoring odlewów (wszystkie zlecenia)</a></li>
+            <li><a href="{% url 'finished' %}">Rejestr odbiorów</a></li>
+            <li><a href="{% url 'pouring' %}">Rejestr zalań</a></li>
+            <li><a href="{% url 'nonconformity' %}">Rejestr niezgodnych operacji</a></li>
+            <li><a href="{% url 'molding' %}">Rejestr zaformowań</a></li>
+            <li><a href="{% url 'non-destructive-testing' %}">Rejestr badań</a></li>
+            <li><a href="{% url 'machining' %}">Rejestr wykonanych obróbek mechanicznych</a></li>
+            <li><a href="{% url 'remarks' %}" >Rejestr uwag do zatwierdzonych operacji</a></li>
+            <li><a href="{% url 'execution-time' %}" >Międzyczasy wykonania odlewów</a></li>
+            <li><a href="{% url 'weight-per-client' %}">Tonaż odlewów do wykonania wg klientów</a></li>
+            <li><a href="{% url 'weight-per-group' %}" >Tonaż odlewów do wykonania wg grup kalkulacyjnych</a></li>
+            <li><a href="{% url 'scraps' %}">Rejestr wybraków</a></li>
+            <li><a href="{% url 'casting-weights' %}">Rejestr operacji ważenia</a></li>
+            <li><a href="{% url 'casts-in-stock' %}"> Stan magazynowy</a></li>
+            <li><a href="{% url 'inserted-data' %}">Rejest wpisanych danych</a></li>
+            <li><a href="{% url 'yields' %}"> Uzyski wg KO</a></li>
+        </ul>
+    </div>
+
+{% endblock content %}
