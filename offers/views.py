@@ -5,7 +5,7 @@ from django.shortcuts import redirect, render, reverse
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 from rest_framework import viewsets
 
-from .forms import (DetailCreateForm, DetailSeachingForm, DetailUpdateForm,
+from .forms import (DetailCreateForm, DetailSearchingForm, DetailUpdateForm,
                     OfferCreateUpdateForm, OfferDetailsForm, OfferNoticeForm)
 from .models import Detail, Material, Notice, Offer
 from .serializers import DetailSerializer, MaterialSerializer, OfferSerializer
@@ -50,14 +50,18 @@ class OfferCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     form_class = OfferCreateUpdateForm
     permission_required = ['offers.add_offer']
 
+    @staticmethod
+    def get_last_offer():
+        return Offer.objects.last()
+
     def get_initial(self):
         """ Set in form the next offer number """
         initial = super().get_initial()
-        offer = Offer.objects.last()
+        offer = self.get_last_offer()
         last_no, ending = offer.offer_no.split('/')
         try:
             new_no = int(last_no) + 1
-        except:
+        except ValueError:
             new_no = last_no
         initial['offer_no'] = '{}/{}'.format(new_no, ending)
 
@@ -145,7 +149,7 @@ def offer_detail_view(request, pk):
 class DetailCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Detail
     form_class = DetailCreateForm
-    permission_required = ['offer.add_detail']
+    permission_required = ['offers.add_detail']
 
     def get_initial(self):
         initial = super().get_initial()
@@ -218,4 +222,4 @@ def details_searching(request):
             ).order_by('-id')
             return render(request, 'offers/detail_searching_results.html', {'objects': objects})
 
-    return render(request, 'offers/detail_searching_form.html', {'form': DetailSeachingForm})
+    return render(request, 'offers/detail_searching_form.html', {'form': DetailSearchingForm})

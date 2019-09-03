@@ -159,9 +159,19 @@ class Pocastord(models.Model):
 
 
 class Cast(models.Model):
-    porder = models.ForeignKey(Porder, db_column='id_po', on_delete=models.DO_NOTHING)
+    porder = models.ForeignKey(
+        Porder,
+        db_column='id_po',
+        on_delete=models.DO_NOTHING
+    )
     cast_name = models.CharField(max_length=64, blank=True, null=True)
-    tech = models.ForeignKey(User, blank=True, null=True, db_column='id_tech', on_delete=models.DO_NOTHING)
+    tech = models.ForeignKey(
+        User,
+        blank=True,
+        null=True,
+        db_column='id_tech',
+        on_delete=models.DO_NOTHING
+    )
     picture_number = models.CharField(max_length=64, blank=True, null=True)
     pc_number = models.IntegerField(blank=True, null=True)
     cast_tries = models.IntegerField(blank=True, null=True)
@@ -190,7 +200,11 @@ class Cast(models.Model):
     order_number = models.CharField(max_length=32, blank=True, null=True)
     notes = models.TextField(blank=True, null=True)
     customer_material = models.CharField(max_length=32, blank=True, null=True)
-    cast_material = models.ForeignKey(Material, on_delete=models.DO_NOTHING, db_column='cast_material')
+    cast_material = models.ForeignKey(
+        Material,
+        on_delete=models.DO_NOTHING,
+        db_column='cast_material'
+    )
     cast_weight = models.FloatField(blank=True, null=True)
     material_need = models.IntegerField(blank=True, null=True)
     mould_start_mintemp = models.IntegerField(blank=True, null=True)
@@ -214,7 +228,13 @@ class Cast(models.Model):
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
     melt = models.IntegerField(blank=True, null=True)
-    pocastord = models.ForeignKey(Pocastord, on_delete=models.DO_NOTHING, db_column='id_poc', blank=True, null=True)
+    pocastord = models.ForeignKey(
+        Pocastord,
+        on_delete=models.DO_NOTHING,
+        db_column='id_poc',
+        blank=True,
+        null=True
+    )
     pplan_id = models.IntegerField()
     pplansposition_id = models.IntegerField(blank=True, null=True)
     delivery_id = models.IntegerField(blank=True, null=True)
@@ -249,7 +269,6 @@ class Cast(models.Model):
             )
             .order_by('-pocastord__id')
         )
-
         return objects
 
 

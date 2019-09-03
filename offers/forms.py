@@ -40,9 +40,10 @@ class DetailCreateForm(forms.ModelForm):
         choices=[(choice.atest, choice.atest) for choice in AtestType.objects.all()],
         label='Atest'
     )
-    boxes = forms.CharField(label='Skrzynki formierskie',
-                            widget=forms.TextInput(attrs={'placeholder': '1,0 x 2,0 x 3,0'})
-                            )
+    boxes = forms.CharField(
+        label='Skrzynki formierskie',
+        widget=forms.TextInput(attrs={'placeholder': '1,0 x 2,0 x 3,0'})
+    )
 
     class Meta:
         model = Detail
@@ -68,7 +69,7 @@ class OfferNoticeForm(forms.ModelForm):
         }
 
 
-class DetailSeachingForm(forms.Form):
+class DetailSearchingForm(forms.Form):
 
     drawing_no = forms.CharField(label='Wpisz nr rysunku:', required=False)
     cast_name = forms.CharField(label='Wpisz nazwę odlewu:', required=False)

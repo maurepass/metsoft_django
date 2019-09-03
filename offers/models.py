@@ -17,8 +17,8 @@ class Notice(models.Model):
 
 class OfferStatus(models.Model):
     offer_status = models.CharField(max_length=30, default=1)
-    created_at = models.DateTimeField()
-    updated_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         managed = False
@@ -33,27 +33,35 @@ class OfferStatus(models.Model):
 class Offer(models.Model):
     offer_no = models.CharField(max_length=20, verbose_name='Nr oferty')
     client = models.CharField(max_length=100, verbose_name='Klient')
-    user_mark = models.ForeignKey(User,
-                                  related_name='%(class)s_mark',
-                                  on_delete=models.DO_NOTHING,
-                                  limit_choices_to={'groups__name': 'marketing'},
-                                  verbose_name='Marketingowiec',
-                                  default=19,
-                                  )
-    user_tech = models.ForeignKey(User,
-                                  related_name='%(class)s_tech',
-                                  on_delete=models.DO_NOTHING,
-                                  limit_choices_to={'groups__name': 'technologia'},
-                                  verbose_name='Technolog',
-                                  default=4,
-                                  )
-    date_tech_in = models.DateField(null=True, blank=True,
-                                    verbose_name='Data wpływu do WZT',
-                                    default=timezone.now)
+    user_mark = models.ForeignKey(
+        User,
+        related_name='%(class)s_mark',
+        on_delete=models.DO_NOTHING,
+        limit_choices_to={'groups__name': 'marketing'},
+        verbose_name='Marketingowiec',
+        default=19,
+    )
+    user_tech = models.ForeignKey(
+        User,
+        related_name='%(class)s_tech',
+        on_delete=models.DO_NOTHING,
+        limit_choices_to={'groups__name': 'technologia'},
+        verbose_name='Technolog',
+        default=4,
+    )
+    date_tech_in = models.DateField(
+        null=True, blank=True,
+        verbose_name='Data wpływu do WZT',
+        default=timezone.now
+    )
     date_tech_out = models.DateField(null=True, blank=True)
     date_mark_out = models.DateField(null=True, blank=True)
     positions_amount = models.IntegerField(default=0)
-    status = models.ForeignKey(OfferStatus, on_delete=models.DO_NOTHING, default=1)
+    status = models.ForeignKey(
+        OfferStatus,
+        on_delete=models.DO_NOTHING,
+        default=1
+    )
     days_amount = models.IntegerField(null=True, blank=True)
     notices = models.TextField(null=True, blank=True, verbose_name='Uwagi')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -110,12 +118,12 @@ class Offer(models.Model):
             tapers.append(detail.tapers)
             atest.append(detail.atest)
 
-        mach_str = self.string_from_list(machining)
-        tol_str = self.string_from_list(tolerances)
-        tap_str = self.string_from_list(tapers)
-        atest_str = self.string_from_list(atest)
-
-        return {'machining': mach_str, 'tolerances': tol_str, 'tapers': tap_str, 'atest': atest_str}
+        return {
+            'machining': self.string_from_list(machining),
+            'tolerances': self.string_from_list(tolerances),
+            'tapers': self.string_from_list(tapers),
+            'atest': self.string_from_list(atest)
+        }
 
 
 class MaterialGroup(models.Model):
@@ -135,7 +143,12 @@ class MaterialGroup(models.Model):
 
 class Material(models.Model):
     material = models.CharField(max_length=100, verbose_name='Materiał')
-    mat_group = models.ForeignKey(MaterialGroup, on_delete=models.SET_NULL, null=True, verbose_name='Grupa materiałowa')
+    mat_group = models.ForeignKey(
+        MaterialGroup,
+        on_delete=models.SET_NULL,
+        null=True,
+        verbose_name='Grupa materiałowa'
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -167,7 +180,7 @@ class HeatTreatment(models.Model):
 
 
 class MachiningType(models.Model):
-    machining = models.CharField(max_length=50, default=4)
+    machining = models.CharField(max_length=50, default=4)  #check this default value
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -207,7 +220,7 @@ class AtestType(models.Model):
 
 
 class OfferPatternStatus(models.Model):
-    status = models.CharField(max_length=50, default=1)
+    status = models.CharField(max_length=50, default=1)  # check this default value
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -221,39 +234,122 @@ class OfferPatternStatus(models.Model):
 
 
 class Detail(models.Model):
-    offer = models.ForeignKey(Offer, on_delete=models.DO_NOTHING)
-    cast_name = models.CharField(max_length=50, blank=False, null=True, verbose_name='Nazwa odlewu')
-    drawing_no = models.CharField(max_length=50, blank=False, null=True, verbose_name='Nr rysunku')
-    mat = models.ForeignKey(Material, on_delete=models.DO_NOTHING, verbose_name='Materiał')
-    draw_weight = models.IntegerField(blank=True, null=True, verbose_name='Ciężar rysunkowy [kg]')
-    cast_weight = models.IntegerField(blank=True, null=True, verbose_name='Ciężar surowego odlewu [kg]')
-    pieces_amount = models.CharField(max_length=100, blank=True, null=True, verbose_name='Ilość sztuk', default=1)
-    detail_yield = models.IntegerField(blank=True, null=True, verbose_name='Uzysk', db_column='yeld')
-    difficulty = models.IntegerField(blank=True, null=True,
-                                     verbose_name='Stopień trudności',
-                                     default=2,
-                                     choices=((1, 1), (2, 2), (3, 3))
-                                     )
-    pattern = models.CharField(max_length=50, blank=True, null=True, verbose_name='Model')
-    heat_treat = models.CharField(max_length=50, blank=True, null=True, verbose_name='Obróbka cieplna')
-    machining = models.ForeignKey(MachiningType,
-                                  on_delete=models.DO_NOTHING,
-                                  verbose_name='Obróbka mechaniczna',
-                                  default=5)
-    tolerances = models.CharField(max_length=50, blank=True, null=True, verbose_name='Tolerancje')
-    tapers = models.CharField(max_length=50, blank=True, null=True, verbose_name='Pochylenia')
-    atest = models.CharField(max_length=50, blank=True, null=True, verbose_name='Atest')
+    offer = models.ForeignKey(
+        Offer,
+        on_delete=models.DO_NOTHING
+    )
+    cast_name = models.CharField(
+        max_length=50,
+        blank=False,
+        null=True,
+        verbose_name='Nazwa odlewu'
+    )
+    drawing_no = models.CharField(
+        max_length=50,
+        blank=False,
+        null=True,
+        verbose_name='Nr rysunku'
+    )
+    mat = models.ForeignKey(
+        Material,
+        on_delete=models.DO_NOTHING,
+        verbose_name='Materiał'
+    )
+    draw_weight = models.IntegerField(
+        blank=True,
+        null=True,
+        verbose_name='Ciężar rysunkowy [kg]'
+    )
+    cast_weight = models.IntegerField(
+        blank=True,
+        null=True,
+        verbose_name='Ciężar surowego odlewu [kg]'
+    )
+    pieces_amount = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        verbose_name='Ilość sztuk',
+        default=1
+    )
+    detail_yield = models.IntegerField(
+        blank=True,
+        null=True,
+        verbose_name='Uzysk',
+        db_column='yeld'
+    )
+    difficulty = models.IntegerField(
+        blank=True, null=True,
+        verbose_name='Stopień trudności',
+        default=2,
+        choices=((1, 1), (2, 2), (3, 3))
+    )
+    pattern = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        verbose_name='Model'
+    )
+    heat_treat = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        verbose_name='Obróbka cieplna'
+    )
+    machining = models.ForeignKey(
+        MachiningType,
+        on_delete=models.DO_NOTHING,
+        verbose_name='Obróbka mechaniczna',
+        default=5
+    )
+    tolerances = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        verbose_name='Tolerancje'
+    )
+    tapers = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        verbose_name='Pochylenia'
+    )
+    atest = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        verbose_name='Atest'
+    )
     required = models.CharField(max_length=50, blank=True, null=True)
-    quality_class = models.CharField(max_length=50, blank=True, null=True, verbose_name='Klasa jakości')
-    boxes = models.CharField(max_length=50, blank=True, null=True, verbose_name='Skrzynki formierskie')
-    others = models.CharField(max_length=50, blank=True, null=True, verbose_name='Inne')
+    quality_class = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        verbose_name='Klasa jakości'
+    )
+    boxes = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        verbose_name='Skrzynki formierskie'
+    )
+    others = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        verbose_name='Inne'
+    )
     fr_mold_work = models.FloatField(blank=True, null=True)
     fr_mold_mat = models.FloatField(blank=True, null=True)
     fr_fettling = models.FloatField(blank=True, null=True)
     fr_welding = models.FloatField(blank=True, null=True)
     fr_heating = models.FloatField(blank=True, null=True)
     fr_scrap = models.IntegerField(blank=True, null=True)
-    fr_chromite = models.IntegerField(blank=True, null=True, verbose_name='Ilość chromitu [%]')
+    fr_chromite = models.IntegerField(
+        blank=True,
+        null=True,
+        verbose_name='Ilość chromitu [%]'
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
