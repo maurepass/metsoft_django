@@ -14,8 +14,8 @@
                 <th>Nowe [kg]</th>
                 <th>Zaplanowane [kg]</th>
                 <th>Zalane [kg]</th>
-                <th>Odebrane [kg]</th>
-                <th>Łączna waga [kg]</th>
+                <th>Razem w produkcji [kg]</th>
+                <th>Na magazynie [kg]</th>
             </tr>
         </thead>
         <tbody>
@@ -25,9 +25,9 @@
                     <td>{{ obj.customer }}</td>
                     <td class="text-right">{{ obj.new|floatformat:"0" }}</td>
                     <td class="text-right">{{ obj.planned|floatformat:"0" }}</td>
-                    <td class="text-right">{{ obj.poureed|floatformat:"0" }}</td>
-                    <td class="text-right">{{ obj.finished|floatformat:"0" }}</td>
-                    <td class="text-right">{{ obj.all|floatformat:"0" }}</td>
+                    <td class="text-right">{{ obj.poured|floatformat:"0" }}</td>
+                    <td class="text-right font-weight-bold">{{ obj.in_production|floatformat:"0" }}</td>
+                    <td class="text-right">{{ obj.on_stock|floatformat:"0" }}</td>
                 </tr>
             {% endfor %}
             <tr class="text-right">
@@ -36,8 +36,8 @@
                 <td>{{ sums.new|floatformat:0 }}</td>
                 <td>{{ sums.planned|floatformat:0 }}</td>
                 <td>{{ sums.poured|floatformat:0 }}</td>
-                <td>{{ sums.finished|floatformat:0 }}</td>
-                <td>{{ sums.all|floatformat:0 }}</td>
+                <td class="font-weight-bold">{{ sums.in_production|floatformat:0 }}</td>
+                <td>{{ sums.on_stock|floatformat:0 }}</td>
             </tr>
         </tbody>
     </table>
