@@ -25,13 +25,13 @@ def orders(request):
             Order.objects.update_or_create(
                 id_poc=item.id,
                 defaults={
-                    'numer_met': item.porder.numer_met,
+                    'numer_met': item.porder.met_no,
                     'company': item.porder.zamawiajacy.company,
                     'cast_name': item.cast_name,
                     'cast_pcs': item.cast_pcs,
                     'pict_number': item.pict_number,
                     'cust_material': item.cust_material,
-                    'termin_klienta': item.porder.termin_klienta,
+                    'termin_klienta': item.porder.customer_date,
                     'model': item.model,
                     'rawcast': item.rawcast,
                     'painting': item.painting,
@@ -54,19 +54,6 @@ class OrderUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     form_class = OrderUpdateForm
     success_url = '/tech/orders/'
     permission_required = ['tech_dep.change_order']
-
-    def get_context_data(self, **kwargs):
-        if self.object.model:
-            self.object.model = 'TAK'
-        if self.object.rawcast:
-            self.object.rawcast = 'TAK'
-        if self.object.painting:
-            self.object.painting = 'TAK'
-        if self.object.mechrough:
-            self.object.mechrough = 'TAK'
-        if self.object.mechfine:
-            self.object.mechfine = 'TAK'
-        return super().get_context_data(**kwargs)
 
 
 @login_required

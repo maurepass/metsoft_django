@@ -17,6 +17,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
+from django.views.generic import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,4 +26,8 @@ urlpatterns = [
     path('patterns/', include('patterns.urls')),
     path('reports/', include('prod_reports.urls')),
     path('tech/', include('tech_dep.urls')),
+
+    # old urls maintenance
+    path('kokila/raporty/', RedirectView.as_view(url='/reports/reports_list'))
+
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

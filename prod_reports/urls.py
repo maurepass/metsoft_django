@@ -35,4 +35,5 @@ urlpatterns = [
     path('machining/', views.machining, name='machining'),
     path('yields/', views.yields, name='yields'),
     path('inserted-data/', views.inserted_data, name='inserted-data'),
+    path('reports_list/', views.reports, name='reports-list'),
 ]

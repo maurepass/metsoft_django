@@ -9,6 +9,10 @@ from .models import Cast, Operation
 from .serializers import CastSerializer, OperationSerializer
 
 
+def reports(request):
+    return render(request, 'prod_reports/reports_list.html')
+
+
 def pouring(request):
     return render(request, 'prod_reports/pouring.html')
 
@@ -155,10 +159,10 @@ def weight_per_client(request):
             new=Sum('cast_weight', filter=Q(cast_status=1)),
             planned=Sum('cast_weight', filter=Q(cast_status=7)),
             poured=Sum('cast_weight', filter=Q(cast_status=2)),
-            finished=Sum('cast_weight', filter=Q(cast_status=3)),
-            all=Sum('cast_weight')
+            on_stock=Sum('cast_weight', filter=Q(cast_status=3)),
+            in_production=Sum('cast_weight',  filter=Q(cast_status__in=[1, 7, 2]))
         )
-        .order_by('-all')
+        .order_by('-in_production')
     )
 
     sums = (
@@ -168,8 +172,8 @@ def weight_per_client(request):
             new=Sum('cast_weight', filter=Q(cast_status=1)),
             planned=Sum('cast_weight', filter=Q(cast_status=7)),
             poured=Sum('cast_weight', filter=Q(cast_status=2)),
-            finished=Sum('cast_weight', filter=Q(cast_status=3)),
-            all=Sum('cast_weight')
+            on_stock=Sum('cast_weight', filter=Q(cast_status=3)),
+            in_production=Sum('cast_weight', filter=Q(cast_status__in=[1, 7, 2]))
         )
     )
 
@@ -184,13 +188,17 @@ def weight_per_client(request):
 def weight_per_group(request):
     objects = (
         Cast.objects
-        .filter(cast_status__in=[1, 2, 7])
+        .filter(cast_status__in=[1, 2, 3, 7])
         .values('mat_calc_group')
         .annotate(sum_cast_weight=Sum('cast_weight'))
         .order_by('mat_calc_group')
     )
 
-    total_weight = Cast.objects.filter(cast_status__in=[1, 2, 7]).aggregate(weight_sum=Sum('cast_weight'))
+    total_weight = (
+        Cast.objects
+        .filter(cast_status__in=[1, 2, 3, 7])
+        .aggregate(weight_sum=Sum('cast_weight'))
+    )
 
     context = {
         "objects": objects,
