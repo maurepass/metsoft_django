@@ -30,10 +30,27 @@ class Pattern(models.Model):
     pattern_index = models.CharField('Numer indexu modelu', max_length=100, blank=True, null=True)
     verification = models.TextField('Weryfikacja', blank=True, null=True)
     remarks = models.TextField('Uwagi', blank=True, null=True)
-    verification_date = models.CharField('Data weryfikacji', max_length=30, blank=True, null=True, default=date.today)
+    verification_date = models.CharField(
+        'Data weryfikacji',
+        max_length=30,
+        blank=True,
+        null=True,
+        default=date.today
+    )
     surname = models.CharField('Nazwisko', max_length=100, blank=True, null=True)
-    status = models.ForeignKey(PatternStatus, on_delete=models.SET_NULL, null=True, verbose_name='status', default=0)
-    move_in = models.DateField('Data zmiany statusu', blank=True, null=True, default=date.today)
+    status = models.ForeignKey(
+        PatternStatus,
+        on_delete=models.SET_NULL,
+        null=True,
+        verbose_name='status',
+        default=0
+    )
+    move_in = models.DateField(
+        'Data zmiany statusu',
+        blank=True,
+        null=True,
+        default=date.today
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
