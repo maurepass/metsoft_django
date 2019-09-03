@@ -8,20 +8,15 @@ class OrderUpdateForm(forms.ModelForm):
     company = forms.CharField(disabled=True, label='Klient')
     cast_name = forms.CharField(disabled=True, label='Nazwa odlewu')
     pict_number = forms.CharField(disabled=True, label='Nr rysunku')
-    cast_pcs = forms.CharField(disabled=True, label='Il. sztuk')
+    cast_pcs = forms.IntegerField(disabled=True, label='Il. sztuk')
     cust_material = forms.CharField(disabled=True, label='Materiał')
-    model = forms.CharField(disabled=True, required=False, label='Model')
-    rawcast = forms.CharField(disabled=True, required=False, label='Odlew')
-    painting = forms.CharField(disabled=True, required=False, label='Malowanie')
-    mechrough = forms.CharField(disabled=True, required=False, label='Obr. zgrubna')
-    mechfine = forms.CharField(disabled=True, required=False, label='Obr. na gotowo')
     marketing = forms.CharField(disabled=True, label='Marketing')
     ord_in = forms.DateField(disabled=True, label='Data otrzymania')
 
     class Meta:
         model = Order
-        fields = ('numer_met', 'company', 'cast_name', 'pict_number', 'cast_pcs', 'cust_material', 'model', 'rawcast',
-                  'painting', 'mechrough', 'mechfine', 'marketing', 'ord_in', 'tech_memb', 'uwagi', 'status')
+        fields = ('numer_met', 'company', 'cast_name', 'pict_number', 'cast_pcs', 'cust_material',
+                  'marketing', 'ord_in', 'tech_memb', 'uwagi', 'status')
 
 
 class OfferStatsForm(forms.Form):
