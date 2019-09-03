@@ -21,10 +21,10 @@ urlpatterns = [
     path('<int:pk>/details/create/', views.DetailCreateView.as_view(), name='detail-create'),
     path('<int:pk>/details/<int:det_pk>/update/', views.DetailUpdateView.as_view(), name='detail-update'),
     path('<int:pk>/details/<int:det_pk>/delete/', views.DetailDeleteView.as_view(), name='detail-delete'),
-    path('detials/', views.details_index, name='details-index'),
+    path('details/', views.details_index, name='details-index'),
     path('details/searching/', views.details_searching, name='details-searching'),
     path('materials/', views.materials, name='materials'),
-    path('materials/create', views.MaterialCreateView.as_view(), name='material-create'),
+    path('materials/create/', views.MaterialCreateView.as_view(), name='material-create'),
     path('materials/<int:pk>/update/', views.MaterialUpdateView.as_view(), name='material-update'),
 
 
