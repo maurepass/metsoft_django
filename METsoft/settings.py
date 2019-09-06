@@ -89,7 +89,7 @@ DATABASE_ROUTERS = ['prod_reports.routers.ProdReportsRouter']
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'test18',
+        'NAME': 'metsoft',
         'HOST': 'localhost',
         'USER': 'root',
         'PASSWORD': 'zaq12#$ESZ',

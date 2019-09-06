@@ -2,6 +2,8 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render, reverse
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 from rest_framework import viewsets
 
@@ -9,6 +11,7 @@ from .forms import (DetailCreateForm, DetailSearchingForm, DetailUpdateForm,
                     OfferCreateUpdateForm, OfferDetailsForm, OfferNoticeForm)
 from .models import Detail, Material, Notice, Offer
 from .serializers import DetailSerializer, MaterialSerializer, OfferSerializer
+import json
 
 
 def test(request):
@@ -36,12 +39,12 @@ def offer_notices_update(request):
 
 
 class OfferViewSet(viewsets.ModelViewSet):
-    queryset = Offer.objects.all()
+    queryset = Offer.objects.all().order_by('-id')
     serializer_class = OfferSerializer
 
 
 class DetailViewSet(viewsets.ModelViewSet):
-    queryset = Detail.objects.exclude(offer__status__in=[1])
+    queryset = Detail.objects.exclude(offer__status__in=[1]).order_by('-id')  # without "W opracowaniu"
     serializer_class = DetailSerializer
 
 
@@ -50,14 +53,10 @@ class OfferCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     form_class = OfferCreateUpdateForm
     permission_required = ['offers.add_offer']
 
-    @staticmethod
-    def get_last_offer():
-        return Offer.objects.last()
-
     def get_initial(self):
         """ Set in form the next offer number """
         initial = super().get_initial()
-        offer = self.get_last_offer()
+        offer = Offer.objects.last()
         last_no, ending = offer.offer_no.split('/')
         try:
             new_no = int(last_no) + 1
@@ -185,7 +184,9 @@ class DetailUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     pk_url_kwarg = 'det_pk'
     permission_required = ['offers.change_detail']
 
+    @csrf_exempt
     def dispatch(self, request, *args, **kwargs):
+
         if 'new-detail' in request.POST:
             pk = self.kwargs.get('pk')
             offer = Offer.objects.get(pk=pk)

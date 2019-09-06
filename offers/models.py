@@ -279,7 +279,8 @@ class Detail(models.Model):
         db_column='yeld'
     )
     difficulty = models.IntegerField(
-        blank=True, null=True,
+        blank=True,
+        null=True,
         verbose_name='Stopień trudności',
         default=2,
         choices=((1, 1), (2, 2), (3, 3))
