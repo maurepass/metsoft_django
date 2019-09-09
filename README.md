@@ -5,6 +5,7 @@ Main functions:
 - User Authentication and Authorization
 - router to external database (generating reports based on data from external production server)
 - generating some statistics
+- tests (for offers app)
 
 Used tools:
 - Django 2.2
