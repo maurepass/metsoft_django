@@ -1,17 +1,40 @@
-from django.test import TestCase, RequestFactory
+from django.test import TestCase, RequestFactory, Client
 from unittest.mock import patch
 from datetime import datetime, timedelta
 from django.shortcuts import reverse
-from django.contrib.auth.models import User, Permission, ContentType
+from django.contrib.auth.models import User, Permission, ContentType, Group
 
 
 from .models import (Offer, OfferStatus, Detail, MaterialGroup, Material, MachiningType, HeatTreatment, PatternTaper,
                      AtestType, OfferPatternStatus, Notice)
-from .views import OfferCreateView, DetailCreateView
+from .views import OfferCreateView, DetailCreateView, DetailUpdateView, DetailDeleteView
+from .forms import OfferCreateUpdateForm
 
 
 class OffersModelsTest(TestCase):
     """ Unit Tests for Models"""
+
+    # def setUp(self) -> None:
+    #     self.of_stat1 = OfferStatus.objects.create(offer_status=1)
+    #     self.offer = Offer.objects.create(
+    #         offer_no='100/17',
+    #         client='test client',
+    #         positions_amount=2,
+    #         status=self.of_stat1
+    #     )
+    #
+    # @patch('offers.models.Offer')
+    # def test_offer_str(self, mock_offer):
+    #     class NewOffer:
+    #         offer_no = '100/17'
+    #         client = 'test client'
+    #         positions_amount = 2
+    #
+    #     mock_offer.return_value = NewOffer()
+    #     self.assertEqual(
+    #         mock_offer.__str__,
+    #         '{} -- {} -- {}'.format(mock_offer.offer_no, mock_offer.client, mock_offer.positions_amount)
+    #     )
 
     def test_string_from_list(self):
         test_list = ['test1', 'test1', 'test1', 'test2', 'test2']
@@ -44,15 +67,6 @@ class OffersViewsTests(TestCase):
         initial = view.get_initial()
         self.assertEqual(initial['offer_no'], 'a100/17')
 
-    # @patch('offers.view.Offer.objects.get')
-    # def test_detail_create_view_form_valid(self, mock_offer_objects_get):
-    #     class NewOffer:
-    #         positions_amount = 0
-    #
-    #     mock_offer_objects_get.return_value = NewOffer()
-    #     view = DetailCreateView()
-    #     view.form_valid()
-
 
 class OffersIntegrationTest(TestCase):
     """ Integration Tests for Offers"""
@@ -62,11 +76,17 @@ class OffersIntegrationTest(TestCase):
         # users
         cls.user1 = User.objects.create_user(username='test_user1', password='test_password')
         cls.user2 = User.objects.create_user('test_user2')
+        cls.group_mark = Group.objects.create(name='marketing')
+        cls.user1.groups.add(cls.group_mark)
+        cls.group_tech = Group.objects.create(name='technologia')
+        cls.user2.groups.add(cls.group_tech)
 
         # offers
         cls.of_stat_id1 = OfferStatus.objects.create(id=1, offer_status='test status id 1')
         cls.of_stat_id2 = OfferStatus.objects.create(id=2, offer_status='test status id 2')
-        cls.notice = Notice.objects.create(content='test_notices')
+        cls.notice = Notice.objects.create(content=u'test_notices')
+
+        Notice.objects.create(content=r'a')
         cls.perm_add_offer = Permission.objects.get(codename='add_offer')
         cls.perm_change_offer = Permission.objects.get(codename='change_offer')
 
@@ -76,7 +96,8 @@ class OffersIntegrationTest(TestCase):
             user_mark=cls.user1,
             user_tech=cls.user2,
             status=cls.of_stat_id1,
-            date_tech_in=datetime.today() - timedelta(days=5)
+            date_tech_in=datetime.today() - timedelta(days=5),
+            positions_amount=2,
         )
         cls.offer2 = Offer.objects.create(
             offer_no='0/00',
@@ -108,10 +129,10 @@ class OffersIntegrationTest(TestCase):
         cls.perm_change_detail = Permission.objects.get(codename='change_detail')
         cls.perm_delete_detail = Permission.objects.get(codename='delete_detail')
         cls.mach1 = MachiningType.objects.create(machining='test_machining_1')
-        HeatTreatment.objects.create(term='test_heat_treatment_1')
-        PatternTaper.objects.create(taper='test_pattern_taper_1')
-        AtestType.objects.create(atest='test_atest_type_1')
-        OfferPatternStatus.objects.create(status='offer_pattern_status_1')
+        cls.heat_treat1 = HeatTreatment.objects.create(term='test_heat_treatment_1')
+        cls.pat_taper_1 = PatternTaper.objects.create(taper='test_pattern_taper_1')
+        cls.atest_type1 = AtestType.objects.create(atest='test_atest_type_1')
+        cls.of_pat_status1 = OfferPatternStatus.objects.create(status='offer_pattern_status_1')
         cls.detail1 = Detail.objects.create(
             offer=cls.offer1,
             mat=cls.mat1,
@@ -128,9 +149,59 @@ class OffersIntegrationTest(TestCase):
             tapers='test_tapers_2',
             atest='test_atest_2',
         )
+        cls.detail_data_form = {
+            'new-detail': '',
+            'steel': '',
+            'cast_name': 'test',
+            'drawing_no': 'test',
+            'mat': cls.mat1.id,
+            'draw_weight': 1,
+            'cast_weight': 10,
+            'pieces_amount': '10',
+            'detail_yield': 50,
+            'pattern': 'wg wyceny',
+            'heat_treat': 'brak',
+            'tolerances': 'test',
+            'tapers': 'wg uwag',
+            'atest': '3.2 (DNV) wg PN-EN 10204',
+            'required': 'test',
+            'quality_class': 'test',
+            'boxes': 'test',
+            'others': 'test',
+            'fr_chromite': 2,
+            'machining': cls.mach1.id,
+        }
 
     def user1_logged(self):
         return self.client.login(username='test_user1', password='test_password')
+
+    def test_offer_str(self):
+        self.assertEqual(
+            self.offer1.__str__(),
+            '{} -- {} -- {}'.format(self.offer1.offer_no, self.offer1.client, self.offer1.positions_amount)
+        )
+
+    def test_heat_treatment_str(self):
+        self.assertEqual(self.heat_treat1.__str__(), self.heat_treat1.term)
+
+    def test_pattern_taper_str(self):
+        self.assertEqual(self.pat_taper_1.__str__(), self.pat_taper_1.taper)
+
+    def test_atest_type_str(self):
+        self.assertEqual(self.atest_type1.__str__(), self.atest_type1.atest)
+
+    def test_offer_pattern_status_str(self):
+        self.assertEqual(self.of_pat_status1.__str__(), self.of_pat_status1.status)
+
+    def test_detail_str(self):
+        self.assertEqual(
+            self.detail1.__str__(),
+            '{} {} {}'.format(self.detail1.cast_name, self.detail1.drawing_no, self.detail1.cast_weight)
+        )
+
+    def test_url_test(self):
+        response = self.client.get(reverse('test'))
+        self.assertEqual(response.status_code, 200)
 
     def test_url_offers(self):
         response = self.client.get(reverse('offers'))
@@ -147,6 +218,23 @@ class OffersIntegrationTest(TestCase):
         self.user1.user_permissions.add(self.perm_add_offer)
         response = self.client.get(reverse('offer-create'))
         self.assertEqual(response.status_code, 200)
+        form_data = {
+            'offer_no': '100/17',
+            'client': 'test',
+            'user_mark': self.user1.id,
+            'user_tech': self.user2.id,
+            'date_tech_in': datetime.today(),
+            'data_tech_out': datetime.today(),
+            'date_mark_out': datetime.today(),
+            'positions_amount': 0,
+            'status': self.of_stat_id2,
+            'days_amount': 0,
+            # 'notices': 'test',
+        }
+        form = OfferCreateUpdateForm(form_data)
+        self.assertTrue(form.is_valid())
+        response = self.client.post(reverse('offer-create'), form_data, follow=True)
+        self.assertEqual(response.status_code, 200)
 
     def test_url_offer_update(self):
         self.user1_logged()
@@ -161,34 +249,41 @@ class OffersIntegrationTest(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_url_offer_details(self):
-        response = self.client.get(reverse('offer-details', args=[self.offer1.pk]))
-        self.assertEqual(response.status_code, 302)
+        #     response = self.client.get(reverse('offer-details', args=[self.offer1.pk]))
+        #     self.assertEqual(response.status_code, 302)
         self.user1_logged()
-        response = self.client.get(reverse('offer-details', args=[self.offer1.pk]))
-        self.assertEqual(response.status_code, 200)
+    #     response = self.client.get(reverse('offer-details', args=[self.offer1.pk]))
+    #     self.assertEqual(response.status_code, 200)
         response = self.client.post(reverse('offer-details', args=[self.offer1.pk]), {'status': '1'})
         self.assertEqual(response.status_code, 200)
-        response = self.client.post(reverse('offer-details', args=[self.offer1.pk]), {'new_notices': 'updated notices'})
+        response = self.client.post(
+            reverse('offer-details', args=[self.offer1.pk]),
+            {'new_notices': 'updated notices'}
+        )
         self.assertEqual(response.status_code, 200)
 
     def test_url_offer_notices_get(self):
         self.user1_logged()
-        response = self.client.get('/offers/notices/')
+        response = self.client.get(reverse('notices'))
         self.assertEqual(response.status_code, 200)
 
-    def test_url_offer_notice_post(self):
+    def test_url_offer_notices_post(self):
         self.user1_logged()
-        response = self.client.post('/offers/notices/', {'notices': 'new_notices'})
+        response = self.client.post(reverse('notices'), {'content': 'new_notices'}, follow=True)
+        self.assertEqual(response.redirect_chain, [(reverse('offers'), 302)])
         self.assertEqual(response.status_code, 200)
 
     def test_url_offer_detail_create(self):
         self.user1_logged()
-        response = self.client.get('/offers/{}/details/create/?steel'.format(self.offer1.pk))
+        response = self.client.get(reverse('detail-create', args=[self.offer1.pk]), {'steel': ''})
         self.assertEqual(response.status_code, 403)
         self.user1.user_permissions.add(self.perm_add_detail)
-        response = self.client.get('/offers/{}/details/create/?steel'.format(self.offer1.pk))
+        response = self.client.get(reverse('detail-create', args=[self.offer1.pk]), {'steel': ''})
         self.assertEqual(response.status_code, 200)
-        response = self.client.get('/offers/{}/details/create/?iron'.format(self.offer1.pk))
+        response = self.client.get(reverse('detail-create', args=[self.offer1.pk]), {'iron': ''})
+        self.assertEqual(response.status_code, 200)
+        response = self.client.post(reverse('detail-create', args=[self.offer1.pk]), self.detail_data_form, follow=True)
+        self.assertEqual(response.redirect_chain, [(reverse('offer-details', args=[self.offer1.pk]), 302)])
         self.assertEqual(response.status_code, 200)
 
     def test_url_offer_detail_update(self):
@@ -200,8 +295,10 @@ class OffersIntegrationTest(TestCase):
         self.assertEqual(response.status_code, 200)
         response = self.client.post(
             reverse('detail-update', args=[self.offer1.pk, self.detail1.pk]),
-            {'new-detail': ''}
+            self.detail_data_form,
+            follow=True
         )
+        self.assertEqual(response.redirect_chain, [(reverse('offer-details', args=[self.offer1.pk]), 302)])
         self.assertEqual(response.status_code, 200)
 
     def test_url_offer_detail_delete(self):
@@ -210,6 +307,11 @@ class OffersIntegrationTest(TestCase):
         self.assertEqual(response.status_code, 403)
         self.user1.user_permissions.add(self.perm_delete_detail)
         response = self.client.get(reverse('detail-delete', args=[self.offer1.pk, self.detail1.pk]))
+        self.assertEqual(response.status_code, 200)
+
+        """ Redirect to offers-details after delete """
+        response = self.client.delete(reverse('detail-delete', args=[self.offer1.pk, self.detail1.pk]), follow=True)
+        self.assertEqual(response.redirect_chain, [(reverse('offer-details', args=[self.offer1.pk]), 302)])
         self.assertEqual(response.status_code, 200)
 
     def test_url_details(self):

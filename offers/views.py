@@ -2,8 +2,6 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render, reverse
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 from rest_framework import viewsets
 
@@ -11,7 +9,6 @@ from .forms import (DetailCreateForm, DetailSearchingForm, DetailUpdateForm,
                     OfferCreateUpdateForm, OfferDetailsForm, OfferNoticeForm)
 from .models import Detail, Material, Notice, Offer
 from .serializers import DetailSerializer, MaterialSerializer, OfferSerializer
-import json
 
 
 def test(request):
@@ -68,8 +65,7 @@ class OfferCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
 
     def form_valid(self, form):
         """ Before create the new offer add default notices """
-        notice = Notice.objects.first()
-        form.instance.notices = notice.content
+        form.instance.notices = Notice.objects.first().content
         return super().form_valid(form)
 
 
@@ -171,6 +167,7 @@ class DetailCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
         return initial
 
     def form_valid(self, form):
+        """ Create new detail and increase positions amount in offer """
         offer = Offer.objects.get(pk=self.kwargs.get('pk'))
         form.instance.offer = offer
         offer.positions_amount += 1
@@ -184,9 +181,8 @@ class DetailUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     pk_url_kwarg = 'det_pk'
     permission_required = ['offers.change_detail']
 
-    @csrf_exempt
     def dispatch(self, request, *args, **kwargs):
-
+        """ If 'new-detail' create new object and increase positions amount in offer """
         if 'new-detail' in request.POST:
             pk = self.kwargs.get('pk')
             offer = Offer.objects.get(pk=pk)
@@ -205,11 +201,16 @@ class DetailDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     pk_url_kwarg = 'det_pk'
     permission_required = ['offers.delete_detail']
 
-    def get_success_url(self):
-        pk = self.kwargs.get('pk')
+    @staticmethod
+    def decrease_offer_positions_amount(pk):
         offer = Offer.objects.get(pk=pk)
         offer.positions_amount -= 1
         offer.save()
+
+    def get_success_url(self):
+        """ After removing detail decrease positions amount in offer """
+        pk = self.kwargs.get('pk')
+        self.decrease_offer_positions_amount(pk)
         return reverse('offer-details', kwargs={'pk': pk})
 
 

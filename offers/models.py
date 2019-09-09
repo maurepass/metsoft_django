@@ -63,7 +63,11 @@ class Offer(models.Model):
         default=1
     )
     days_amount = models.IntegerField(null=True, blank=True)
-    notices = models.TextField(null=True, blank=True, verbose_name='Uwagi')
+    notices = models.TextField(
+        null=True, blank=True,
+        verbose_name='Uwagi',
+        # default=Notice.objects.first().content
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

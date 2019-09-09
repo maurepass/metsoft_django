@@ -11,7 +11,7 @@ router.register(r'details', views.DetailViewSet)
 
 urlpatterns = [
     re_path('^api/', include(router.urls)),
-    path('test/', views.test),
+    path('test/', views.test, name='test'),
     path('', views.index_offer, name='offers'),
     path('create/', views.OfferCreateView.as_view(), name='offer-create'),
     path('<int:pk>/update/', views.OfferUpdateView.as_view(), name='offer-update'),
