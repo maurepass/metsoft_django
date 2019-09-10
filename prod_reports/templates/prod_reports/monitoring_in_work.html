@@ -67,13 +67,13 @@
                         <td>{{ obj.customer_date|date:'Y-m-d' }}</td>
                     {% endif %}
                     <td class="text-right">{{ obj.cast_pcs }}</td>
-                    <td class="text-right">{{ obj.new|floatformat:"0" }}</td>
-                    <td class="text-right">{{ obj.planned|floatformat:"0" }}</td>
-                    <td class="text-right">{{ obj.poured|floatformat:"0" }}</td>
-                    <td class="text-right">{{ obj.finished|floatformat:"0" }}</td>
-                    <td class="text-right">{{ obj.sent|floatformat:"0" }}</td>
-                    <td class="text-right">{{ obj.scraped|floatformat:"0" }}</td>
-                    <td class="text-right">{{ obj.cancelled|floatformat:"0" }}</td>
+                    <td class="text-right">{{ obj.new|default:"" }}</td>
+                    <td class="text-right">{{ obj.planned|default:"" }}</td>
+                    <td class="text-right">{{ obj.poured|default:"" }}</td>
+                    <td class="text-right">{{ obj.finished|default:"" }}</td>
+                    <td class="text-right">{{ obj.sent|default:""}}</td>
+                    <td class="text-right">{{ obj.scraped|default:"" }}</td>
+                    <td class="text-right">{{ obj.cancelled|default:"" }}</td>
                 </tr>
             {% endfor %}
         </tbody>
