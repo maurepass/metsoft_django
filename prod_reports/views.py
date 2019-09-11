@@ -1,6 +1,6 @@
 import datetime
 
-from django.db.models import F, Max, Q, Sum
+from django.db.models import F, Max, Q, Sum, Subquery
 from django.shortcuts import render
 from rest_framework import viewsets
 
@@ -150,7 +150,6 @@ def monitoring_in_work(request):
 
 
 def weight_per_client(request):
-
     objects = (
         Cast.objects
         .filter(cast_status__in=[1, 2, 3, 7])
@@ -241,3 +240,16 @@ def execution_time(request):
             return render(request, 'prod_reports/execution_time_results.html', {'objects': casts})
 
     return render(request, 'prod_reports/execution_time_form.html', {'form': ExecutionTimeForm()})
+
+
+def casts_with_machining(request):
+    return render(request, 'prod_reports/casts_with_machining.html')
+
+
+class CastsWithMachiningViewSet(viewsets.ModelViewSet):
+    subquery = Operation.objects.filter(opdict__in=[19, 20])
+    queryset = Cast.objects.filter(porder__status__in=[1, 2],
+                                   cast_status__in=[1, 2, 7],
+                                   id__in=Subquery(subquery.values('cast').distinct())
+                                   )
+    serializer_class = CastSerializer

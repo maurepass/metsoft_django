@@ -3,9 +3,11 @@ Application is deployed on the server in my current work.
 Main functions:
 - CRUD (offers, details, materials, patterns)
 - User Authentication and Authorization
-- router to external database (generating reports based on data from external production server)
-- generating some statistics
 - tests (for offers app)
+- router to external database (for generating reports based on data from external production server)
+- templatetags (in tech_dep app)
+- generating some statistics
+
 
 Used tools:
 - Django 2.2

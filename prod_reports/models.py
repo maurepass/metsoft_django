@@ -103,7 +103,7 @@ class Porder(models.Model):
     zamawiajacy = models.ForeignKey(Customer, on_delete=models.DO_NOTHING, db_column='zamawiajacy')
     nr_zamowienia = models.CharField(max_length=32)
     customer_date = models.DateField(blank=True, null=True, db_column='termin_klienta')
-    termin_realizacji = models.DateField(blank=True, null=True)
+    confirmed_date = models.DateField(blank=True, null=True, db_column='termin_realizacji')
     wprowadzajacy = models.CharField(max_length=20, db_column='wprowadzajacy_id')
     data_przekwzt = models.DateField(blank=True, null=True)
     data_wplywu_do_pzm = models.DateField(blank=True, null=True)
@@ -156,6 +156,14 @@ class Pocastord(models.Model):
 
     def __str__(self):
         return '{} {} {}'.format(self.cast_name, self.cast_pcs, self.cust_material)
+
+
+class CastStatus(models.Model):
+    statusname = models.CharField(max_length=50)
+
+    class Meta:
+        managed = False
+        db_table = 'caststatuses'
 
 
 class Cast(models.Model):
@@ -223,7 +231,11 @@ class Cast(models.Model):
     tests_vt = models.CharField(max_length=32, blank=True, null=True)
     tests_other = models.CharField(max_length=64, blank=True, null=True)
     active = models.IntegerField(blank=True, null=True)
-    cast_status = models.IntegerField(blank=True, null=True)
+    cast_status = models.ForeignKey(
+        CastStatus,
+        on_delete=models.DO_NOTHING,
+        db_column='cast_status',
+    )
     cast_clones_from_po = models.IntegerField(blank=True, null=True)
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()

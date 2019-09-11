@@ -15,6 +15,7 @@ router.register(r'machining', views.MachiningViewSet, 'machining')
 router.register(r'scraps', views.ScrapsViewSet, 'scraps')
 router.register(r'yields', views.YieldsViewSet, 'yields')
 router.register(r'pouring', views.PouringViewSet, 'pouring')
+router.register(r'castings-with-machining', views.CastsWithMachiningViewSet, 'castings-with-machining')
 
 urlpatterns = [
     re_path('^api/', include(router.urls)),
@@ -36,4 +37,5 @@ urlpatterns = [
     path('yields/', views.yields, name='yields'),
     path('inserted-data/', views.inserted_data, name='inserted-data'),
     path('reports_list/', views.reports, name='reports-list'),
+    path('castings-with-machining/', views.casts_with_machining, name='castings-with-machining'),
 ]

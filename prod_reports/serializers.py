@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from .models import (AccordanceDict, Cast, Material, Operation, OperationDict,
-                     Pocastord, Porder, User)
+                     Pocastord, Porder, User, CastStatus)
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -15,7 +15,7 @@ class PorderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Porder
-        fields = ['met_no']
+        fields = ['met_no', 'customer_date', 'confirmed_date']
 
 
 class PocastordSerializer(serializers.ModelSerializer):
@@ -32,15 +32,23 @@ class MaterialSerializer(serializers.ModelSerializer):
         fields = ['materialname', 'calcgroup']
 
 
+class CastStatusSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = CastStatus
+        fields = ['statusname']
+
+
 class CastSerializer(serializers.ModelSerializer):
     porder = PorderSerializer()
     cast_material = MaterialSerializer()
     tech = UserSerializer()
+    cast_status = CastStatusSerializer()
 
     class Meta:
         model = Cast
         fields = ['id', 'porder', 'cast_name', 'tech', 'picture_number', 'customer', 'cast_material', 'cast_weight',
-                  'created_at', 'material_need', 'tech_maker']
+                  'created_at', 'material_need', 'tech_maker', 'cast_status', 'creation_date']
 
 
 class AccordanceDictSerializer(serializers.ModelSerializer):
