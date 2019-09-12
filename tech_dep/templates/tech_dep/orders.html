@@ -117,7 +117,19 @@
                             $(nTd).html('<a href="/tech/' + sData +'/update">Edytuj</a>');
                         }
                     },
-                ]
+                ],
+                rowCallback : function(row, data){
+                    if (data.status.id == 2){
+                        var diff  = new Date(new Date() - new Date(data.ord_in));
+                        var days = diff/1000/60/60/24;
+
+                        if (days > 5)
+                            $(row).addClass('table-danger');
+
+                        if (days < 6)
+                            $(row).addClass('table-success');
+                    }
+                }
             });
 
             //Kod do wyszukiwania po kolumnach
