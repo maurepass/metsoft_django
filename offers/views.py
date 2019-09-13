@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import HttpResponseRedirect
@@ -124,8 +126,11 @@ def offer_detail_view(request, pk):
         if offer_form.is_valid():
             offer_form.save()
             if 'status' in offer_form.changed_data:
+                offer_form.instance.date_tech_out = datetime.datetime.today()
+                offer_form.save()
                 return redirect('offers')
 
+    # loading default notices if users require them
     if 'new_notices' in request.POST:
         notices = Notice.objects.first()
         this_offer.notices = notices.content

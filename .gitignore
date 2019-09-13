@@ -125,3 +125,5 @@ dmypy.json
 .pyre/
 /offers/static/js/jquery.datetimepicker.js
 
+/.idea/
+__pycache__

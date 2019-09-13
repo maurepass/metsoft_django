@@ -8,7 +8,7 @@ class OfferDetailsForm(forms.ModelForm):
 
     class Meta:
         model = Offer
-        fields = ['notices', 'status']
+        fields = ['notices', 'status', 'date_tech_out']
         widgets = {
           'notices': forms.Textarea(attrs={'rows': 15, 'cols': 100}),
         }
