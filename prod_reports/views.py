@@ -230,10 +230,14 @@ def execution_time(request):
                     customer=Max('cast__customer'),
                     cast_name=Max('cast__cast_name'),
                     picture_number=Max('cast__picture_number'),
-                    pc_number=Max('parameter_value1', filter=Q(opdict_id=5)),
                     created_at=Max('cast__created_at'),
                     moulding_date=Max('completion_date1', filter=Q(opdict_id=5)),
+                    pc_number=Max('parameter_value1', filter=Q(opdict_id=5)),
                     pouring_date=Max('completion_date1', filter=Q(opdict_id=6)),
+                    melt_no=Max('parameter_value1', filter=Q(opdict_id=6)),
+                    knock_out=Max('completion_date1', filter=Q(opdict_id=61)),
+                    casting_weight=Max('parameter_value1', filter=Q(opdict_id__in=[43, 51])),
+                    machining_flatness=Max('completion_date1', filter=Q(opdict_id=91)),
                     finishing_date=Max('completion_date1', filter=Q(opdict_id=38)),
                 )
             )
