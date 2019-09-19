@@ -83,10 +83,19 @@ class Offer(models.Model):
         return reverse('offers')
 
     def get_days_amount(self):
+        """ When offers is during preparation calculate current amount of days """
         if self.status.id == 1:
             days = date.today() - self.date_tech_in
             return days.days
         return self.days_amount
+
+    def offer_status_changed(self):
+        """ When offer is finished add to database the end date and amount of days needed to finish them """
+        if self.status.id != 1:
+            self.date_tech_out = date.today()
+            delta = self.date_tech_out - self.date_tech_in
+            self.days_amount = delta.days
+            self.save()
 
     @staticmethod
     def string_from_list(attr_list):

@@ -126,8 +126,7 @@ def offer_detail_view(request, pk):
         if offer_form.is_valid():
             offer_form.save()
             if 'status' in offer_form.changed_data:
-                offer_form.instance.date_tech_out = datetime.datetime.today()
-                offer_form.save()
+                this_offer.offer_status_changed()
                 return redirect('offers')
 
     # loading default notices if users require them
