@@ -23,6 +23,7 @@
                 <th>Numer odlewu</th>
                 <th>Data zalania</th>
                 <th>Nr wytopu</th>
+                <th>Temp. zalania</th>
                 <th>Data wybicia</th>
                 <th>Waga odlewu</th>
                 <th>Obr (płaskość)</th>
@@ -42,6 +43,7 @@
                 <th>Numer odlewu</th>
                 <th>Data zalania</th>
                 <th>Nr wytopu</th>
+                <th>Temp. zalania</th>
                 <th>Data wybicia</th>
                 <th>Waga odlewu</th>
                 <th>Obr (płaskość)</th>
@@ -62,6 +64,7 @@
                     <td>{{ obj.pc_number }}</td>
                     <td>{{ obj.pouring_date|date:"Y-m-d" }}</td>
                     <td>{{ obj.melt_no|default:"" }}</td>
+                    <td>{{ obj.pouring_temp|default:"" }}</td>
                     <td>{{ obj.knock_out|date:"Y-m-d" }}</td>
                     <td  class="text-right">{{ obj.casting_weight|default:"" }}</td>
                     <td>{{ obj.machining_flatness|default:"" }}</td>

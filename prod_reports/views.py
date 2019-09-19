@@ -235,6 +235,7 @@ def execution_time(request):
                     pc_number=Max('parameter_value1', filter=Q(opdict_id=5)),
                     pouring_date=Max('completion_date1', filter=Q(opdict_id=6)),
                     melt_no=Max('parameter_value1', filter=Q(opdict_id=6)),
+                    pouring_temp=Max('parameter_value2', filter=Q(opdict_id=6)),
                     knock_out=Max('completion_date1', filter=Q(opdict_id=61)),
                     casting_weight=Max('parameter_value1', filter=Q(opdict_id__in=[43, 51])),
                     machining_flatness=Max('completion_date1', filter=Q(opdict_id=91)),
