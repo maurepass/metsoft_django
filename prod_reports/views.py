@@ -9,21 +9,9 @@ from .models import Cast, Operation
 from .serializers import CastSerializer, OperationSerializer
 
 
-def reports(request):
-    return render(request, 'prod_reports/reports_list.html')
-
-
-def pouring(request):
-    return render(request, 'prod_reports/pouring.html')
-
-
 class PouringViewSet(viewsets.ModelViewSet):
     queryset = Operation.objects.filter(opdict=6)
     serializer_class = OperationSerializer
-
-
-def molding(request):
-    return render(request, 'prod_reports/molding.html')
 
 
 class MoldingViewSet(viewsets.ModelViewSet):
@@ -31,17 +19,9 @@ class MoldingViewSet(viewsets.ModelViewSet):
     serializer_class = OperationSerializer
 
 
-def finished(request):
-    return render(request, 'prod_reports/finished.html')
-
-
 class FinishedViewSet(viewsets.ModelViewSet):
     queryset = Operation.objects.filter(opdict=38)
     serializer_class = OperationSerializer
-
-
-def remarks(request):
-    return render(request, 'prod_reports/remarks.html')
 
 
 class RemarksViewSet(viewsets.ModelViewSet):
@@ -49,17 +29,9 @@ class RemarksViewSet(viewsets.ModelViewSet):
     serializer_class = OperationSerializer
 
 
-def non_destructive_testing(request):
-    return render(request, 'prod_reports/non_destructive_testing.html')
-
-
 class NonDestructiveTestingViewSet(viewsets.ModelViewSet):
     queryset = Operation.objects.filter(opdict__in=[10, 21, 22, 24, 25, 26, 28, 56])
     serializer_class = OperationSerializer
-
-
-def nonconformity(request):
-    return render(request, 'prod_reports/nonconformity.html')
 
 
 class NonconformityViewSet(viewsets.ModelViewSet):
@@ -89,17 +61,9 @@ def inserted_data(request):
     return render(request, 'prod_reports/inserted_data.html', {'casts': casts})
 
 
-def casts_in_stock(request):
-    return render(request, 'prod_reports/casts_in_stock.html')
-
-
 class CastsInStockViewSet(viewsets.ModelViewSet):
     queryset = Cast.objects.filter(cast_status=3)
     serializer_class = CastSerializer
-
-
-def casting_weights(request):
-    return render(request, 'prod_reports/casting_weights.html')
 
 
 class CastingWeightsViewSet(viewsets.ModelViewSet):
@@ -107,26 +71,14 @@ class CastingWeightsViewSet(viewsets.ModelViewSet):
     serializer_class = OperationSerializer
 
 
-def machining(request):
-    return render(request, 'prod_reports/machining.html')
-
-
 class MachiningViewSet(viewsets.ModelViewSet):
     queryset = Operation.objects.filter(opdict__in=[10, 21, 22, 24, 25, 26, 28, 56])
     serializer_class = OperationSerializer
 
 
-def scraps(request):
-    return render(request, 'prod_reports/scraps.html')
-
-
 class ScrapsViewSet(viewsets.ModelViewSet):
     queryset = Cast.objects.filter(cast_status=5)
     serializer_class = CastSerializer
-
-
-def yields(request):
-    return render(request, 'prod_reports/yields.html')
 
 
 class YieldsViewSet(viewsets.ModelViewSet):
@@ -245,10 +197,6 @@ def execution_time(request):
             return render(request, 'prod_reports/execution_time_results.html', {'objects': casts})
 
     return render(request, 'prod_reports/execution_time_form.html', {'form': ExecutionTimeForm()})
-
-
-def casts_with_machining(request):
-    return render(request, 'prod_reports/casts_with_machining.html')
 
 
 class CastsWithMachiningViewSet(viewsets.ModelViewSet):

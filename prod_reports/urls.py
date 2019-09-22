@@ -1,4 +1,5 @@
 from django.urls import include, path, re_path
+from django.views.generic import TemplateView
 from rest_framework import routers
 
 from . import views
@@ -20,22 +21,22 @@ router.register(r'castings-with-machining', views.CastsWithMachiningViewSet, 'ca
 urlpatterns = [
     re_path('^api/', include(router.urls)),
     path('execution-time/', views.execution_time, name='execution-time'),
-    path('finished/', views.finished, name='finished'),
-    path('pouring/', views.pouring, name='pouring'),
-    path('nonconformity/', views.nonconformity, name='nonconformity'),
-    path('remarks/', views.remarks, name='remarks'),
+    path('finished/', TemplateView.as_view(template_name='prod_reports/finished.html'), name='finished'),
+    path('pouring/', TemplateView.as_view(template_name='prod_reports/pouring.html'), name='pouring'),
+    path('nonconformity/', TemplateView.as_view(template_name='prod_reports/nonconformity.html'), name='nonconformity'),
+    path('remarks/', TemplateView.as_view(template_name='prod_reports/remarks.html'), name='remarks'),
     path('weight-per-client/', views.weight_per_client, name='weight-per-client'),
     path('weight-per-group/', views.weight_per_group, name='weight-per-group'),
-    path('scraps/', views.scraps, name='scraps'),
-    path('casting-weights/', views.casting_weights, name='casting-weights'),
+    path('scraps/', TemplateView.as_view(template_name='prod_reports/scraps.html'), name='scraps'),
+    path('casting-weights/', TemplateView.as_view(template_name='prod_reports/casting_weights.html'), name='casting-weights'),
     path('monitoring-in-work/', views.monitoring_in_work, name='monitoring-in-work'),
     path('monitoring-all/', views.monitoring_all, name='monitoring-all'),
-    path('casts-in-stock/', views.casts_in_stock, name='casts-in-stock'),
-    path('molding/', views.molding, name='molding'),
-    path('non-destructive-testing/', views.non_destructive_testing, name='non-destructive-testing'),
-    path('machining/', views.machining, name='machining'),
-    path('yields/', views.yields, name='yields'),
+    path('casts-in-stock/', TemplateView.as_view(template_name='prod_reports/casts_in_stock.html'), name='casts-in-stock'),
+    path('molding/', TemplateView.as_view(template_name='prod_reports/molding.html'), name='molding'),
+    path('non-destructive-testing/', TemplateView.as_view(template_name='prod_reports/non_destructive_testing.html'), name='non-destructive-testing'),
+    path('machining/', TemplateView.as_view(template_name='prod_reports/machining.html'), name='machining'),
+    path('yields/', TemplateView.as_view(template_name='prod_reports/yields.html'), name='yields'),
     path('inserted-data/', views.inserted_data, name='inserted-data'),
-    path('reports_list/', views.reports, name='reports-list'),
-    path('castings-with-machining/', views.casts_with_machining, name='castings-with-machining'),
+    path('reports/', TemplateView.as_view(template_name='prod_reports/reports_list.html'), name='reports-list'),
+    path('castings-with-machining/', TemplateView.as_view(template_name='prod_reports/casts_with_machining.html'), name='castings-with-machining'),
 ]
