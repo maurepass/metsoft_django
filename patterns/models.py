@@ -8,7 +8,7 @@ class PatternStatus(models.Model):
     status = models.CharField(max_length=30, blank=True, null=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'pattern_statuses'
         verbose_name_plural = 'PatternStatuses'
 
@@ -43,7 +43,7 @@ class Pattern(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         verbose_name='status',
-        default=0
+        default=1
     )
     move_in = models.DateField(
         'Data zmiany statusu',
@@ -55,7 +55,7 @@ class Pattern(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'patterns'
 
     def __str__(self):
@@ -82,6 +82,6 @@ class PatternHistory(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'pattern_history'
         verbose_name_plural = 'PatternHistory'
