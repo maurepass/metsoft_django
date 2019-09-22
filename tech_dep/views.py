@@ -57,7 +57,7 @@ class OrderUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
 
 
 @login_required
-@permission_required('offers')
+@permission_required('offers.view_offer')
 def tech_dep_statistics(request):
 
     date_stats_to = datetime.date.today()
