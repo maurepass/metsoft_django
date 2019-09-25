@@ -340,7 +340,7 @@ class Detail(models.Model):
         blank=True,
         null=True,
         verbose_name='Odbiór na',
-        default='wł. wytrz., skł. chem.'
+        #default=u'wł. wytrz., skł. chem.'
     )
     quality_class = models.CharField(
         max_length=50,

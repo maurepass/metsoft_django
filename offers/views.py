@@ -1,11 +1,14 @@
+import datetime
+
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.models import Group
 from django.shortcuts import redirect, render, reverse
 from django.views.generic import CreateView, DeleteView, UpdateView, TemplateView, FormView
 from rest_framework import viewsets
 
 from .forms import (DetailCreateForm, DetailSearchingForm, DetailUpdateForm,
-                    OfferCreateUpdateForm, OfferDetailsForm, OfferNoticeForm)
-from .models import Detail, Material, Notice, Offer
+                    OfferCreateUpdateForm, OfferDetailsForm, OfferNoticeForm, OfferStatsForm)
+from .models import Detail, Material, Notice, Offer, OfferStatus, MaterialGroup
 from .serializers import DetailSerializer, MaterialSerializer, OfferSerializer
 
 
@@ -220,6 +223,89 @@ class DetailSearchingView(FormView):
         return render(request, 'offers/detail_searching_form.html', {'form': DetailSearchingForm})
 
 
+class OffersStatisticsView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
+    """ Generate reports: offers per technologist, offers per status, details per material group."""
+    permission_required = 'offers.view_offer'
 
+    def dispatch(self, request, *args, **kwargs):
+        date_stats_to = datetime.date.today()
+        date_stats_from = datetime.date(date_stats_to.year, date_stats_to.month, 1)
 
+        if request.method == "POST":
+            form = OfferStatsForm(request.POST)
+            date_stats_from = datetime.datetime.strptime(request.POST['date_stats_from'], '%d.%m.%Y')
+            date_stats_to = datetime.datetime.strptime(request.POST['date_stats_to'], '%d.%m.%Y')
+        else:
+            form = OfferStatsForm(initial={'date_stats_from': date_stats_from, 'date_stats_to': date_stats_to})
+
+        # get required data
+        offers = Offer.objects.filter(date_tech_out__gt=date_stats_from, date_tech_out__lt=date_stats_to)
+        tech_users = Group.objects.get(pk=2).user_set.all()
+        offer_statuses = OfferStatus.objects.all()
+        mat_groups = MaterialGroup.objects.all()
+        details = Detail.objects.filter(offer__date_tech_out__gt=date_stats_from, offer__date_tech_out__lt=date_stats_to)
+
+        # stats for offers per technologist
+        tech_stats = []
+        of_amt, det_amt, in_time_amt = 0, 0, 0
+
+        for index, tech in enumerate(tech_users):
+            tech_stats.append({
+                'tech': tech.first_name,
+                'amount': 0,
+                'avg_days': 0,
+                'in_time': 0,
+                'det_amt': 0,
+            })
+            for offer in offers:
+                if tech.pk == offer.user_tech.pk:
+                    tech_stats[index]['amount'] += 1
+                    tech_stats[index]['avg_days'] += offer.days_amount
+                    if offer.days_amount < 8:
+                        tech_stats[index]['in_time'] += 1
+                        in_time_amt += 1
+                    tech_stats[index]['det_amt'] += offer.positions_amount
+                    of_amt += 1
+                    det_amt += offer.positions_amount
+
+        # stats for offers per status
+        statuses_stats = []
+        of_stat_amt = 0
+
+        for index, status in enumerate(offer_statuses):
+            statuses_stats.append({
+                'status': status.offer_status,
+                'amount': 0,
+            })
+            for offer in offers:
+                if offer.status.pk == status.pk:
+                    statuses_stats[index]['amount'] += 1
+                    of_stat_amt += 1
+
+        # stats for details per material group
+        detail_stats = []
+        det_mat_amt = 0
+        for index, mat_group in enumerate(mat_groups):
+            detail_stats.append({
+                'mat_group': mat_group.mat_group,
+                'amount': 0,
+            })
+            for detail in details:
+                if detail.mat.mat_group.pk == mat_group.pk:
+                    detail_stats[index]['amount'] += 1
+                    det_mat_amt += 1
+
+        context = {
+            "tech_stats": tech_stats,
+            "statuses_stats": statuses_stats,
+            "detail_stats": detail_stats,
+            "of_amt": of_amt,
+            "in_time_amt": in_time_amt,
+            "det_amt": det_amt,
+            "det_mat_amt": det_mat_amt,
+            "of_stat_amt": of_stat_amt,
+            "form": form,
+        }
+
+        return render(request, 'offers/stats.html', context)
 

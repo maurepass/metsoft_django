@@ -77,3 +77,21 @@ class DetailSearchingForm(forms.Form):
 
     class Meta:
         fields = ['drawing_no', 'cast_name', 'offer_no']
+
+
+class OfferStatsForm(forms.Form):
+    date_stats_from = forms.DateField(label="Data początkowa",
+                                      widget=forms.DateInput(
+                                            attrs={'id': 'datepicker1', 'width': '275px'},
+                                            format='%Y-%m-%d',
+                                            )
+                                      )
+    date_stats_to = forms.DateField(label="Data końcowa",
+                                    widget=forms.DateInput(
+                                        attrs={'id': 'datepicker2', 'width': '275px'},
+                                        format='%Y-%m-%d',
+                                        )
+                                    )
+
+    class Meta:
+        fields = ['date_stats_from', 'date_stats_to']

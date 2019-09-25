@@ -27,6 +27,6 @@ urlpatterns = [
     path('materials/', TemplateView.as_view(template_name='offers/material_list.html'), name='materials'),
     path('materials/create/', views.MaterialCreateView.as_view(), name='material-create'),
     path('materials/<int:pk>/update/', views.MaterialUpdateView.as_view(), name='material-update'),
-
+    path('stats/', views.OffersStatisticsView.as_view(), name='tech-stats')
 
 ]
