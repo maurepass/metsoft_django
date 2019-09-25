@@ -332,14 +332,22 @@ class Detail(models.Model):
         max_length=50,
         blank=True,
         null=True,
-        verbose_name='Atest'
+        verbose_name='Atest',
+        default='3.1 wg PN-EN 10204'
     )
-    required = models.CharField(max_length=50, blank=True, null=True)
+    required = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        verbose_name='Odbiór na',
+        default='wł. wytrz., skł. chem.'
+    )
     quality_class = models.CharField(
         max_length=50,
         blank=True,
         null=True,
-        verbose_name='Klasa jakości'
+        verbose_name='Klasa jakości',
+        default='VT – poziom 4 wg ISO 11971:2008'
     )
     boxes = models.CharField(
         max_length=50,

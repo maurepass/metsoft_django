@@ -45,11 +45,13 @@ def orders(request):
 
 
 class OrderViewSet(viewsets.ModelViewSet):
+    """ Register of orders processed by Technology Department. """
     queryset = Order.objects.all()
     serializer_class = OrderSerializers
 
 
 class OrderUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    """ Updating records from register of orders. """
     model = Order
     form_class = OrderUpdateForm
     success_url = '/tech/orders/'

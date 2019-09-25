@@ -2,6 +2,8 @@ import datetime
 
 from django.db.models import F, Max, Q, Sum, Subquery
 from django.shortcuts import render
+from django.views.generic import ListView
+from django.views.generic.base import View, TemplateView
 from rest_framework import viewsets
 
 from .forms import ExecutionTimeForm
@@ -10,37 +12,46 @@ from .serializers import CastSerializer, OperationSerializer
 
 
 class PouringViewSet(viewsets.ModelViewSet):
+    """ All confirmed pouring operations."""
     queryset = Operation.objects.filter(opdict=6)
     serializer_class = OperationSerializer
 
 
 class MoldingViewSet(viewsets.ModelViewSet):
+    """ All confirmed moulding form operations."""
     queryset = Operation.objects.filter(opdict=5)
     serializer_class = OperationSerializer
 
 
 class FinishedViewSet(viewsets.ModelViewSet):
+    """ All confirmed final control operations. """
     queryset = Operation.objects.filter(opdict=38)
     serializer_class = OperationSerializer
 
 
 class RemarksViewSet(viewsets.ModelViewSet):
+    """ All remarks written for any operation. """
     queryset = Operation.objects.filter(notes__regex=r'\w+')
     serializer_class = OperationSerializer
 
 
 class NonDestructiveTestingViewSet(viewsets.ModelViewSet):
+    """ All confirmed NDT operations. """
     queryset = Operation.objects.filter(opdict__in=[10, 21, 22, 24, 25, 26, 28, 56])
     serializer_class = OperationSerializer
 
 
 class NonconformityViewSet(viewsets.ModelViewSet):
+    """ All nonconformity confirmed for operations."""
     queryset = Operation.objects.filter(accordance=3)
     serializer_class = OperationSerializer
 
 
-def inserted_data(request):
-    casts = (
+class InsertedDataList(ListView):
+    """ List of selected data from productions process written during the operation confirmation."""
+    context_object_name = 'casts'
+    template_name = 'prod_reports/inserted_data.html'
+    queryset = (
         Operation.objects
         .values('cast')
         .annotate(
@@ -58,148 +69,163 @@ def inserted_data(request):
         .order_by('-cast_id')[:5000]
     )
 
-    return render(request, 'prod_reports/inserted_data.html', {'casts': casts})
-
 
 class CastsInStockViewSet(viewsets.ModelViewSet):
+    """ All casting on the stock (after final control but not sent)."""
     queryset = Cast.objects.filter(cast_status=3)
     serializer_class = CastSerializer
 
 
 class CastingWeightsViewSet(viewsets.ModelViewSet):
+    """ All confirmed weighting operations."""
     queryset = Operation.objects.filter(opdict=51)
     serializer_class = OperationSerializer
 
 
 class MachiningViewSet(viewsets.ModelViewSet):
+    """ All confirmed machining operations."""
     queryset = Operation.objects.filter(opdict__in=[10, 21, 22, 24, 25, 26, 28, 56])
     serializer_class = OperationSerializer
 
 
 class ScrapsViewSet(viewsets.ModelViewSet):
+    """ Scrapped castings. """
     queryset = Cast.objects.filter(cast_status=5)
     serializer_class = CastSerializer
 
 
 class YieldsViewSet(viewsets.ModelViewSet):
+    """ Technological yield on every casting."""
     queryset = Cast.objects.filter(pc_number=1)
     serializer_class = CastSerializer
 
 
-def monitoring_all(request):
-    objects = Cast.monitoring()
-    return render(request, 'prod_reports/monitoring_all.html', {'objects': objects})
+class MonitoringAllList(ListView):
+    """Shows amount of castings on with the particular production status for all orders."""
+    queryset = Cast.monitoring()
+    context_object_name = 'objects'
+    template_name = 'prod_reports/monitoring_all.html'
 
 
-def monitoring_in_work(request):
-    objects = list(Cast.monitoring().filter(cast_pcs__gt=F('sent') + F('cancelled') + F('finished')))
+class MonitoringInWorkList(ListView):
+    """Shows amount of castings on with the particular production status for not finished orders."""
+    template_name = 'prod_reports/monitoring_in_work.html'
+    context_object_name = 'objects'
 
-    for obj in objects:
-        time = obj['customer_date'] - datetime.date.today()
-        obj['time'] = time.days
+    def get_queryset(self):
+        objects = list(Cast.monitoring().filter(cast_pcs__gt=F('sent') + F('cancelled') + F('finished')))
 
-    return render(request, 'prod_reports/monitoring_in_work.html', {'objects': objects})
+        # calculate amount of days till delivery date required by customer
+        for obj in objects:
+            time = obj['customer_date'] - datetime.date.today()
+            obj['time'] = time.days
 
-
-def weight_per_client(request):
-    objects = (
-        Cast.objects
-        .filter(cast_status__in=[1, 2, 3, 7])
-        .values('customer')
-        .annotate(
-            new=Sum('cast_weight', filter=Q(cast_status=1)),
-            planned=Sum('cast_weight', filter=Q(cast_status=7)),
-            poured=Sum('cast_weight', filter=Q(cast_status=2)),
-            on_stock=Sum('cast_weight', filter=Q(cast_status=3)),
-            in_production=Sum('cast_weight',  filter=Q(cast_status__in=[1, 7, 2]))
-        )
-        .order_by('-in_production')
-    )
-
-    sums = (
-        Cast.objects
-        .filter(cast_status__in=[1, 2, 3, 7])
-        .aggregate(
-            new=Sum('cast_weight', filter=Q(cast_status=1)),
-            planned=Sum('cast_weight', filter=Q(cast_status=7)),
-            poured=Sum('cast_weight', filter=Q(cast_status=2)),
-            on_stock=Sum('cast_weight', filter=Q(cast_status=3)),
-            in_production=Sum('cast_weight', filter=Q(cast_status__in=[1, 7, 2]))
-        )
-    )
-
-    context = {
-        "objects": objects,
-        "sums": sums,
-    }
-
-    return render(request, 'prod_reports/weight_per_client.html', context)
+        return objects
 
 
-def weight_per_group(request):
-    objects = (
-        Cast.objects
-        .filter(cast_status__in=[1, 2, 3, 7])
-        .values('mat_calc_group')
-        .annotate(sum_cast_weight=Sum('cast_weight'))
-        .order_by('mat_calc_group')
-    )
+class WeightPerClientView(TemplateView):
+    """ Total weight of castings with open order in the particular production status. """
+    template_name = 'prod_reports/weight_per_client.html'
 
-    total_weight = (
-        Cast.objects
-        .filter(cast_status__in=[1, 2, 3, 7])
-        .aggregate(weight_sum=Sum('cast_weight'))
-    )
-
-    context = {
-        "objects": objects,
-        "total": total_weight['weight_sum']
-    }
-
-    return render(request, 'prod_reports/weight_per_group.html', context)
-
-
-def execution_time(request):
-    if request.method == 'POST':
-        met_number = request.POST['met_number']
-        company = request.POST['company']
-        cast_name = request.POST['cast_name']
-        picture_number = request.POST['picture_number']
-
-        if met_number or company or cast_name or picture_number:
-            casts = (
-                Operation.objects
-                .filter(
-                    cast__porder__met_no__icontains=met_number,
-                    cast__customer__icontains=company,
-                    cast__cast_name__icontains=cast_name,
-                    cast__picture_number__icontains=picture_number
-                )
-                .values('cast')
-                .annotate(
-                    id=Max('cast__id'),
-                    met_no=Max('cast__porder__met_no'),
-                    customer=Max('cast__customer'),
-                    cast_name=Max('cast__cast_name'),
-                    picture_number=Max('cast__picture_number'),
-                    created_at=Max('cast__created_at'),
-                    moulding_date=Max('completion_date1', filter=Q(opdict_id=5)),
-                    pc_number=Max('parameter_value1', filter=Q(opdict_id=5)),
-                    pouring_date=Max('completion_date1', filter=Q(opdict_id=6)),
-                    melt_no=Max('parameter_value1', filter=Q(opdict_id=6)),
-                    pouring_temp=Max('parameter_value2', filter=Q(opdict_id=6)),
-                    knock_out=Max('completion_date1', filter=Q(opdict_id=61)),
-                    casting_weight=Max('parameter_value1', filter=Q(opdict_id__in=[43, 51])),
-                    machining_flatness=Max('completion_date1', filter=Q(opdict_id=91)),
-                    finishing_date=Max('completion_date1', filter=Q(opdict_id=38)),
-                )
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['objects'] = (
+            Cast.objects
+            .filter(cast_status__in=[1, 2, 3, 7])
+            .values('customer')
+            .annotate(
+                new=Sum('cast_weight', filter=Q(cast_status=1)),
+                planned=Sum('cast_weight', filter=Q(cast_status=7)),
+                poured=Sum('cast_weight', filter=Q(cast_status=2)),
+                on_stock=Sum('cast_weight', filter=Q(cast_status=3)),
+                in_production=Sum('cast_weight', filter=Q(cast_status__in=[1, 7, 2]))
             )
-            return render(request, 'prod_reports/execution_time_results.html', {'objects': casts})
+            .order_by('-in_production')
+        )
 
-    return render(request, 'prod_reports/execution_time_form.html', {'form': ExecutionTimeForm()})
+        context['sums'] = (
+            Cast.objects
+            .filter(cast_status__in=[1, 2, 3, 7])
+            .aggregate(
+                new=Sum('cast_weight', filter=Q(cast_status=1)),
+                planned=Sum('cast_weight', filter=Q(cast_status=7)),
+                poured=Sum('cast_weight', filter=Q(cast_status=2)),
+                on_stock=Sum('cast_weight', filter=Q(cast_status=3)),
+                in_production=Sum('cast_weight', filter=Q(cast_status__in=[1, 7, 2]))
+            )
+        )
+
+        return context
+
+
+class WeightPerGroupView(TemplateView):
+    """ Total weight of castings in the particular material group. """
+    template_name = 'prod_reports/weight_per_group.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['objects'] = (
+            Cast.objects
+            .filter(cast_status__in=[1, 2, 3, 7])
+            .values('mat_calc_group')
+            .annotate(sum_cast_weight=Sum('cast_weight'))
+            .order_by('mat_calc_group')
+        )
+
+        context['total_weight'] = (
+            Cast.objects
+            .filter(cast_status__in=[1, 2, 3, 7])
+            .aggregate(weight_sum=Sum('cast_weight'))
+        )
+
+        return context
+
+
+class ExecutionTimeView(TemplateView):
+    """ Confirmation date for specified operations and specified data written during confirmation. """
+    def dispatch(self, request, *args, **kwargs):
+        if request.method == 'POST':
+            met_number = request.POST['met_number']
+            company = request.POST['company']
+            cast_name = request.POST['cast_name']
+            picture_number = request.POST['picture_number']
+
+            if met_number or company or cast_name or picture_number:
+                casts = (
+                    Operation.objects
+                    .filter(
+                        cast__porder__met_no__icontains=met_number,
+                        cast__customer__icontains=company,
+                        cast__cast_name__icontains=cast_name,
+                        cast__picture_number__icontains=picture_number
+                    )
+                    .values('cast')
+                    .annotate(
+                        id=Max('cast__id'),
+                        met_no=Max('cast__porder__met_no'),
+                        customer=Max('cast__customer'),
+                        cast_name=Max('cast__cast_name'),
+                        picture_number=Max('cast__picture_number'),
+                        created_at=Max('cast__created_at'),
+                        moulding_date=Max('completion_date1', filter=Q(opdict_id=5)),
+                        pc_number=Max('parameter_value1', filter=Q(opdict_id=5)),
+                        pouring_date=Max('completion_date1', filter=Q(opdict_id=6)),
+                        melt_no=Max('parameter_value1', filter=Q(opdict_id=6)),
+                        pouring_temp=Max('parameter_value2', filter=Q(opdict_id=6)),
+                        knock_out=Max('completion_date1', filter=Q(opdict_id=61)),
+                        casting_weight=Max('parameter_value1', filter=Q(opdict_id__in=[43, 51])),
+                        machining_flatness=Max('completion_date1', filter=Q(opdict_id=91)),
+                        finishing_date=Max('completion_date1', filter=Q(opdict_id=38)),
+                    )
+                )
+                return render(request, 'prod_reports/execution_time_results.html', {'objects': casts})
+
+        return render(request, 'prod_reports/execution_time_form.html', {'form': ExecutionTimeForm()})
 
 
 class CastsWithMachiningViewSet(viewsets.ModelViewSet):
+    """ All castings required machining (raw or final)."""
     subquery = Operation.objects.filter(opdict__in=[19, 20])
     queryset = Cast.objects.filter(porder__status__in=[1, 2],
                                    cast_status__in=[1, 2, 7],
