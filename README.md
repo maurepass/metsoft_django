@@ -1,13 +1,17 @@
-Application is deployed on the server in my current work.
+Application is deployed on the server and in constant use in my current job.
 
-Main functions:
-- CRUD (offers, details, materials, patterns)
-- User Authentication and Authorization
-- tests (for offers app)
-- router to external database (for generating reports based on data from external production server)
-- templatetags (in tech_dep app)
-- generating some statistics
+Application contains three independent modules:
+1.	offers: preparing technical requirement for clients requests, generate reports showing amount of prepared offers and processed casting by every employee, generate report showing amount of castings from specified material group
+2.	patterns: managing patterns in the warehouse, generate report showing how long patterns for specified client where not used.
+3.	prod_reports: generate many different reports from production process based on data from another server
 
+Used functions:
+- CRUD class-based views
+- user authentication and authorization
+- multiple databases
+- template custom filters
+- serialization
+- tests (unittest, mocking)
 
 Used tools:
 - Django 2.2
