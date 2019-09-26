@@ -6,7 +6,7 @@ def base(request):
 
 
 def redirect_after_login(request):
-    if request.user.username == 'modelarnia':
+    if request.user.id == 25:
         return redirect('patterns:patterns')
     else:
         return redirect('offers')
