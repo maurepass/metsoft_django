@@ -13,19 +13,19 @@ from .serializers import CastSerializer, OperationSerializer
 
 class PouringViewSet(viewsets.ModelViewSet):
     """ All confirmed pouring operations."""
-    queryset = Operation.objects.filter(opdict=6)
+    queryset = Operation.objects.filter(opdict=6, completion_date1__regex=r'\w+')
     serializer_class = OperationSerializer
 
 
 class MoldingViewSet(viewsets.ModelViewSet):
     """ All confirmed moulding form operations."""
-    queryset = Operation.objects.filter(opdict=5)
+    queryset = Operation.objects.filter(opdict=5, completion_date1__regex=r'\w+')
     serializer_class = OperationSerializer
 
 
 class FinishedViewSet(viewsets.ModelViewSet):
     """ All confirmed final control operations. """
-    queryset = Operation.objects.filter(opdict=38)
+    queryset = Operation.objects.filter(opdict=38, completion_date1__regex=r'\w+')
     serializer_class = OperationSerializer
 
 
@@ -37,7 +37,7 @@ class RemarksViewSet(viewsets.ModelViewSet):
 
 class NonDestructiveTestingViewSet(viewsets.ModelViewSet):
     """ All confirmed NDT operations. """
-    queryset = Operation.objects.filter(opdict__in=[10, 21, 22, 24, 25, 26, 28, 56])
+    queryset = Operation.objects.filter(opdict__in=[10, 21, 22, 24, 25, 26, 28, 56], completion_date1__regex=r'\w+')
     serializer_class = OperationSerializer
 
 
@@ -78,13 +78,13 @@ class CastsInStockViewSet(viewsets.ModelViewSet):
 
 class CastingWeightsViewSet(viewsets.ModelViewSet):
     """ All confirmed weighting operations."""
-    queryset = Operation.objects.filter(opdict=51)
+    queryset = Operation.objects.filter(opdict=51, completion_date1__regex=r'\w+')
     serializer_class = OperationSerializer
 
 
 class MachiningViewSet(viewsets.ModelViewSet):
     """ All confirmed machining operations."""
-    queryset = Operation.objects.filter(opdict__in=[10, 21, 22, 24, 25, 26, 28, 56])
+    queryset = Operation.objects.filter(opdict__in=[10, 21, 22, 24, 25, 26, 28, 56], completion_date1__regex=r'\w+')
     serializer_class = OperationSerializer
 
 
