@@ -1,8 +1,10 @@
 import datetime
 
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.models import Group
 from django.shortcuts import redirect, render, reverse
+from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DeleteView, UpdateView, TemplateView, FormView
 from rest_framework import viewsets
 
@@ -223,9 +225,9 @@ class DetailSearchingView(FormView):
         return render(request, 'offers/detail_searching_form.html', {'form': DetailSearchingForm})
 
 
-class OffersStatisticsView(LoginRequiredMixin, PermissionRequiredMixin, TemplateView):
+@method_decorator([login_required, permission_required('offers.add_offer', raise_exception=True)], name='dispatch')
+class OffersStatisticsView(FormView):
     """ Generate reports: offers per technologist, offers per status, details per material group."""
-    permission_required = 'offers.view_offer'
 
     def dispatch(self, request, *args, **kwargs):
         date_stats_to = datetime.date.today()
@@ -233,8 +235,8 @@ class OffersStatisticsView(LoginRequiredMixin, PermissionRequiredMixin, Template
 
         if request.method == "POST":
             form = OfferStatsForm(request.POST)
-            date_stats_from = datetime.datetime.strptime(request.POST['date_stats_from'], '%d.%m.%Y')
-            date_stats_to = datetime.datetime.strptime(request.POST['date_stats_to'], '%d.%m.%Y')
+            date_stats_from = request.POST.get('date_stats_from')
+            date_stats_to = request.POST.get('date_stats_to')
         else:
             form = OfferStatsForm(initial={'date_stats_from': date_stats_from, 'date_stats_to': date_stats_to})
 
@@ -308,4 +310,3 @@ class OffersStatisticsView(LoginRequiredMixin, PermissionRequiredMixin, Template
         }
 
         return render(request, 'offers/stats.html', context)
-
