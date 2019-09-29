@@ -49,7 +49,7 @@ class PatternStatusChangeView(LoginRequiredMixin, PermissionRequiredMixin, gener
 
 class PatternReportFormView(generic.FormView):
     """ Generate a report included all patterns belonging to given customer """
-    form_class = PatternReportForm()
+    form_class = PatternReportForm
     template_name = 'patterns/pattern_report_form.html'
 
     def post(self, request, *args, **kwargs):
@@ -71,7 +71,7 @@ class PatternReportFormView(generic.FormView):
 
 class PatternViewSet(viewsets.ModelViewSet):
     """ Show all patterns in database"""
-    queryset = Pattern.objects.all()
+    queryset = Pattern.objects.all().order_by('-id')
     serializer_class = PatternSerializers
 
 
@@ -90,6 +90,7 @@ class PatternUpdateView(LoginRequiredMixin, PermissionRequiredMixin, generic.Upd
 
     def dispatch(self, request, *args, **kwargs):
         """ If the pattern status is changed, add new status to the pattern history """
+
         if request.method == 'POST':
             pattern = Pattern.objects.get(pk=kwargs.get('pk'))
             new_status = PatternStatus.objects.get(pk=request.POST.get('status'))
