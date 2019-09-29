@@ -11,6 +11,7 @@ Used functions:
 - multiple databases
 - template custom filters
 - serialization
+- middleware
 - tests (unittest, mocking)
 
 Used tools:

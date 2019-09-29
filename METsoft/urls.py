@@ -28,6 +28,7 @@ urlpatterns = [
     path('tech/', include('tech_dep.urls')),
 
     # old urls maintenance
-    path('kokila/raporty/', RedirectView.as_view(url='/reports/reports_list'))
+    path('kokila/raporty/', RedirectView.as_view(url='/reports/reports_list')),
+    path('modele/', RedirectView.as_view(url='/patterns/')),
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
