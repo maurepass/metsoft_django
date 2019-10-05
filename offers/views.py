@@ -147,6 +147,7 @@ class DetailCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
 
     def get_initial(self):
         initial = super().get_initial()
+        initial['required'] = 'wł. wytrz., skł. chem.'
 
         if 'steel' in self.request.GET:
             initial['detail_yield'] = 50

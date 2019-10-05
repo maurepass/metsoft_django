@@ -66,7 +66,6 @@ class Offer(models.Model):
     notices = models.TextField(
         null=True, blank=True,
         verbose_name='Uwagi',
-        # default=Notice.objects.first().content
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -340,7 +339,6 @@ class Detail(models.Model):
         blank=True,
         null=True,
         verbose_name='Odbiór na',
-        #default=u'wł. wytrz., skł. chem.'
     )
     quality_class = models.CharField(
         max_length=50,
