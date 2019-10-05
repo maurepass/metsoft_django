@@ -1,4 +1,4 @@
-from django.test import TestCase, RequestFactory, Client
+from django.test import TestCase
 from unittest.mock import patch
 from datetime import datetime, timedelta
 from django.shortcuts import reverse
@@ -7,34 +7,12 @@ from django.contrib.auth.models import User, Permission, ContentType, Group
 
 from .models import (Offer, OfferStatus, Detail, MaterialGroup, Material, MachiningType, HeatTreatment, PatternTaper,
                      AtestType, OfferPatternStatus, Notice)
-from .views import OfferCreateView, DetailCreateView, DetailUpdateView, DetailDeleteView
+from .views import OfferCreateView
 from .forms import OfferCreateUpdateForm
 
 
 class OffersModelsTest(TestCase):
     """ Unit Tests for Models"""
-
-    # def setUp(self) -> None:
-    #     self.of_stat1 = OfferStatus.objects.create(offer_status=1)
-    #     self.offer = Offer.objects.create(
-    #         offer_no='100/17',
-    #         client='test client',
-    #         positions_amount=2,
-    #         status=self.of_stat1
-    #     )
-    #
-    # @patch('offers.models.Offer')
-    # def test_offer_str(self, mock_offer):
-    #     class NewOffer:
-    #         offer_no = '100/17'
-    #         client = 'test client'
-    #         positions_amount = 2
-    #
-    #     mock_offer.return_value = NewOffer()
-    #     self.assertEqual(
-    #         mock_offer.__str__,
-    #         '{} -- {} -- {}'.format(mock_offer.offer_no, mock_offer.client, mock_offer.positions_amount)
-    #     )
 
     def test_string_from_list(self):
         test_list = ['test1', 'test1', 'test1', 'test2', 'test2']
@@ -70,6 +48,8 @@ class OffersViewsTests(TestCase):
 
 class OffersIntegrationTest(TestCase):
     """ Integration Tests for Offers"""
+
+    databases = {'kokila', 'default'}
 
     @classmethod
     def setUpTestData(cls):
@@ -355,27 +335,15 @@ class OffersIntegrationTest(TestCase):
         response = self.client.get(reverse('material-update', args=[self.mat1.pk]))
         self.assertEqual(response.status_code, 200)
 
-
-
-    #
-    # def test_get_days_amount(self):
-    #     self.assertEqual(self.offer1.get_days_amount(), 5)
-    #     self.assertIsNone(self.offer2.get_days_amount())
-    #
-    # def test_offer_status_creation(self):
-    #     self.assertTrue(isinstance(self.of_stat1, OfferStatus))
-    #     self.assertEqual(self.of_stat1.__str__(), self.of_stat1.offer_status)
-    #
-
-    # def test_prepare_details(self):
-    #     results = {
-    #         'machining': 'test_machining_1: 1,2,; ',
-    #         'tolerances': 'test_tolerances_1: 1,2,; ',
-    #         'tapers': 'test_tapers_1: 1,; test_tapers_2: 2,; ',
-    #         'atest': 'test_atest_1: 1,; test_atest_2: 2,; ',
-    #     }
-    #     self.assertEqual(self.offer1.prepare_details(), results)
-    #
+    def test_url_stats(self):
+        response = self.client.get(reverse('offers-stats'))
+        self.assertEqual(response.status_code, 302)
+        self.user1_logged()
+        response = self.client.get(reverse('offers-stats'))
+        self.assertEqual(response.status_code, 403)
+        self.user1.user_permissions.add(self.perm_add_offer)
+        response = self.client.get(reverse('offers-stats'))
+        self.assertEqual(response.status_code, 200)
 
 
 
