@@ -9,18 +9,26 @@ https://docs.djangoproject.com/en/2.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
-
 import os
+
+from django.core.exceptions import ImproperlyConfigured
+
+
+def get_secret(key, secrets):
+    """Get the secret variable or return explicit exception."""
+    try:
+        return secrets[key]
+    except KeyError:
+        error_msg = "Set the {0} environment variable".format(key)
+        raise ImproperlyConfigured(error_msg)
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'd71sfp!r5&m_%ock&$^devga4ktt!6ya&0#p+-j5y+^qq)moph'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -86,26 +94,6 @@ WSGI_APPLICATION = 'METsoft.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASE_ROUTERS = ['prod_reports.routers.ProdReportsRouter']
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'metsoft',
-        'HOST': 'localhost',
-        'USER': 'root',
-        'PASSWORD': 'zaq12#$ESZ',
-        'PORT': 3306
-    },
-    'kokila': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'kokila',
-        'HOST': 'localhost',
-        'USER': 'root',
-        'PASSWORD': 'zaq12#$ESZ',
-        'PORT': 3306
-    }
-
-}
 
 
 # Password validation
