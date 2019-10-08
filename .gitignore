@@ -127,7 +127,4 @@ dmypy.json
 
 /.idea/
 __pycache__
-/METsoft/settings/secrets/development.json
-/METsoft/settings/secrets/production.json
-/METsoft/METsoft/settings/secrets/development.json
-/METsoft/METsoft/settings/secrets/production.json
+/METsoft/settings/secrets/
