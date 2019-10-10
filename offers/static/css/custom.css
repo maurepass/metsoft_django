@@ -11,72 +11,52 @@ tfoot input {
 
 
 .fieldset fieldset {
-	font-size: 15px;
-	font-family: 'Times New Roman';
-	border: 1px solid black;
-	line-height: 18px;
+	font-size: 16px;
+	font-family: "Times New Roman";
+	border-radius: 15px;
 	margin: 0 auto 18px;
-	overflow: hidden;
-	width: 1200px;
 	background: #eee;
-	border-bottom: 1px solid #fff;
-	-khtml-box-shadow: 0 3px 3px rgba(0,0,0,.25);
-	-moz-box-shadow: 0 3px 3px rgba(0,0,0,.25);
-	-webkit-box-shadow: 0 3px 3px rgba(0,0,0,.25);
-	box-shadow: 0 3px 3px rgba(0,0,0,.25);
+	border-style: solid;
+	border-color: black;
+	border-width: 1px;
 	padding: 0 18px;
-	position: relative;
-	z-index: 1
-}
+	max-width: 1000px;
 
+}
 .fieldset legend {
+	width: auto;
 	color: #1e90ff;
 	font-size: 24px;
-	line-height: 1;
-	margin: 0;
-	text-shadow: -1px -1px 1px rgba(255,255,255,.5), 1px 1px 1px rgba(0,0,0,.75);
 	text-transform: uppercase;
+	text-shadow: -1px -1px 1px rgba(255,255,255,.5), 1px 1px 1px rgba(0,0,0,.75);
 }
 
 
 .fieldset fieldset ul {
 	list-style: none;
-	margin: 0;
 }
-
-.fieldset fieldset > ul {
-	border-top: 1px dotted #1e90ff;
-	margin: 6px 0 12px;
-	padding-top: 12px;
-}
-
-.fieldset_disabled fieldset > ul > li {
-	overflow: hidden;
-	padding: 6px 2px;
-	line-height: 24px;
-}
-
 
 .fieldset fieldset > ul > li:nth-child(odd) {
-	background: rgba(255,255,255,.35);
+	background-color: rgba(255,255,255,.35);
 }
-
-.fieldset fieldset > ul > li > label,
-.frm-label {
-	color: #0f467c;
-	display:  block;
+.fieldset fieldset > label {
+	display: block;
 	float: left;
-	margin: 0 10px 0 0;
-	width: 250px;
 }
 
 .fieldset label {
-	cursor: pointer;
-	font-weight: normal;
+	width: 250px;
+}
+.fieldset li input, select {
+	width: 350px;
+	height: 28px;
+	font-size: 16px;
 }
 
-.fieldset select {
-	width: 300px;
+.fieldset textarea {
+	width: 350px;
+	height: 50px;
+	font-size: 16px;
 }
 
 .alert {
