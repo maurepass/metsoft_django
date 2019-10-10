@@ -49,6 +49,7 @@ class PatternStatusChangeView(LoginRequiredMixin, PermissionRequiredMixin, gener
 
 class PatternReportFormView(generic.FormView):
     """ Generate a report included all patterns belonging to given customer """
+
     form_class = PatternReportForm
     template_name = 'patterns/pattern_report_form.html'
 
@@ -56,7 +57,7 @@ class PatternReportFormView(generic.FormView):
         """ Preparing results from given data """
         patterns = (Pattern.objects
                     .filter(customer__icontains=request.POST.get('customer1'))
-                    .exclude(status__in=[4, 5, 6, 7])
+                    .exclude(status__in=[4, 5, 6, 8])
                     )
         total_area = patterns.aggregate(total_area=Sum('area'))
         customers = patterns.values('customer').distinct()
