@@ -5,11 +5,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.auth.models import Group
 from django.shortcuts import redirect, render, reverse
 from django.utils.decorators import method_decorator
-from django.views.generic import CreateView, DeleteView, UpdateView, TemplateView, FormView
+from django.views.generic import CreateView, DeleteView, UpdateView, FormView, DetailView
 from rest_framework import viewsets
 
-from .forms import (DetailCreateForm, DetailSearchingForm, DetailUpdateForm,
-                    OfferCreateUpdateForm, OfferDetailsForm, OfferNoticeForm, OfferStatsForm)
+from . import forms
 from .models import Detail, Material, Notice, Offer, OfferStatus, MaterialGroup
 from .serializers import DetailSerializer, MaterialSerializer, OfferSerializer
 
@@ -17,7 +16,7 @@ from .serializers import DetailSerializer, MaterialSerializer, OfferSerializer
 class OfferNoticesUpdateView(LoginRequiredMixin, UpdateView):
     """ Changing default notices for offers"""
     template_name = 'offers/notice_form.html'
-    form_class = OfferNoticeForm
+    form_class = forms.OfferNoticeForm
 
     def get_object(self, queryset=None):
         return Notice.objects.first()
@@ -41,7 +40,7 @@ class DetailViewSet(viewsets.ModelViewSet):
 class OfferCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     """ Create a new offer"""
     model = Offer
-    form_class = OfferCreateUpdateForm
+    form_class = forms.OfferCreateUpdateForm
     permission_required = ['offers.add_offer']
 
     def get_initial(self):
@@ -66,27 +65,23 @@ class OfferCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
 class OfferUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     """ Offer update"""
     model = Offer
-    form_class = OfferCreateUpdateForm
+    form_class = forms.OfferCreateUpdateForm
     permission_required = ['offers.change_offer']
 
 
-class OfferPrintView(TemplateView):
+class OfferPrintView(DetailView):
     """ Prepare view to print the offer """
+    model = Offer
     template_name = 'offers/offer_print.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        offer = Offer.objects.get(pk=kwargs.get('pk'))
-        details = offer.detail_set.all()
-        prep_det = offer.prepare_details()
-
-        context['offer'] = offer
-        context['details'] = details
+        prep_det = self.object.prepare_details()
+        context['details'] = self.object.detail_set.all()
         context['tolerances'] = prep_det['tolerances']
         context['tapers'] = prep_det['tapers']
         context['atest'] = prep_det['atest']
         context['machining'] = prep_det['machining'],
-
         return context
 
 
@@ -110,13 +105,14 @@ class MaterialUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView
     permission_required = ['offers.change_material']
 
 
-class OfferDetailView(LoginRequiredMixin, TemplateView):
+class OfferDetailView(LoginRequiredMixin, FormView):
     """ Managing details belonged to a offer and editing notices"""
+
     def dispatch(self, request, *args, **kwargs):
         this_offer = Offer.objects.get(pk=kwargs.get('pk'))
 
         if request.method == 'POST' and 'new_notices' not in request.POST:
-            offer_form = OfferDetailsForm(request.POST, instance=this_offer)
+            offer_form = forms.OfferDetailsForm(request.POST, instance=this_offer)
             if offer_form.is_valid():
                 offer_form.save()
                 if 'status' in offer_form.changed_data:
@@ -128,7 +124,7 @@ class OfferDetailView(LoginRequiredMixin, TemplateView):
             notices = Notice.objects.first()
             this_offer.notices = notices.content
 
-        offer_form = OfferDetailsForm(instance=this_offer)
+        offer_form = forms.OfferDetailsForm(instance=this_offer)
         details = this_offer.detail_set.all()
 
         context = {
@@ -142,7 +138,7 @@ class OfferDetailView(LoginRequiredMixin, TemplateView):
 class DetailCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     """ Create new detail from cast iron or steel"""
     model = Detail
-    form_class = DetailCreateForm
+    form_class = forms.DetailCreateForm
     permission_required = ['offers.add_detail']
 
     def get_initial(self):
@@ -174,24 +170,22 @@ class DetailCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
 
 class DetailUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     """ Update detail or create new one based on current detail """
-
     model = Detail
-    form_class = DetailUpdateForm
+    form_class = forms.DetailUpdateForm
     pk_url_kwarg = 'det_pk'
     permission_required = ['offers.change_detail']
 
     def dispatch(self, request, *args, **kwargs):
         """ If 'new-detail' create new object and increase positions amount in the offer """
         if 'new-detail' in request.POST:
-            pk = self.kwargs.get('pk')
-            offer = Offer.objects.get(pk=pk)
-            new_detail = DetailCreateForm(request.POST)
+            offer = Offer.objects.get(pk=self.kwargs.get('pk'))
+            new_detail = forms.DetailCreateForm(request.POST)
             new_detail.instance.offer = offer
             if new_detail.is_valid():
                 new_detail.save()
                 offer.positions_amount += 1
                 offer.save()
-                return redirect('offer-details', pk=pk)
+                return redirect('offer-details', pk=offer.pk)
         return super().dispatch(request, *args, **kwargs)
 
 
@@ -203,11 +197,10 @@ class DetailDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
 
     def get_success_url(self):
         """ After removing detail decrease positions amount in offer """
-        pk = self.kwargs.get('pk')
-        offer = Offer.objects.get(pk=pk)
+        offer = Offer.objects.get(pk=self.kwargs.get('pk'))
         offer.positions_amount -= 1
         offer.save()
-        return reverse('offer-details', kwargs={'pk': pk})
+        return reverse('offer-details', kwargs={'pk': offer.pk})
 
 
 class DetailSearchingView(FormView):
@@ -223,7 +216,7 @@ class DetailSearchingView(FormView):
                 ).order_by('-id')
                 return render(request, 'offers/detail_searching_results.html', {'objects': objects})
 
-        return render(request, 'offers/detail_searching_form.html', {'form': DetailSearchingForm})
+        return render(request, 'offers/detail_searching_form.html', {'form': forms.DetailSearchingForm})
 
 
 @method_decorator([login_required, permission_required('offers.add_offer', raise_exception=True)], name='dispatch')
@@ -235,11 +228,11 @@ class OffersStatisticsView(FormView):
         date_stats_from = datetime.date(date_stats_to.year, date_stats_to.month, 1)
 
         if request.method == "POST":
-            form = OfferStatsForm(request.POST)
+            form = forms.OfferStatsForm(request.POST)
             date_stats_from = request.POST.get('date_stats_from')
             date_stats_to = request.POST.get('date_stats_to')
         else:
-            form = OfferStatsForm(initial={'date_stats_from': date_stats_from, 'date_stats_to': date_stats_to})
+            form = forms.OfferStatsForm(initial={'date_stats_from': date_stats_from, 'date_stats_to': date_stats_to})
 
         # get required data
         offers = Offer.objects.filter(date_tech_out__gt=date_stats_from, date_tech_out__lt=date_stats_to)
