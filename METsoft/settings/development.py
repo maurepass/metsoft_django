@@ -7,6 +7,8 @@ with open(os.path.join('./METsoft/settings/secrets/', 'development.json'), 'r') 
 
 SECRET_KEY = get_secret('SECRET_KEY', secrets),
 
+ALLOWED_HOSTS = ['testserver', 'localhost']
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',

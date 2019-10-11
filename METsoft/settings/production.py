@@ -1,9 +1,18 @@
+import json
+
 from .base import *
 
-secrets = os.path.join('./settings/secrets/', 'production.json')
 
+
+with open(os.path.join('/var/www/metsoft_django/METsoft/METsoft/settings/secrets/', 'production.json'), 'r') as f:
+    secrets = json.load(f)
 
 SECRET_KEY = get_secret('SECRET_KEY', secrets),
+
+ALLOWED_HOSTS = ["192.168.1.127", 'localhost']
+
+STATIC_ROOT = "/var/www/metsoft_django/METsoft/static"
+
 
 DATABASES = {
     'default': {
