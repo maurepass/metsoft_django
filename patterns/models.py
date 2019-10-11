@@ -43,7 +43,8 @@ class Pattern(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         verbose_name='status',
-        default=1
+        default=1,
+        limit_choices_to={'pk__lt': 8}
     )
     move_in = models.DateField(
         'Data zmiany statusu',
@@ -72,6 +73,18 @@ class Pattern(models.Model):
             diff = date.today() - self.last_order
             return int(diff.days/30)
         return None
+
+    def if_status_changed_update_history(self):
+        previous_status = self.patternhistory_set.order_by('id').last()
+        if previous_status.status != self.status:
+            self.add_status_to_pattern_history()
+
+    def add_status_to_pattern_history(self):
+        PatternHistory.objects.create(
+            pattern=self,
+            status=self.status,
+            date=self.move_in
+        )
 
 
 class PatternHistory(models.Model):

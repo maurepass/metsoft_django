@@ -1,55 +1,46 @@
-from datetime import date
-
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.db.models import Sum
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 from django.views import generic
 from rest_framework import viewsets
 
 from .forms import PatternCreateForm, PatternReportForm, PatternUpdateForm
-from .models import Pattern, PatternHistory, PatternStatus
+from .models import Pattern, PatternStatus
 from .serializers import PatternSerializers
 
 
-class PatternCardView(generic.TemplateView):
+class PatternCardView(generic.DetailView):
     """ Showing history of status changes for the specific pattern"""
+    model = Pattern
     template_name = 'patterns/pattern_card.html'
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data()
-        pattern = Pattern.objects.get(pk=kwargs.get('pk'))
-        context['pattern'] = pattern
-        context['objects'] = pattern.patternhistory_set.all()
+        context = super().get_context_data(**kwargs)
+        context['objects'] = self.object.patternhistory_set.all()
         return context
 
 
-class PatternStatusChangeView(LoginRequiredMixin, PermissionRequiredMixin, generic.TemplateView):
+class PatternStatusChangeView(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateView):
     """ Quick changing of the pattern status by clicking the appropriate button. """
+    model = Pattern
+    template_name = 'patterns/pattern_status_change.html'
     permission_required = ['patterns.change_pattern']
+    fields = ['status']
 
-    def dispatch(self, request, *args, **kwargs):
-        pattern = Pattern.objects.get(pk=kwargs.get('pk'))
-        statuses = PatternStatus.objects.all()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Not possible to set status "Brak weryfikacji"
+        context['statuses'] = PatternStatus.objects.all().exclude(pk=8)
+        return context
 
-        if request.method == "POST":
-            pattern.status = PatternStatus.objects.get(pk=request.POST.get('status'))
-            pattern.move_in = date.today()
-            pattern.save()
-            last_status = PatternHistory.objects.last()
-            if last_status.status != pattern.status:
-                PatternHistory.objects.create(pattern=pattern, status=pattern.status, date=pattern.move_in)
-            return redirect('/patterns/')
-
-        context = {
-            'pattern': pattern,
-            'statuses': statuses,
-        }
-        return render(request, 'patterns/pattern_status_change.html', context)
+    def get_success_url(self):
+        """ If the pattern status is changed, add new status to the pattern history """
+        Pattern.if_status_changed_update_history(self.object)
+        return super().get_success_url()
 
 
 class PatternReportFormView(generic.FormView):
     """ Generate a report included all patterns belonging to given customer """
-
     form_class = PatternReportForm
     template_name = 'patterns/pattern_report_form.html'
 
@@ -82,6 +73,11 @@ class PatternCreateView(LoginRequiredMixin, PermissionRequiredMixin, generic.Cre
     form_class = PatternCreateForm
     permission_required = ['patterns.add_pattern']
 
+    def get_success_url(self):
+        """ Add record with initial status to the pattern history"""
+        Pattern.add_status_to_pattern_history(self.object)
+        return super().get_success_url()
+
 
 class PatternUpdateView(LoginRequiredMixin, PermissionRequiredMixin, generic.UpdateView):
     """ Changing the pattern data"""
@@ -89,14 +85,7 @@ class PatternUpdateView(LoginRequiredMixin, PermissionRequiredMixin, generic.Upd
     form_class = PatternUpdateForm
     permission_required = ['patterns.change_pattern']
 
-    def dispatch(self, request, *args, **kwargs):
+    def get_success_url(self):
         """ If the pattern status is changed, add new status to the pattern history """
-
-        if request.method == 'POST':
-            pattern = Pattern.objects.get(pk=kwargs.get('pk'))
-            new_status = PatternStatus.objects.get(pk=request.POST.get('status'))
-            if pattern.status != new_status:
-                move_in_date = request.POST.get('move_in')
-                PatternHistory.objects.create(pattern=pattern, status=new_status, date=move_in_date)
-
-        return super().dispatch(request, *args, **kwargs)
+        Pattern.if_status_changed_update_history(self.object)
+        return super().get_success_url()
