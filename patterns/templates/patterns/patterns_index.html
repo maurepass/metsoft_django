@@ -88,8 +88,8 @@
                         { data: 'get_not_using_time' },
                         { data: 'id',
                             "fnCreatedCell":function(nTd, sData, oData, iRow, iCol){
-                                $(nTd).html('<a class="iframe" href="/patterns/' + sData + '/edit">Edytuj</a><br>' +
-                                            '<a class="iframe" href="/patterns/' + sData + '/status">Status</a><br>' +
+                                $(nTd).html('{% if perms.patterns %}<a class="iframe" href="/patterns/' + sData + '/edit">Edytuj</a><br> ' +
+                                            '<a class="iframe" href="/patterns/' + sData + '/status">Status</a><br>{% endif %}' +
                                             '<a class="iframe" href="/patterns/' + sData + '">Karta</a>');
                             }
                         }
