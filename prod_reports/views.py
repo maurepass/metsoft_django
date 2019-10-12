@@ -2,8 +2,8 @@ import datetime
 
 from django.db.models import F, Max, Q, Sum, Subquery
 from django.shortcuts import render
-from django.views.generic import ListView
-from django.views.generic.base import View, TemplateView
+from django.views.generic import ListView, FormView
+from django.views.generic.base import TemplateView
 from rest_framework import viewsets
 
 from .forms import ExecutionTimeForm
@@ -182,46 +182,46 @@ class WeightPerGroupView(TemplateView):
         return context
 
 
-class ExecutionTimeView(TemplateView):
+class ExecutionTimeView(FormView):
     """ Confirmation date for specified operations and specified data written during confirmation. """
-    def dispatch(self, request, *args, **kwargs):
-        if request.method == 'POST':
-            met_number = request.POST['met_number']
-            company = request.POST['company']
-            cast_name = request.POST['cast_name']
-            picture_number = request.POST['picture_number']
+    form_class = ExecutionTimeForm
+    template_name = 'prod_reports/execution_time_form.html'
 
-            if met_number or company or cast_name or picture_number:
-                casts = (
-                    Operation.objects
-                    .filter(
-                        cast__porder__met_no__icontains=met_number,
-                        cast__customer__icontains=company,
-                        cast__cast_name__icontains=cast_name,
-                        cast__picture_number__icontains=picture_number
-                    )
-                    .values('cast')
-                    .annotate(
-                        id=Max('cast__id'),
-                        met_no=Max('cast__porder__met_no'),
-                        customer=Max('cast__customer'),
-                        cast_name=Max('cast__cast_name'),
-                        picture_number=Max('cast__picture_number'),
-                        created_at=Max('cast__created_at'),
-                        moulding_date=Max('completion_date1', filter=Q(opdict_id=5)),
-                        pc_number=Max('parameter_value1', filter=Q(opdict_id=5)),
-                        pouring_date=Max('completion_date1', filter=Q(opdict_id=6)),
-                        melt_no=Max('parameter_value1', filter=Q(opdict_id=6)),
-                        pouring_temp=Max('parameter_value2', filter=Q(opdict_id=6)),
-                        knock_out=Max('completion_date1', filter=Q(opdict_id=61)),
-                        casting_weight=Max('parameter_value1', filter=Q(opdict_id__in=[43, 51])),
-                        machining_flatness=Max('completion_date1', filter=Q(opdict_id=91)),
-                        finishing_date=Max('completion_date1', filter=Q(opdict_id=38)),
-                    )
+    def post(self, request, *args, **kwargs):
+        met_number = request.POST['met_number']
+        company = request.POST['company']
+        cast_name = request.POST['cast_name']
+        picture_number = request.POST['picture_number']
+
+        if met_number or company or cast_name or picture_number:
+            casts = (
+                Operation.objects
+                .filter(
+                    cast__porder__met_no__icontains=met_number,
+                    cast__customer__icontains=company,
+                    cast__cast_name__icontains=cast_name,
+                    cast__picture_number__icontains=picture_number
                 )
-                return render(request, 'prod_reports/execution_time_results.html', {'objects': casts})
-
-        return render(request, 'prod_reports/execution_time_form.html', {'form': ExecutionTimeForm()})
+                .values('cast')
+                .annotate(
+                    id=Max('cast__id'),
+                    met_no=Max('cast__porder__met_no'),
+                    customer=Max('cast__customer'),
+                    cast_name=Max('cast__cast_name'),
+                    picture_number=Max('cast__picture_number'),
+                    created_at=Max('cast__created_at'),
+                    moulding_date=Max('completion_date1', filter=Q(opdict_id=5)),
+                    pc_number=Max('parameter_value1', filter=Q(opdict_id=5)),
+                    pouring_date=Max('completion_date1', filter=Q(opdict_id=6)),
+                    melt_no=Max('parameter_value1', filter=Q(opdict_id=6)),
+                    pouring_temp=Max('parameter_value2', filter=Q(opdict_id=6)),
+                    knock_out=Max('completion_date1', filter=Q(opdict_id=61)),
+                    casting_weight=Max('parameter_value1', filter=Q(opdict_id__in=[43, 51])),
+                    machining_flatness=Max('completion_date1', filter=Q(opdict_id=91)),
+                    finishing_date=Max('completion_date1', filter=Q(opdict_id=38)),
+                )
+            )
+            return render(request, 'prod_reports/execution_time_results.html', {'objects': casts})
 
 
 class CastsWithMachiningViewSet(viewsets.ModelViewSet):

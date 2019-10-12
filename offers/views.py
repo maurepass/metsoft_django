@@ -205,47 +205,38 @@ class DetailDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
 
 class DetailSearchingView(FormView):
     """ Find and show details based on given criteria """
+    form_class = forms.DetailSearchingForm
+    template_name = 'offers/detail_searching_form.html'
 
-    def dispatch(self, request, *args, **kwargs):
-        if request.method == 'POST':
-            if request.POST['cast_name'] or request.POST['drawing_no'] or request.POST['offer_no']:
-                objects = Detail.objects.filter(
-                    cast_name__icontains=request.POST.get('cast_name'),
-                    drawing_no__icontains=request.POST.get('drawing_no'),
-                    offer__offer_no__icontains=request.POST.get('offer_no')
-                ).order_by('-id')
-                return render(request, 'offers/detail_searching_results.html', {'objects': objects})
-
-        return render(request, 'offers/detail_searching_form.html', {'form': forms.DetailSearchingForm})
+    def post(self, request, *args, **kwargs):
+        if request.POST['cast_name'] or request.POST['drawing_no'] or request.POST['offer_no']:
+            objects = Detail.objects.filter(
+                cast_name__icontains=request.POST.get('cast_name'),
+                drawing_no__icontains=request.POST.get('drawing_no'),
+                offer__offer_no__icontains=request.POST.get('offer_no')
+            ).order_by('-id')
+            return render(request, 'offers/detail_searching_results.html', {'objects': objects})
+        else:
+            return redirect('details-searching')
 
 
 @method_decorator([login_required, permission_required('offers.add_offer', raise_exception=True)], name='dispatch')
 class OffersStatisticsView(FormView):
     """ Generate reports: offers per technologist, offers per status, details per material group."""
 
-    def dispatch(self, request, *args, **kwargs):
-        date_stats_to = datetime.date.today()
-        date_stats_from = datetime.date(date_stats_to.year, date_stats_to.month, 1)
-
-        if request.method == "POST":
-            form = forms.OfferStatsForm(request.POST)
-            date_stats_from = request.POST.get('date_stats_from')
-            date_stats_to = request.POST.get('date_stats_to')
-        else:
-            form = forms.OfferStatsForm(initial={'date_stats_from': date_stats_from, 'date_stats_to': date_stats_to})
-
-        # get required data
-        offers = Offer.objects.filter(date_tech_out__gt=date_stats_from, date_tech_out__lt=date_stats_to)
-        tech_users = Group.objects.get(pk=2).user_set.all()
-        offer_statuses = OfferStatus.objects.all()
-        mat_groups = MaterialGroup.objects.all()
-        details = Detail.objects.filter(offer__date_tech_out__gt=date_stats_from, offer__date_tech_out__lt=date_stats_to)
-
-        # stats for offers per technologist
+    @staticmethod
+    def gen_report_offer_per_technologist(offers):
+        """
+        Generate report:
+        - amount of offers prepared by every technologist
+        - average time required to prepare offer by every technologist
+        - amount of casting prepared by every technologist
+        """
         tech_stats = []
         of_amt, det_amt, in_time_amt = 0, 0, 0
+        technologists = Group.objects.get(pk=2).user_set.all()
 
-        for index, tech in enumerate(tech_users):
+        for index, tech in enumerate(technologists):
             tech_stats.append({
                 'tech': tech.first_name,
                 'amount': 0,
@@ -264,9 +255,14 @@ class OffersStatisticsView(FormView):
                     of_amt += 1
                     det_amt += offer.positions_amount
 
-        # stats for offers per status
+        return {'tech_stats': tech_stats, 'of_amt': of_amt, 'det_amt': det_amt}
+
+    @staticmethod
+    def gen_report_offer_per_statuses(offers):
+        """ Generat report: amount of offers in every status"""
         statuses_stats = []
         of_stat_amt = 0
+        offer_statuses = OfferStatus.objects.all()
 
         for index, status in enumerate(offer_statuses):
             statuses_stats.append({
@@ -278,9 +274,15 @@ class OffersStatisticsView(FormView):
                     statuses_stats[index]['amount'] += 1
                     of_stat_amt += 1
 
-        # stats for details per material group
+        return {'statuses_stats': statuses_stats, 'of_stat_amt': of_stat_amt}
+
+    @staticmethod
+    def gen_report_details_per_mat_group(details):
+        """ Generate report: amount of castings in every material group """
         detail_stats = []
         det_mat_amt = 0
+        mat_groups = MaterialGroup.objects.all()
+
         for index, mat_group in enumerate(mat_groups):
             detail_stats.append({
                 'mat_group': mat_group.mat_group,
@@ -290,17 +292,25 @@ class OffersStatisticsView(FormView):
                 if detail.mat.mat_group.pk == mat_group.pk:
                     detail_stats[index]['amount'] += 1
                     det_mat_amt += 1
+        return {'detail_stats': detail_stats, 'det_mat_amt': det_mat_amt}
 
-        context = {
-            "tech_stats": tech_stats,
-            "statuses_stats": statuses_stats,
-            "detail_stats": detail_stats,
-            "of_amt": of_amt,
-            "in_time_amt": in_time_amt,
-            "det_amt": det_amt,
-            "det_mat_amt": det_mat_amt,
-            "of_stat_amt": of_stat_amt,
-            "form": form,
-        }
+    def dispatch(self, request, *args, **kwargs):
+        date_stats_to = datetime.date.today()
+        date_stats_from = datetime.date(date_stats_to.year, date_stats_to.month, 1)
+
+        if request.method == "POST":
+            form = forms.OfferStatsForm(request.POST)
+            date_stats_from = request.POST.get('date_stats_from')
+            date_stats_to = request.POST.get('date_stats_to')
+        else:
+            form = forms.OfferStatsForm(initial={'date_stats_from': date_stats_from, 'date_stats_to': date_stats_to})
+
+        offers = Offer.objects.filter(date_tech_out__gt=date_stats_from, date_tech_out__lt=date_stats_to)
+        details = Detail.objects.filter(offer__date_tech_out__gt=date_stats_from, offer__date_tech_out__lt=date_stats_to)
+
+        context = {"form": form}
+        context.update(self.gen_report_offer_per_technologist(offers))
+        context.update(self.gen_report_offer_per_statuses(offers))
+        context.update(self.gen_report_details_mat_per_group(details))
 
         return render(request, 'offers/stats.html', context)
