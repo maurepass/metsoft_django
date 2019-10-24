@@ -9,6 +9,10 @@ tfoot input {
 	box-sizing: border-box;
 }
 
+.bg-company-blue {
+	background-color: #23527c;
+}
+
 
 .fieldset fieldset {
 	font-size: 16px;
