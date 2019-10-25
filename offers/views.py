@@ -1,10 +1,8 @@
 import datetime
 
-from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.models import Group
 from django.shortcuts import redirect, render, reverse
-from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DeleteView, UpdateView, FormView, DetailView
 from rest_framework import viewsets
 
@@ -216,13 +214,13 @@ class DetailSearchingView(FormView):
                 offer__offer_no__icontains=request.POST.get('offer_no')
             ).order_by('-id')
             return render(request, 'offers/detail_searching_results.html', {'objects': objects})
-        else:
-            return redirect('details-searching')
+
+        return redirect('details-searching')
 
 
-@method_decorator([login_required, permission_required('offers.add_offer', raise_exception=True)], name='dispatch')
-class OffersStatisticsView(FormView):
+class OffersStatisticsView(LoginRequiredMixin, PermissionRequiredMixin, FormView):
     """ Generate reports: offers per technologist, offers per status, details per material group."""
+    permission_required = 'offers.add_offer'
 
     @staticmethod
     def gen_report_offer_per_technologist(offers):
@@ -311,6 +309,6 @@ class OffersStatisticsView(FormView):
         context = {"form": form}
         context.update(self.gen_report_offer_per_technologist(offers))
         context.update(self.gen_report_offer_per_statuses(offers))
-        context.update(self.gen_report_details_mat_per_group(details))
+        context.update(self.gen_report_details_per_mat_group(details))
 
         return render(request, 'offers/stats.html', context)
