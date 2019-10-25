@@ -71,7 +71,8 @@ class Pattern(models.Model):
             return None
         if self.last_order:
             diff = date.today() - self.last_order
-            return int(diff.days/30)
+            months = (diff.days // 365 * 12) + (diff.days % 365)/30
+            return int(months)
         return None
 
     def if_status_changed_update_history(self):
