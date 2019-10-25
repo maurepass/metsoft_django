@@ -24,6 +24,8 @@ class PatternReportForm(forms.Form):
 
 class PatternCreateForm(forms.ModelForm):
 
+    material = forms.ChoiceField(choices=[('', ''), ('staliwo', 'staliwo'), ('żeliwo', 'żeliwo'), ('kolorki', 'kolorki')])
+
     class Meta:
         model = Pattern
         fields = "__all__"
