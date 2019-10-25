@@ -35,32 +35,31 @@
                     <li class="nav-item"><a class="nav-link" href="{% url 'orders-index' %}">Zlecenia</a></li>
                 {% endif %}
 
-                {% if 'patterns' not in request.path or perms.prod_reports %}
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Raporty</a>
-                        <div class="dropdown-menu" aria-labelledby="dropdown04">
-                            <a class="dropdown-item"  href="{% url 'monitoring-in-work' %}" >Monitoring odlewów w produkcji</a>
-                            <a class="dropdown-item" href="{% url 'monitoring-all' %}" >Monitoring odlewów (wszystkie zlecenia)</a>
-                            <a class="dropdown-item" href="{% url 'finished' %}">Rejestr odbiorów</a>
-                            <a class="dropdown-item" href="{% url 'pouring' %}">Rejestr zalań</a>
-                            <a class="dropdown-item" href="{% url 'nonconformity' %}">Rejestr niezgodnych operacji</a>
-                            <a class="dropdown-item" href="{% url 'molding' %}">Rejestr zaformowań</a>
-                            <a class="dropdown-item" href="{% url 'non-destructive-testing' %}">Rejestr badań</a>
-                            <a class="dropdown-item" href="{% url 'machining' %}">Rejestr wykonanych obróbek mechanicznych</a>
-                            <a class="dropdown-item" href="{% url 'remarks' %}" >Rejestr uwag do zatwierdzonych operacji</a>
-                            <a class="dropdown-item" href="{% url 'execution-time' %}"> Międzyczasy wykonania operacji</a>
-                            <a class="dropdown-item" href="{% url 'weight-per-client' %}">Tonaż odlewów do wykonania wg klientów</a>
-                            <a class="dropdown-item" href="{% url 'weight-per-group' %}" >Tonaż odlewów do wykonania wg grup kalkulacyjnych</a>
-                            <a class="dropdown-item" href="{% url 'scraps' %}">Rejestr wybraków</a>
-                            <a class="dropdown-item" href="{% url 'casting-weights' %}">Rejestr operacji ważenia</a>
-                            <a class="dropdown-item" href="{% url 'casts-in-stock' %}"> Stan magazynowy</a>
-                            <a class="dropdown-item" href="{% url 'inserted-data' %}">Rejest wpisanych danych</a>
-                            <a class="dropdown-item" href="{% url 'yields' %}"> Uzyski wg KO</a>
-                            <a class="dropdown-item" href="{% url 'castings-with-machining' %}"> Odlewy do obróbki mechanicznej</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Raporty (Kokila)</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown04">
+                        <a class="dropdown-item"  href="{% url 'monitoring-in-work' %}" >Monitoring odlewów w produkcji</a>
+                        <a class="dropdown-item" href="{% url 'monitoring-all' %}" >Monitoring odlewów (wszystkie zlecenia)</a>
+                        <a class="dropdown-item" href="{% url 'finished' %}">Rejestr odbiorów</a>
+                        <a class="dropdown-item" href="{% url 'pouring' %}">Rejestr zalań</a>
+                        <a class="dropdown-item" href="{% url 'nonconformity' %}">Rejestr niezgodnych operacji</a>
+                        <a class="dropdown-item" href="{% url 'molding' %}">Rejestr zaformowań</a>
+                        <a class="dropdown-item" href="{% url 'non-destructive-testing' %}">Rejestr badań</a>
+                        <a class="dropdown-item" href="{% url 'machining' %}">Rejestr wykonanych obróbek mechanicznych</a>
+                        <a class="dropdown-item" href="{% url 'remarks' %}" >Rejestr uwag do zatwierdzonych operacji</a>
+                        <a class="dropdown-item" href="{% url 'execution-time' %}"> Międzyczasy wykonania operacji</a>
+                        <a class="dropdown-item" href="{% url 'weight-per-client' %}">Tonaż odlewów do wykonania wg klientów</a>
+                        <a class="dropdown-item" href="{% url 'weight-per-group' %}" >Tonaż odlewów do wykonania wg grup kalkulacyjnych</a>
+                        <a class="dropdown-item" href="{% url 'scraps' %}">Rejestr wybraków</a>
+                        <a class="dropdown-item" href="{% url 'casting-weights' %}">Rejestr operacji ważenia</a>
+                        <a class="dropdown-item" href="{% url 'casts-in-stock' %}"> Stan magazynowy</a>
+                        <a class="dropdown-item" href="{% url 'inserted-data' %}">Rejest wpisanych danych</a>
+                        <a class="dropdown-item" href="{% url 'yields' %}"> Uzyski wg KO</a>
+                        <a class="dropdown-item" href="{% url 'castings-with-machining' %}"> Odlewy do obróbki mechanicznej</a>
 
-                        </div>
-                    </li>
-                {% endif %}
+                    </div>
+                </li>
+
 
                 {% if perms.offers or 'offers' in request.path or 'tech' in request.path %}
                     <li class="nav-item"><a class="nav-link" href="{% url 'offer-create' %}">Dodaj ofertę</a></li>
@@ -88,7 +87,7 @@
                 {% endif %}
 
                 {% if 'patterns' in request.path or perms.patterns %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'patterns:pattern-report' %}">Raport</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'patterns:pattern-report' %}">Raport (modele)</a></li>
                 {% endif %}
 
                 {% if request.user.username == 'admin' %}
