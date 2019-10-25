@@ -56,7 +56,7 @@
                 <td>{{ obj.drawing_number }}</td>
                 <td>{{ obj.pattern_name }}</td>
                 <td class="text-right">{{ obj.area|floatformat:"2" }}</td>
-                <td>{{ obj.last_order|date:"Y-m-d" }}</td>
+                <td class="text-right">{{ obj.last_order|date:"Y-m-d" }}</td>
                 <td class="text-right">{{ obj.get_not_using_time|default_if_none:"" }}</td>
             </tr>
         {% endfor %}
