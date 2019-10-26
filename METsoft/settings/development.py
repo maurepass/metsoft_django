@@ -9,6 +9,9 @@ SECRET_KEY = get_secret('SECRET_KEY', secrets),
 
 ALLOWED_HOSTS = ['testserver', 'localhost']
 
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -27,3 +30,10 @@ DATABASES = {
         'PORT': 3306
     }
 }
+
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = get_secret('EMAIL_HOST', secrets)
+EMAIL_HOST_USER = get_secret('EMAIL_HOST_USER', secrets)
+EMAIL_HOST_PASSWORD = get_secret('EMAIL_HOST_PASSWORD', secrets)
+EMAIL_PORT = 587

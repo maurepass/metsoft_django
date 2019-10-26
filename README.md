@@ -18,7 +18,8 @@ Used tools:
 - Django 2.2
 - Django Rest Framework 3.9
 - Datatables 1.10
-- Django Rest Framework Datatables
+- Django Rest Framework 
+- Datatables
 - Django Crispy Forms
 - Bootstrap 4.3
 - jQuery 3.3

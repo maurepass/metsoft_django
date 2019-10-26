@@ -30,10 +30,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -151,4 +147,5 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework_datatables.pagination.DatatablesPageNumberPagination',
     'PAGE_SIZE': 50,
 }
+
 
