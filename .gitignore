@@ -128,3 +128,4 @@ dmypy.json
 /.idea/
 __pycache__
 /METsoft/settings/secrets/
+/cov_html/

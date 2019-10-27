@@ -12,7 +12,7 @@ Used functions:
 - template custom filters
 - serialization
 - middleware
-- tests (unittest, mocking)
+- tests (unittest, mocking, pytest)
 
 Used tools:
 - Django 2.2
