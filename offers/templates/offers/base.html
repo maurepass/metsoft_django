@@ -28,10 +28,8 @@
 
           <div class="collapse navbar-collapse" id="navbarsExample04">
             <ul class="navbar-nav mr-auto">
-                {% if perms.offers or 'offers' in request.path or 'tech' in request.path %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'offers' %}">Oferty</a></li>
-                {% endif %}
 
+                <li class="nav-item"><a class="nav-link" href="{% url 'offers' %}">Oferty</a></li>
                 <li class="nav-item"><a class="nav-link" href="http://192.168.1.185/"  target="_blade">Kokila</a></li>
 
                 {% if 'tech' in request.path or 'offers' in request.path or perms.tech_dep %}
