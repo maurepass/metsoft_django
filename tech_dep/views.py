@@ -1,8 +1,15 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.models import User
+from django.core.mail import send_mail
+from django.shortcuts import redirect
+from django.template.loader import render_to_string
 from django.views.generic import UpdateView, TemplateView
 from rest_framework import viewsets
 
 from prod_reports.models import Pocastord
+from offers.models import Offer
+
+from METsoft.settings import EMAIL_HOST_USER
 
 from .forms import OrderUpdateForm
 from .models import Order
@@ -53,4 +60,25 @@ class OrderUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     form_class = OrderUpdateForm
     success_url = '/tech/orders/'
     permission_required = ['tech_dep.change_order']
+
+
+def daily_mail_tech_department():
+
+    context = {
+        'offers': Offer.objects.filter(status_id=1),
+        'orders': Order.objects.filter(status_id=2),
+    }
+
+    user = User.objects.get(pk=4)
+
+    send_mail('METsoft - daily mail',
+              'Some message',
+              from_email=EMAIL_HOST_USER,
+              recipient_list=[user.email],
+              html_message=render_to_string('tech_dep/daily_mail_tech_department.html', context)
+              )
+
+    return redirect('offers')
+
+
 

@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     # third part apps
     'rest_framework',
     'crispy_forms',
+    'django_extensions',
+    'django_inlinecss',
 
     # my apps
     'offers.apps.OffersConfig',

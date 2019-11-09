@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>Oferty w opracowaniu</h1>
+
+    <table class="mail_table">
+        <thead>
+            <tr style="text-align: left">
+                <th>Lp</th>
+                <th>Nr oferty</th>
+                <th>Klient</th>
+                <th>Marketingowiec</th>
+                <th>Technolog</th>
+                <th>Data przekazania do WZT</th>
+                <th>Ilość dni</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for offer in offers %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ offer.offer_no }}</td>
+                    <td>{{ offer.client }}</td>
+                    <td>{{ offer.user_mark.first_name }}</td>
+                    <td>{{ offer.user_tech.first_name }}</td>
+                    <td>{{ offer.date_tech_in|date:"Y-m-d" }}</td>
+                    <td>{{ offer.get_days_amount }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br>
+    <h1>Zlecenia w opracowaniu</h1>
+ <table id="raports" class="table table-bordered table-sm table-hover" style="width: 100%">
+        <thead>
+            <tr>
+                <th>Lp.</th>
+                <th>Nr zlecenia</th>
+                <th>Klient</th>
+                <th>Nazwa odlewu</th>
+                <th>Nr. rys.</th>
+                <th>Il. szt.</th>
+                <th>Materiał</th>
+                <th>Termin</th>
+                <th>Marketing</th>
+                <th>Data otrzymania</th>
+                <th>Technolog</th>
+                <th>Uwagi</th>
+                <th>Dni</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ order.numer_met }}</td>
+                    <td>{{ order.company }}</td>
+                    <td>{{ order.cast_name }}</td>
+                    <td>{{ order.pict_number }}</td>
+                    <td>{{ order.cast_pcs }}</td>
+                    <td>{{ order.cust_material }}</td>
+                    <td>{{ order.termin_klienta }}</td>
+                    <td>{{ order.marketing }}</td>
+                    <td>{{ order.ord_in }}</td>
+                    <td>{{ order.tech_memb.first_name }}</td>
+                    <td>{{ order.uwagi }}</td>
+                    <td>{{ order.get_working_time }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
