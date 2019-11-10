@@ -83,5 +83,40 @@
             {% endfor %}
         </tbody>
     </table>
+    <h2>Niezgodności</h2>
+    <table style="width: 100%">
+        <thead>
+            <tr>
+                <th>Lp</th>
+                <th>ID odlewu</th>
+                <th>Numer MET</th>
+                <th>Klient</th>
+                <th>Nazwa odlewu</th>
+                <th>Numer rysunku</th>
+                <th>Materiał</th>
+                <th>Ciężar</th>
+                <th>Operacja</th>
+                <th>Wprowadzający</th>
+                <th>Opis niezgodności</th>
+                <th>Data</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in nonconformities %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ item.cast.id }}</td>
+                    <td>{{ item.cast.porder.met_no }}</td>
+                    <td>{{ item.cast.customer }}</td>
+                    <td>{{ item.cast.cast_name }}</td>
+                    <td>{{ item.cast.picture_number }}</td>
+                    <td>{{ item.cast.cast_material.materialname }}</td>
+                    <td>{{ item.cast.cast_weight }}</td>
+                    <td>{{ item.opdict.operationname }}</td>
+                    <td>{{ item.confirmed_by1 }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </body>
 </html>
