@@ -2,13 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        table tr td, th {
+            border: 1px solid black;
+            padding: 0 5px;
+            text-align: left;
+        }
+    </style>
 </head>
 <body>
-    <h1>Oferty w opracowaniu</h1>
-
-    <table class="mail_table">
+    <h2>Oferty w opracowaniu</h2>
+    <table style="width: 100%">
         <thead>
-            <tr style="text-align: left">
+            <tr>
                 <th>Lp</th>
                 <th>Nr oferty</th>
                 <th>Klient</th>
@@ -32,9 +43,9 @@
             {% endfor %}
         </tbody>
     </table>
-    <br>
-    <h1>Zlecenia w opracowaniu</h1>
- <table id="raports" class="table table-bordered table-sm table-hover" style="width: 100%">
+
+    <h2>Zlecenia w opracowaniu</h2>
+    <table style="width: 100%">
         <thead>
             <tr>
                 <th>Lp.</th>
@@ -62,9 +73,9 @@
                     <td>{{ order.pict_number }}</td>
                     <td>{{ order.cast_pcs }}</td>
                     <td>{{ order.cust_material }}</td>
-                    <td>{{ order.termin_klienta }}</td>
+                    <td>{{ order.termin_klienta|date:"Y-m-d" }}</td>
                     <td>{{ order.marketing }}</td>
-                    <td>{{ order.ord_in }}</td>
+                    <td>{{ order.ord_in|date:"Y-m-d" }}</td>
                     <td>{{ order.tech_memb.first_name }}</td>
                     <td>{{ order.uwagi }}</td>
                     <td>{{ order.get_working_time }}</td>
