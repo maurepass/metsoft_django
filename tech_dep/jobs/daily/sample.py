@@ -1,6 +1,5 @@
 from datetime import timedelta, date
 
-from dateutil.utils import today
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
@@ -17,10 +16,10 @@ class Job(DailyJob):
 
     def execute(self):
         # if is Monday send nonconformities since Friday
-        if date.isoweekday(today()) == 1:
-            completion_date = today() - timedelta(days=3)
+        if date.isoweekday(date.today()) == 1:
+            completion_date = date.today() - timedelta(days=3)
         else:
-            completion_date = today() - timedelta(days=1)
+            completion_date = date.today() - timedelta(days=1)
 
         context = {
             'offers': Offer.objects.filter(status_id=1).order_by('-id'),
