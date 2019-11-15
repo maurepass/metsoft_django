@@ -1,9 +1,11 @@
 Application is deployed on the server and in constant use in my current job.
 
-Application contains three independent modules:
+Application includes the following modules:
 1.	offers: preparing technical requirement for clients requests, generate reports showing amount of prepared offers and processed casting by every employee, generate report showing amount of castings from specified material group
 2.	patterns: managing patterns in the warehouse, generate report showing how long patterns for specified client where not used.
 3.	prod_reports: generate many different reports from production process based on data from another server
+4.  tech_dep: managing new orders in technology department, sending daily mail with task in progress and nonconformities since previous day
+5.  users: authentication and password reset, logging of using specified paths by users
 
 Used functions:
 - CRUD class-based views
@@ -13,6 +15,8 @@ Used functions:
 - serialization
 - middleware
 - tests (unittest, mocking, pytest)
+- send_mail
+- job scheduling (django_extensions)
 
 Used tools:
 - Django 2.2
@@ -27,3 +31,4 @@ Used tools:
 - CSS
 - MySQL
 - Apache2
+- Cron
