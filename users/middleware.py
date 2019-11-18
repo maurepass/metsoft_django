@@ -49,8 +49,11 @@ class UsedViewsMiddleware:
                 if user_ip == '127.0.0.1':
                     user_host = socket.gethostname()
                 else:
-                    result_host = socket.gethostbyaddr(user_ip)
-                    user_host = result_host[0]
+                    try:
+                        result_host = socket.gethostbyaddr(user_ip)
+                        user_host = result_host[0]
+                    except:
+                        user_host = 'unknown'
 
                 # set report_name
                 if request.path in self.old_paths:
