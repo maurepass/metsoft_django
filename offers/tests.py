@@ -1,53 +1,64 @@
+import factory
 import pytest
+
 from django.test import TestCase
 from unittest.mock import patch
 from datetime import datetime, timedelta
 from django.shortcuts import reverse
 from django.contrib.auth.models import User, Permission, ContentType, Group
 
-
-from .models import (Offer, OfferStatus, Detail, MaterialGroup, Material, MachiningType, HeatTreatment, PatternTaper,
-                     AtestType, OfferPatternStatus, Notice)
 from . import models
 
 
-class OffersModelsTest(TestCase):
-    """ Unit Tests for Models"""
+class OfferStatusFactory(factory.DjangoModelFactory):
+    class Meta:
+        model = models.OfferStatus
 
-    def test_string_from_list(self):
-        test_list = ['test1', 'test1', 'test1', 'test2', 'test2']
-        results = 'test1: 1,2,3,; test2: 4,5,; '
-        self.assertEqual(models.Offer.string_from_list(test_list), results)
+
+def test_offer_string_from_list():
+    test_list = ['test1', 'test1', 'test1', 'test2', 'test2']
+    results = 'test1: 1,2,3,; test2: 4,5,; '
+    assert models.Offer.string_from_list(test_list) == results
+
+
+@patch('offers.models.reverse')
+def test_offer_get_absolute_url(mock_reverse):
+    mock_reverse.return_value = 'test'
+    assert models.Offer.get_absolute_url() == 'test'
+    mock_reverse.assert_called()
+
+
+@patch('offers.models.reverse')
+def test_material_get_absolute_url(mock_reverse):
+    mock_reverse.return_value = 'test'
+    assert models.Offer.get_absolute_url() == 'test'
+    mock_reverse.assert_called()
 
 
 @pytest.mark.django_db
 class OffersViewsTests(TestCase):
     """Unit Tests for Views"""
 
+    def offer_create_view(self):
+        from . import views
+        return views.OfferCreateView()
+
     @patch('offers.views.Offer.objects.last')
     def test_offer_create_view_get_initial_try(self, mock_objects_last):
-
-        from . import views
-
         class NewOffer:
             offer_no = '100/17'
 
         mock_objects_last.return_value = NewOffer()
-        view = views.OfferCreateView()
-        initial = view.get_initial()
+        initial = self.offer_create_view().get_initial()
         self.assertEqual(initial['offer_no'], '101/17')
 
     @patch('offers.views.Offer.objects.last')
     def test_offer_create_view_get_initial_except(self, mock_offer_objects_last):
-
-        from . import views
-
         class NewOffer:
             offer_no = 'a100/17'
 
         mock_offer_objects_last.return_value = NewOffer()
-        view = views.OfferCreateView()
-        initial = view.get_initial()
+        initial = self.offer_create_view().get_initial()
         self.assertEqual(initial['offer_no'], 'a100/17')
 
 
@@ -68,15 +79,15 @@ class OffersIntegrationTest(TestCase):
         cls.user2.groups.add(cls.group_tech)
 
         # offers
-        cls.of_stat_id1 = OfferStatus.objects.create(id=1, offer_status='test status id 1')
-        cls.of_stat_id2 = OfferStatus.objects.create(id=2, offer_status='test status id 2')
-        cls.notice = Notice.objects.create(content=u'test_notices')
+        cls.of_stat_id1 = models.OfferStatus.objects.create(id=1, offer_status='test status id 1')
+        cls.of_stat_id2 = models.OfferStatus.objects.create(id=2, offer_status='test status id 2')
+        cls.notice = models.Notice.objects.create(content=u'test_notices')
 
-        Notice.objects.create(content=r'a')
+        models.Notice.objects.create(content=r'a')
         cls.perm_add_offer = Permission.objects.get(codename='add_offer')
         cls.perm_change_offer = Permission.objects.get(codename='change_offer')
 
-        cls.offer1 = Offer.objects.create(
+        cls.offer1 = models.Offer.objects.create(
             offer_no='0/00',
             client='test_client1',
             user_mark=cls.user1,
@@ -85,7 +96,7 @@ class OffersIntegrationTest(TestCase):
             date_tech_in=datetime.today() - timedelta(days=5),
             positions_amount=2,
         )
-        cls.offer2 = Offer.objects.create(
+        cls.offer2 = models.Offer.objects.create(
             offer_no='0/00',
             client='test_client2',
             user_mark=cls.user1,
@@ -104,22 +115,22 @@ class OffersIntegrationTest(TestCase):
             codename='change_material',
             content_type_id=cls.content_type_offers_material
         )
-        MaterialGroup.objects.create(id=1, mat_group=21, description='test_material_group')
-        cls.mat1 = Material.objects.create(
+        models.MaterialGroup.objects.create(id=1, mat_group=21, description='test_material_group')
+        cls.mat1 = models.Material.objects.create(
             material='test_material_test_1',
-            mat_group=MaterialGroup.objects.get(id=1)
+            mat_group=models.MaterialGroup.objects.get(id=1)
         )
 
         # details
         cls.perm_add_detail = Permission.objects.get(codename='add_detail')
         cls.perm_change_detail = Permission.objects.get(codename='change_detail')
         cls.perm_delete_detail = Permission.objects.get(codename='delete_detail')
-        cls.mach1 = MachiningType.objects.create(machining='test_machining_1')
-        cls.heat_treat1 = HeatTreatment.objects.create(term='test_heat_treatment_1')
-        cls.pat_taper_1 = PatternTaper.objects.create(taper='test_pattern_taper_1')
-        cls.atest_type1 = AtestType.objects.create(atest='test_atest_type_1')
-        cls.of_pat_status1 = OfferPatternStatus.objects.create(status='offer_pattern_status_1')
-        cls.detail1 = Detail.objects.create(
+        cls.mach1 = models.MachiningType.objects.create(machining='test_machining_1')
+        cls.heat_treat1 = models.HeatTreatment.objects.create(term='test_heat_treatment_1')
+        cls.pat_taper_1 = models.PatternTaper.objects.create(taper='test_pattern_taper_1')
+        cls.atest_type1 = models.AtestType.objects.create(atest='test_atest_type_1')
+        cls.of_pat_status1 = models.OfferPatternStatus.objects.create(status='offer_pattern_status_1')
+        cls.detail1 = models.Detail.objects.create(
             offer=cls.offer1,
             mat=cls.mat1,
             machining=cls.mach1,
@@ -127,7 +138,7 @@ class OffersIntegrationTest(TestCase):
             tapers='test_tapers_1',
             atest='test_atest_1',
         )
-        cls.detail2 = Detail.objects.create(
+        cls.detail2 = models.Detail.objects.create(
             offer=cls.offer1,
             mat=cls.mat1,
             machining=cls.mach1,
