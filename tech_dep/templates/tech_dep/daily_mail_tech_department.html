@@ -114,7 +114,7 @@
                     <td>{{ item.cast.cast_weight }}</td>
                     <td>{{ item.opdict.operationname }}</td>
                     <td>{{ item.confirmed_by1 }}</td>
-                    <td>{{ item.notes }}</td>
+                    <td>{{ item.notes|default:"" }}</td>
                     <td>{{ item.completion_date1|date:"Y-m-d" }}</td>
                 </tr>
             {% endfor %}

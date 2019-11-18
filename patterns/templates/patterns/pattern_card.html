@@ -24,7 +24,7 @@
                 <tr>
                     <td>{{ forloop.counter }}</td>
                     <td>{{ obj.status.status }}</td>
-                    <td>{{ obj.date }}</td>
+                    <td>{{ obj.date|date:"Y-m-d" }}</td>
                 </tr>
             {% endfor %}
         </tbody>

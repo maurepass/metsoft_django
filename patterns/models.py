@@ -67,7 +67,7 @@ class Pattern(models.Model):
         return reverse('patterns:patterns')
 
     def get_not_using_time(self):
-        if self.status.id in [4, 5, 6, 7]:
+        if self.status.id in [4, 5, 6]:
             return None
         if self.last_order:
             diff = date.today() - self.last_order
