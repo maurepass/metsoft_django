@@ -1,3 +1,5 @@
+from unittest import mock
+
 import factory
 import pytest
 from django.contrib.auth.models import User, Permission
@@ -9,6 +11,14 @@ from .models import Pattern, PatternStatus
 class PatternStatusFactory(factory.DjangoModelFactory):
     class Meta:
         model = PatternStatus
+
+
+@pytest.mark.django_db
+def test_url_pattern_card(client):
+    pattern1 = Pattern.objects.create(status=PatternStatusFactory())
+    response = client.get(reverse('patterns:pattern-card', args=[pattern1.pk]))
+    assert list(response.context['objects']) == []
+    assert response.status_code == 200
 
 
 @pytest.mark.django_db
