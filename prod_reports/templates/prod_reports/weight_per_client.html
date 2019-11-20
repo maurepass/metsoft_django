@@ -1,4 +1,5 @@
 {% extends 'offers/base.html' %}
+{% load humanize %}
 
 {% block content %}
     <div class="text-center my-3">
@@ -23,21 +24,21 @@
                 <tr>
                     <td>{{ forloop.counter }}</td>
                     <td>{{ obj.customer }}</td>
-                    <td class="text-right">{{ obj.new|floatformat:"0" }}</td>
-                    <td class="text-right">{{ obj.planned|floatformat:"0" }}</td>
-                    <td class="text-right">{{ obj.poured|floatformat:"0" }}</td>
-                    <td class="text-right font-weight-bold">{{ obj.in_production|floatformat:"0" }}</td>
-                    <td class="text-right">{{ obj.on_stock|floatformat:"0" }}</td>
+                    <td class="text-right">{{ obj.new|floatformat:"0"|intcomma }}</td>
+                    <td class="text-right">{{ obj.planned|floatformat:"0"|intcomma }}</td>
+                    <td class="text-right">{{ obj.poured|floatformat:"0"|intcomma }}</td>
+                    <td class="text-right font-weight-bold">{{ obj.in_production|floatformat:"0"|intcomma }}</td>
+                    <td class="text-right">{{ obj.on_stock|floatformat:"0"|intcomma }}</td>
                 </tr>
             {% endfor %}
             <tr class="text-right">
                 <td>--</td>
                 <td class="text-left">RAZEM</td>
-                <td>{{ sums.new|floatformat:0 }}</td>
-                <td>{{ sums.planned|floatformat:0 }}</td>
-                <td>{{ sums.poured|floatformat:0 }}</td>
-                <td class="font-weight-bold">{{ sums.in_production|floatformat:0 }}</td>
-                <td>{{ sums.on_stock|floatformat:0 }}</td>
+                <td>{{ sums.new|floatformat:0|intcomma }}</td>
+                <td>{{ sums.planned|floatformat:0|intcomma }}</td>
+                <td>{{ sums.poured|floatformat:0|intcomma }}</td>
+                <td class="font-weight-bold">{{ sums.in_production|floatformat:0|intcomma }}</td>
+                <td>{{ sums.on_stock|floatformat:0|intcomma }}</td>
             </tr>
         </tbody>
     </table>

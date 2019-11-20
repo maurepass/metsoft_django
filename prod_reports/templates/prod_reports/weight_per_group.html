@@ -1,4 +1,5 @@
 {% extends 'offers/base.html' %}
+{% load humanize %}
 
 {% block content %}
     <div class="text-center my-3">
@@ -17,12 +18,12 @@
             {% for obj in objects %}
                 <tr>
                     <td>{{ obj.mat_calc_group }}</td>
-                    <td class="text-right">{{ obj.sum_cast_weight|floatformat:"0" }}</td>
+                    <td class="text-right">{{ obj.sum_cast_weight|floatformat:"0"|intcomma }}</td>
                 </tr>
             {% endfor %}
             <tr>
                 <td>RAZEM</td>
-                <td class="text-right">{{ total|floatformat:0 }}</td>
+                <td class="text-right">{{ total_weight.weight_sum|floatformat:0|intcomma }}</td>
             </tr>
         </tbody>
 
