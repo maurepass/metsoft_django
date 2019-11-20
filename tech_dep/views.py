@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic import UpdateView, TemplateView
 from rest_framework import viewsets
@@ -53,6 +55,14 @@ class OrderUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     form_class = OrderUpdateForm
     success_url = '/tech/orders/'
     permission_required = ['tech_dep.change_order']
+
+    def form_valid(self, form):
+        """ Set order finish date. """
+        if form.instance.status.id != 2:
+            form.instance.ord_out = datetime.today()
+        else:
+            form.instance.ord_out = None
+        return super().form_valid(form)
 
 
 
