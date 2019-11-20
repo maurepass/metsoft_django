@@ -85,7 +85,7 @@
                         { data: 'surname', name:'surname'},
                         { data: 'status.status'},
                         { data: 'move_in', name:'move_in' },
-                        { data: 'get_not_using_time' },
+                        { data: 'get_not_using_time', searchable: false },
                         { data: 'id',
                             "fnCreatedCell":function(nTd, sData, oData, iRow, iCol){
                                 $(nTd).html('{% if perms.patterns %}<a class="iframe" href="/patterns/' + sData + '/edit">Edytuj</a><br> ' +
