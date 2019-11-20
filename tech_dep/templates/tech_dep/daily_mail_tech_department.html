@@ -77,7 +77,7 @@
                     <td>{{ order.marketing }}</td>
                     <td>{{ order.ord_in|date:"Y-m-d" }}</td>
                     <td>{{ order.tech_memb.first_name }}</td>
-                    <td>{{ order.uwagi }}</td>
+                    <td>{{ order.uwagi|default:"" }}</td>
                     <td>{{ order.get_working_time }}</td>
                 </tr>
             {% endfor %}
