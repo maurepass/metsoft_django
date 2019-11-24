@@ -79,7 +79,7 @@ class OfferPrintView(DetailView):
         context['tolerances'] = prep_det['tolerances']
         context['tapers'] = prep_det['tapers']
         context['atest'] = prep_det['atest']
-        context['machining'] = prep_det['machining'],
+        context['machining'] = prep_det['machining']
         return context
 
 
