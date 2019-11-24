@@ -167,7 +167,7 @@ class WeightPerGroupView(TemplateView):
 
         context['objects'] = (
             Cast.objects
-            .filter(cast_status__in=[1, 2, 3, 7])
+            .filter(cast_status__in=[1, 2, 7])
             .values('mat_calc_group')
             .annotate(sum_cast_weight=Sum('cast_weight'))
             .order_by('mat_calc_group')
@@ -175,7 +175,7 @@ class WeightPerGroupView(TemplateView):
 
         context['total_weight'] = (
             Cast.objects
-            .filter(cast_status__in=[1, 2, 3, 7])
+            .filter(cast_status__in=[1, 2, 7])
             .aggregate(weight_sum=Sum('cast_weight'))
         )
 
