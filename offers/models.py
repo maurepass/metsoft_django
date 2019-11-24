@@ -113,7 +113,7 @@ class Offer(models.Model):
             end_str += '{}: '.format(key)
             for value in temp_dict[key]:
                 end_str += '{},'.format(value)
-            end_str += '; '
+            end_str = end_str.rstrip(',') + '; '
 
         return end_str
 
@@ -125,7 +125,7 @@ class Offer(models.Model):
         atest = []
 
         for detail in details:
-            machining.append(detail.machining)
+            machining.append(detail.machining.machining)
             tolerances.append(detail.tolerances)
             tapers.append(detail.tapers)
             atest.append(detail.atest)

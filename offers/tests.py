@@ -17,7 +17,7 @@ class OfferStatusFactory(factory.DjangoModelFactory):
 
 def test_offer_string_from_list():
     test_list = ['test1', 'test1', 'test1', 'test2', 'test2']
-    results = 'test1: 1,2,3,; test2: 4,5,; '
+    results = 'test1: 1,2,3; test2: 4,5; '
     assert models.Offer.string_from_list(test_list) == results
 
 
