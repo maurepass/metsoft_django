@@ -28,21 +28,21 @@
                 <i>odlew: </i><b>{{ detail.cast_name }}</b>;
                 <i>nr rys.: </i><b>{{ detail.drawing_no }}</b>;
                 <i>materiał: </i><b>{{ detail.mat.material }}</b><br>
-                <i>ciężar[kg]: </i><b>{{ detail.cast_weight }}</b>;
-                <i>il. szt.: </i><b>{{ detail.pieces_amount }}</b>;
-                <i>uzysk[%]: </i><b>{{ detail.detail_yield }}</b>;
-                <i>st. tr.: </i><b>{{ detail.difficulty }}</b>;
-                <i>model: </i><b>{{ detail.pattern }}</b>;<br>
-                <i>obr. cieplna: </i><b>{{ detail.heat_treat }}</b>;
-                <i> odb. na: </i><b>{{ detail.required }}</b>;
-                <i>skrzynie form.[m]: </i><b>{{ detail.boxes }}</b>;
+                <i>ciężar[kg]: </i><b>{{ detail.cast_weight|default_if_none:"" }}</b>;
+                <i>il. szt.: </i><b>{{ detail.pieces_amount|default_if_none:"" }}</b>;
+                <i>uzysk[%]: </i><b>{{ detail.detail_yield|default_if_none:"" }}</b>;
+                <i>st. tr.: </i><b>{{ detail.difficulty|default_if_none:"" }}</b>;
+                <i>model: </i><b>{{ detail.pattern|default_if_none:"" }}</b>;<br>
+                <i>obr. cieplna: </i><b>{{ detail.heat_treat|default_if_none:"" }}</b>;
+                <i> odb. na: </i><b>{{ detail.required|default_if_none:"" }}</b>;
+                <i>skrzynie form.[m]: </i><b>{{ detail.boxes|default_if_none:"" }}</b>;
                 {% if detail.quality_class is not None %}
                     <i><br> klasa jakości: </i><b>{{ detail.quality_class }}</b>;
                 {% endif %}
                 {% if detail.others is not None %}
-                    <i>inne: </i><b>{{ detail.others }}</b>;
+                    <i>inne: </i><b>{{ detail.others|default_if_none:"" }}</b>;
                 {% endif %}
-                <i>Chromit: </i><b>{{ detail.fr_chromite }} %</b>;
+                <i>Chromit: </i><b>{{ detail.fr_chromite|default_if_none:"" }} %</b>;
                 <br>
             </td>
         </tr>
