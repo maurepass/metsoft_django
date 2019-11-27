@@ -52,7 +52,7 @@
             {% for obj in objects %}
                 <tr>
                     <td>{{ forloop.counter }}</td>
-                    <td><a href="{% url 'offer-details' obj.offer.id %}">{{ obj.offer.offer_no }}</a></td>
+                    <td><a href="{% url 'offer-print' obj.offer.id %}">{{ obj.offer.offer_no }}</a></td>
                     <td>{{ obj.cast_name }}</td>
                     <td>{{ obj.drawing_no }}</td>
                     <td>{{ obj.mat.material }}</td>
