@@ -27,11 +27,11 @@ class Job(DailyJob):
             'nonconformities': Operation.objects.filter(accordance=3, completion_date1=completion_date)
         }
 
-        user = User.objects.get(pk=4)
+        users = User.objects.filter(pk__in=[4, 7, 10])
 
         send_mail('METsoft - daily mail',
                   'Some message',
                   from_email=EMAIL_HOST_USER,
-                  recipient_list=[user.email],
+                  recipient_list=[user.email for user in users],
                   html_message=render_to_string('tech_dep/daily_mail_tech_department.html', context)
                   )
