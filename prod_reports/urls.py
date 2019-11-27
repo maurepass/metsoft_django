@@ -17,6 +17,8 @@ router.register(r'scraps', views.ScrapsViewSet, 'scraps')
 router.register(r'yields', views.YieldsViewSet, 'yields')
 router.register(r'pouring', views.PouringViewSet, 'pouring')
 router.register(r'castings-with-machining', views.CastsWithMachiningViewSet, 'castings-with-machining')
+router.register(r'monitoring-all', views.MonitoringAllViewSet, 'monitoring-all')
+router.register(r'monitoring-in-work', views.MonitoringInWorkViewSet, 'monitoring-in-work')
 
 urlpatterns = [
     re_path('^api/', include(router.urls)),
@@ -29,8 +31,8 @@ urlpatterns = [
     path('weight-per-group/', views.WeightPerGroupView.as_view(), name='weight-per-group'),
     path('scraps/', TemplateView.as_view(template_name='prod_reports/scraps.html'), name='scraps'),
     path('casting-weights/', TemplateView.as_view(template_name='prod_reports/casting_weights.html'), name='casting-weights'),
-    path('monitoring-in-work/', views.MonitoringInWorkList.as_view(), name='monitoring-in-work'),
-    path('monitoring-all/', views.MonitoringAllList.as_view(), name='monitoring-all'),
+    path('monitoring-in-work/', TemplateView.as_view(template_name='prod_reports/monitoring_in_work.html'), name='monitoring-in-work'),
+    path('monitoring-all/', TemplateView.as_view(template_name='prod_reports/monitoring_all.html'), name='monitoring-all'),
     path('casts-in-stock/', TemplateView.as_view(template_name='prod_reports/casts_in_stock.html'), name='casts-in-stock'),
     path('molding/', TemplateView.as_view(template_name='prod_reports/molding.html'), name='molding'),
     path('non-destructive-testing/', TemplateView.as_view(template_name='prod_reports/non_destructive_testing.html'), name='non-destructive-testing'),

@@ -8,7 +8,7 @@ from rest_framework import viewsets
 
 from .forms import ExecutionTimeForm
 from .models import Cast, Operation
-from .serializers import CastSerializer, OperationSerializer
+from .serializers import CastSerializer, OperationSerializer, MonitoringSerializer
 
 
 class PouringViewSet(viewsets.ModelViewSet):
@@ -100,27 +100,15 @@ class YieldsViewSet(viewsets.ModelViewSet):
     serializer_class = CastSerializer
 
 
-class MonitoringAllList(ListView):
+class MonitoringAllViewSet(viewsets.ModelViewSet):
     """Shows amount of castings on with the particular production status for all orders."""
     queryset = Cast.monitoring()
-    context_object_name = 'objects'
-    template_name = 'prod_reports/monitoring_all.html'
+    serializer_class = MonitoringSerializer
 
 
-class MonitoringInWorkList(ListView):
-    """Shows amount of castings on with the particular production status for not finished orders."""
-    template_name = 'prod_reports/monitoring_in_work.html'
-    context_object_name = 'objects'
-
-    def get_queryset(self):
-        objects = list(Cast.monitoring().filter(cast_pcs__gt=F('sent') + F('cancelled') + F('finished')))
-
-        # calculate amount of days till delivery date required by customer
-        for obj in objects:
-            time = obj['customer_date'] - datetime.date.today()
-            obj['time'] = time.days
-
-        return objects
+class MonitoringInWorkViewSet(viewsets.ModelViewSet):
+    queryset = Cast.monitoring().filter(cast_pcs__gt=F('sent') + F('cancelled') + F('finished'))
+    serializer_class = MonitoringSerializer
 
 
 class WeightPerClientView(TemplateView):
