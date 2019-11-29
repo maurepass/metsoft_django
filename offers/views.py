@@ -253,7 +253,7 @@ class OffersStatisticsView(LoginRequiredMixin, PermissionRequiredMixin, FormView
                     of_amt += 1
                     det_amt += offer.positions_amount
 
-        return {'tech_stats': tech_stats, 'of_amt': of_amt, 'det_amt': det_amt}
+        return {'tech_stats': tech_stats, 'of_amt': of_amt, 'det_amt': det_amt, 'in_time_amt': in_time_amt}
 
     @staticmethod
     def gen_report_offer_per_statuses(offers):
