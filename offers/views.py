@@ -113,9 +113,16 @@ class OfferDetailView(LoginRequiredMixin, FormView):
             offer_form = forms.OfferDetailsForm(request.POST, instance=this_offer)
             if offer_form.is_valid():
                 offer_form.save()
+
+                # when status changed
                 if 'status' in offer_form.changed_data:
                     this_offer.offer_status_changed()
                     return redirect('offers')
+
+                # when you edit notices and offer status is different then "In progress", set date_tech_out
+                if this_offer.status.id != 1:
+                    this_offer.date_tech_out = datetime.datetime.today()
+                    this_offer.save()
 
         # loading default notices if users require them
         if 'new_notices' in request.POST:
