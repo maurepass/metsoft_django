@@ -26,23 +26,28 @@ class DetailCreateForm(forms.ModelForm):
 
     pattern = forms.ChoiceField(
         choices=[(choice.status, choice.status) for choice in OfferPatternStatus.objects.all()],
+        required=False,
         label="Model"
     )
     heat_treat = forms.ChoiceField(
         choices=[(choice.term, choice.term) for choice in HeatTreatment.objects.all()],
+        required=False,
         label='Obróbka cieplna'
     )
     tapers = forms.ChoiceField(
         choices=[(choice.taper, choice.taper) for choice in PatternTaper.objects.all()],
+        required=False,
         label='Pochylenia'
     )
     atest = forms.ChoiceField(
         choices=[(choice.atest, choice.atest) for choice in AtestType.objects.all()],
+        required=False,
         label='Atest'
     )
     boxes = forms.CharField(
         label='Skrzynki formierskie',
-        widget=forms.TextInput(attrs={'placeholder': '1,0 x 2,0 x 3,0'})
+        widget=forms.TextInput(attrs={'placeholder': '1,0 x 2,0 x 3,0'}),
+        required=False
     )
 
     class Meta:
