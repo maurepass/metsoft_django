@@ -190,7 +190,7 @@ class DetailUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
                 new_detail.save()
                 offer.positions_amount += 1
                 offer.save()
-                return redirect('offer-details', pk=offer.pk)
+            return redirect('offer-details', pk=offer.pk)
         return super().dispatch(request, *args, **kwargs)
 
 
