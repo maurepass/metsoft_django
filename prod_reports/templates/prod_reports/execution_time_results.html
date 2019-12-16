@@ -12,7 +12,6 @@
     <table id="table" class="table table-bordered table-sm table-hover" style="width: 100%">
         <thead>
             <tr>
-                <td>Lp</td>
                 <th>ID odlewu</th>
                 <th>Numer MET</th>
                 <th>Klient</th>
@@ -32,7 +31,6 @@
         </thead>
         <tfoot>
             <tr>
-                <td></td>
                 <th>ID odlewu</th>
                 <th>Numer MET</th>
                 <th>Klient</th>
@@ -53,22 +51,21 @@
         <tbody>
             {% for obj in objects %}
                 <tr>
-                    <td>{{ forloop.counter }}</td>
                     <td>{{ obj.id }}</td>
                     <td>{{ obj.met_no }}</td>
                     <td>{{ obj.customer }}</td>
                     <td>{{ obj.cast_name }}</td>
                     <td>{{ obj.picture_number }}</td>
                     <td>{{ obj.created_at|date:"Y-m-d" }}</td>
-					<td>{{ obj.moulding_date|date:"Y-m-d" }}</td>
-                    <td>{{ obj.pc_number }}</td>
-                    <td>{{ obj.pouring_date|date:"Y-m-d" }}</td>
+					<td>{{ obj.moulding_date|default_if_none:"" }}</td>
+                    <td>{{ obj.pc_number|default_if_none:"" }}</td>
+                    <td>{{ obj.pouring_date|default_if_none:"" }}</td>
                     <td>{{ obj.melt_no|default:"" }}</td>
                     <td>{{ obj.pouring_temp|default:"" }}</td>
-                    <td>{{ obj.knock_out|date:"Y-m-d" }}</td>
-                    <td  class="text-right">{{ obj.casting_weight|default:"" }}</td>
+                    <td>{{ obj.knock_out|default_if_none:"" }}</td>
+                    <td  class="text-right">{{ obj.casting_weight|default_if_none:"" }}</td>
                     <td>{{ obj.machining_flatness|default:"" }}</td>
-                    <td>{{ obj.id }}</td>
+                    <td>{{ obj.finishing_date|default_if_none:"" }}</td>
                 </tr>
             {% endfor %}
         </tbody>
@@ -79,7 +76,8 @@
     <script defer>
         $(document).ready( function () {
             $('#table').DataTable({
-                lengthMenu: [ [25, 50, 100, 200, 500], [25, 50, 100, 200, 500] ],
+                lengthMenu: [ [50, 100, 200, 500], [50, 100, 200, 500] ],
+                pageLength: 100,
                 order: [0, 'desc'],
             });
 
