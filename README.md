@@ -1,4 +1,4 @@
-### Application is deployed on the server and in constant use in my current job.
+### Application is deployed on the server and is in constant use in my current job.
 
 ### Application includes the following modules:
 1.	offers: preparing technical requirement for clients requests, generate reports showing amount of prepared offers and processed casting by every employee, generate report showing amount of castings from specified material group
