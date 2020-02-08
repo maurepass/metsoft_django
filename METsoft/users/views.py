@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect
 
 from rest_framework import viewsets
 
-from users.models import UsedViewsLogs
-from users.serializers import LogSerializer
+from METsoft_root.users.models import UsedViewsLogs
+from METsoft_root.users.serializers import LogSerializer
 
 
 def base(request):
