@@ -1,0 +1,17 @@
+Django==2.2.10
+djangorestframework
+djangorestframework-datatables
+django-crispy-forms
+django-extensions
+django-inlinecss
+mysqlclient
+
+# development
+pytest
+pytest-django
+pytest-cov
+factory-boy
+black
+isort
+flake8
+pylint
