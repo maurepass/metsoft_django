@@ -129,8 +129,4 @@ dmypy.json
 __pycache__
 /METsoft/settings/secrets/
 /cov_html/
-/offers/static/bootstrap-4.3.1-dist/
-/offers/static/DataTables-1.10.20/
-/offers/static/jquery-ui-1.12.1/
-/offers/static/js/jquery-3.3.1.min.js
-/offers/static/js/popper-1.15.0.js
+

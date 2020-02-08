@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  db_default:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: abc
+      MYSQL_DATABASE: metsoft
+      MYSQL_USER: usr
+      MYSQL_PASSWORD: pass
+    volumes:
+    - metsoft_db_default:/var/lib/mysql
+    ports:
+    - 13306:3306
+
+  db_kokila:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: abc
+      MYSQL_DATABASE: kokila
+      MYSQL_USER: usr
+      MYSQL_PASSWORD: pass
+    volumes:
+      - metsoft_db_kokila:/var/lib/mysql
+    ports:
+    - 23306:3306
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+#      MYSQL_ROOT_PASSWORD: abc
+      PMA_HOST: db_default
+
+    ports:
+    - 8081:80
+
+
+volumes:
+  metsoft_db_default:
+  metsoft_db_kokila:

@@ -19,7 +19,7 @@ DATABASES = {
         'HOST': get_secret('DEFAULT_DB_HOST', secrets),
         'USER': get_secret('DEFAULT_DB_USER', secrets),
         'PASSWORD': get_secret('DEFAULT_DB_PASSWORD', secrets),
-        'PORT': 3306
+        'PORT': get_secret('DEFAULT_DB_PORT', secrets),
     },
     'kokila': {
         'ENGINE': 'django.db.backends.mysql',
@@ -27,7 +27,7 @@ DATABASES = {
         'HOST': get_secret('KOKILA_DB_HOST', secrets),
         'USER': get_secret('KOKILA_DB_USER', secrets),
         'PASSWORD': get_secret('KOKILA_DB_PASSWORD', secrets),
-        'PORT': 3306
+        'PORT': get_secret('KOKILA_DB_PORT', secrets),
     }
 }
 
