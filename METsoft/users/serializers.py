@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from METsoft_root.users.models import UsedViewsLogs
+from users.models import UsedViewsLogs
 
 
 class LogSerializer(serializers.ModelSerializer):

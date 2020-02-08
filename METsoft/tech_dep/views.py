@@ -4,8 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.views.generic import UpdateView, TemplateView
 from rest_framework import viewsets
 
-from METsoft_root.prod_reports import Pocastord
-
+from prod_reports.models import Pocastord
 from .forms import OrderUpdateForm
 from .models import Order
 from .serializers import OrderSerializers
