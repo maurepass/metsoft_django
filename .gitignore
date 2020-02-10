@@ -130,3 +130,4 @@ __pycache__
 /METsoft/settings/secrets/
 /cov_html/
 
+/metsoft-venv/
