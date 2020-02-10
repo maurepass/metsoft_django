@@ -6,9 +6,9 @@ from django.template.loader import render_to_string
 from django_extensions.management.jobs import DailyJob
 
 from METsoft.settings import EMAIL_HOST_USER
-from METsoft_root.offers.models import Offer
-from METsoft_root.prod_reports import Operation
-from METsoft_root.tech_dep.models import Order
+from offers.models import Offer
+from prod_reports import Operation
+from tech_dep.models import Order
 
 
 class Job(DailyJob):

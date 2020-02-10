@@ -36,7 +36,7 @@
         </tfoot>
         <tbody>
             {% for cast in casts %}
-                {% if cast.cast_no or cast.melting_no or cast.pourint_temp or cast.cast_weight or cast.machining %}
+                {% if cast.cast_no or cast.melting_no or cast.pouring_temp or cast.cast_weight or cast.machining %}
                     <tr>
                         <td>{{ cast.id }}</td>
                         <td>{{ cast.met_no }}</td>
