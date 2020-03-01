@@ -7,7 +7,7 @@ from django_extensions.management.jobs import DailyJob
 
 from METsoft.settings import EMAIL_HOST_USER
 from offers.models import Offer
-from prod_reports import Operation
+from prod_reports.models import Operation
 from tech_dep.models import Order
 
 
@@ -27,7 +27,7 @@ class Job(DailyJob):
             'nonconformities': Operation.objects.filter(accordance=3, completion_date1=completion_date)
         }
 
-        users = User.objects.filter(pk__in=[4, 7, 10])
+        users = User.objects.filter(groups__name='raport')
 
         send_mail('METsoft - daily mail',
                   'Some message',
