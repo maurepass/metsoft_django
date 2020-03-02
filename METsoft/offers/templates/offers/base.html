@@ -78,7 +78,13 @@
                 {% endif %}
 
                 {% if perms.offers %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'offers-stats' %}">Statystyki</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Raporty (WZT)</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown04">
+                        <a class="dropdown-item"  href="{% url 'offers-stats' %}" >Statystyki</a>
+                        <a class="dropdown-item" href="{% url 'wzt-daily-report' %}" >Raport bieżący</a>
+                    </div>
+                </li>
                 {% endif %}
 
                 <li class="nav-item"><a class="nav-link" href="{% url 'patterns:patterns' %}">Modele</a></li>

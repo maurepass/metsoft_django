@@ -1,0 +1,116 @@
+{% extends 'offers/base.html' %}
+{% load humanize %}
+
+{% block content %}
+    <div class="text-center my-3">
+        <h2>Oferty w opracowaniu</h2>
+    </div>
+    <table class="table table-bordered table-sm table-hover" style="width: 90%; margin:auto">
+        <thead>
+            <tr>
+                <th>Lp</th>
+                <th>Nr oferty</th>
+                <th>Klient</th>
+                <th>Marketingowiec</th>
+                <th>Technolog</th>
+                <th>Data przekazania do WZT</th>
+                <th>Ilość dni</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for offer in offers %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ offer.offer_no }}</td>
+                    <td>{{ offer.client }}</td>
+                    <td>{{ offer.user_mark.first_name }}</td>
+                    <td>{{ offer.user_tech.first_name }}</td>
+                    <td>{{ offer.date_tech_in|date:"Y-m-d" }}</td>
+                    <td>{{ offer.get_days_amount }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="text-center my-3">
+        <h2>Zlecenia w opracowaniu</h2>
+    </div>
+    <table class="table table-bordered table-sm table-hover" style="width: 90%; margin:auto">
+        <thead>
+            <tr>
+                <th>Lp.</th>
+                <th>Nr zlecenia</th>
+                <th>Klient</th>
+                <th>Nazwa odlewu</th>
+                <th>Nr. rys.</th>
+                <th>Il. szt.</th>
+                <th>Materiał</th>
+                <th>Termin</th>
+                <th>Marketing</th>
+                <th>Data otrzymania</th>
+                <th>Technolog</th>
+                <th>Uwagi</th>
+                <th>Ilośc dni</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ order.numer_met }}</td>
+                    <td>{{ order.company }}</td>
+                    <td>{{ order.cast_name }}</td>
+                    <td>{{ order.pict_number }}</td>
+                    <td>{{ order.cast_pcs }}</td>
+                    <td>{{ order.cust_material }}</td>
+                    <td>{{ order.termin_klienta|date:"Y-m-d" }}</td>
+                    <td>{{ order.marketing }}</td>
+                    <td>{{ order.ord_in|date:"Y-m-d" }}</td>
+                    <td>{{ order.tech_memb.first_name }}</td>
+                    <td>{{ order.uwagi|default:"" }}</td>
+                    <td>{{ order.get_working_time }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="text-center my-3">
+        <h2>Niezgodności</h2>
+    </div>
+    <table class="table table-bordered table-sm table-hover" style="width: 90%; margin:auto">
+        <thead>
+            <tr>
+                <th>Lp</th>
+                <th>ID odlewu</th>
+                <th>Numer MET</th>
+                <th>Klient</th>
+                <th>Nazwa odlewu</th>
+                <th>Numer rysunku</th>
+                <th>Materiał</th>
+                <th>Ciężar</th>
+                <th>Operacja</th>
+                <th>Wprowadzający</th>
+                <th>Opis niezgodności</th>
+                <th>Data</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in nonconformities %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ item.cast.id }}</td>
+                    <td>{{ item.cast.porder.met_no }}</td>
+                    <td>{{ item.cast.customer }}</td>
+                    <td>{{ item.cast.cast_name }}</td>
+                    <td>{{ item.cast.picture_number }}</td>
+                    <td>{{ item.cast.cast_material.materialname }}</td>
+                    <td>{{ item.cast.cast_weight }}</td>
+                    <td>{{ item.opdict.operationname }}</td>
+                    <td>{{ item.confirmed_by1 }}</td>
+                    <td>{{ item.notes|default:"" }}</td>
+                    <td>{{ item.completion_date1|date:"Y-m-d" }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock content %}
