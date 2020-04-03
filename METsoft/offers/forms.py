@@ -24,23 +24,24 @@ class OfferCreateUpdateForm(forms.ModelForm):
 
 class DetailCreateForm(forms.ModelForm):
 
-    pattern = forms.ChoiceField(
-        choices=[(choice.status, choice.status) for choice in OfferPatternStatus.objects.all()],
+    pattern = forms.ModelChoiceField(
+        queryset=OfferPatternStatus.objects.all(),
         required=False,
-        label="Model"
+        label="Model",
     )
-    heat_treat = forms.ChoiceField(
-        choices=[(choice.term, choice.term) for choice in HeatTreatment.objects.all()],
+
+    heat_treat = forms.ModelChoiceField(
+        queryset=HeatTreatment.objects.all(),
         required=False,
         label='Obróbka cieplna'
     )
-    tapers = forms.ChoiceField(
-        choices=[(choice.taper, choice.taper) for choice in PatternTaper.objects.all()],
+    tapers = forms.ModelChoiceField(
+        queryset=PatternTaper.objects.all(),
         required=False,
         label='Pochylenia'
     )
-    atest = forms.ChoiceField(
-        choices=[(choice.atest, choice.atest) for choice in AtestType.objects.all()],
+    atest = forms.ModelChoiceField(
+        queryset=AtestType.objects.all(),
         required=False,
         label='Atest'
     )
