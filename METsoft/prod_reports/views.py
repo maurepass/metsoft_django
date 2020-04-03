@@ -11,37 +11,37 @@ from .models import Cast, Operation
 from .serializers import CastSerializer, OperationSerializer, MonitoringSerializer
 
 
-class PouringViewSet(viewsets.ModelViewSet):
+class PouringViewSet(viewsets.ReadOnlyModelViewSet):
     """ All confirmed pouring operations."""
     queryset = Operation.objects.filter(opdict=6, completion_date1__isnull=False)
     serializer_class = OperationSerializer
 
 
-class MoldingViewSet(viewsets.ModelViewSet):
+class MoldingViewSet(viewsets.ReadOnlyModelViewSet):
     """ All confirmed moulding form operations."""
     queryset = Operation.objects.filter(opdict=5, completion_date1__isnull=False)
     serializer_class = OperationSerializer
 
 
-class FinishedViewSet(viewsets.ModelViewSet):
+class FinishedViewSet(viewsets.ReadOnlyModelViewSet):
     """ All confirmed final control operations. """
     queryset = Operation.objects.filter(opdict=38, completion_date1__isnull=False)
     serializer_class = OperationSerializer
 
 
-class RemarksViewSet(viewsets.ModelViewSet):
+class RemarksViewSet(viewsets.ReadOnlyModelViewSet):
     """ All remarks written for any operation. """
     queryset = Operation.objects.filter(notes__regex=r'\w+')
     serializer_class = OperationSerializer
 
 
-class NonDestructiveTestingViewSet(viewsets.ModelViewSet):
+class NonDestructiveTestingViewSet(viewsets.ReadOnlyModelViewSet):
     """ All confirmed NDT operations. """
     queryset = Operation.objects.filter(opdict__in=[10, 21, 22, 24, 25, 26, 28, 56], completion_date1__isnull=False)
     serializer_class = OperationSerializer
 
 
-class NonconformityViewSet(viewsets.ModelViewSet):
+class NonconformityViewSet(viewsets.ReadOnlyModelViewSet):
     """ All nonconformity confirmed for operations."""
     queryset = Operation.objects.filter(accordance=3)
     serializer_class = OperationSerializer
@@ -70,43 +70,43 @@ class InsertedDataList(ListView):
     )
 
 
-class CastsInStockViewSet(viewsets.ModelViewSet):
+class CastsInStockViewSet(viewsets.ReadOnlyModelViewSet):
     """ All casting on the stock (after final control but not sent)."""
     queryset = Cast.objects.filter(cast_status=3)
     serializer_class = CastSerializer
 
 
-class CastingWeightsViewSet(viewsets.ModelViewSet):
+class CastingWeightsViewSet(viewsets.ReadOnlyModelViewSet):
     """ All confirmed weighting operations."""
     queryset = Operation.objects.filter(opdict=51, completion_date1__isnull=False)
     serializer_class = OperationSerializer
 
 
-class MachiningViewSet(viewsets.ModelViewSet):
+class MachiningViewSet(viewsets.ReadOnlyModelViewSet):
     """ All confirmed machining operations."""
     queryset = Operation.objects.filter(opdict__in=[19, 20, 64, 65, 82, 91], completion_date1__isnull=False)
     serializer_class = OperationSerializer
 
 
-class ScrapsViewSet(viewsets.ModelViewSet):
+class ScrapsViewSet(viewsets.ReadOnlyModelViewSet):
     """ Scrapped castings. """
     queryset = Cast.objects.filter(cast_status=5)
     serializer_class = CastSerializer
 
 
-class YieldsViewSet(viewsets.ModelViewSet):
+class YieldsViewSet(viewsets.ReadOnlyModelViewSet):
     """ Technological yield on every casting."""
     queryset = Cast.objects.filter(pc_number=1)
     serializer_class = CastSerializer
 
 
-class MonitoringAllViewSet(viewsets.ModelViewSet):
+class MonitoringAllViewSet(viewsets.ReadOnlyModelViewSet):
     """Shows amount of castings on with the particular production status for all orders."""
     queryset = Cast.monitoring()
     serializer_class = MonitoringSerializer
 
 
-class MonitoringInWorkViewSet(viewsets.ModelViewSet):
+class MonitoringInWorkViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Cast.monitoring().filter(cast_pcs__gt=F('sent') + F('cancelled') + F('finished'))
     serializer_class = MonitoringSerializer
 
@@ -212,7 +212,7 @@ class ExecutionTimeView(FormView):
             return render(request, 'prod_reports/execution_time_results.html', {'objects': casts})
 
 
-class CastsWithMachiningViewSet(viewsets.ModelViewSet):
+class CastsWithMachiningViewSet(viewsets.ReadOnlyModelViewSet):
     """ All castings required machining (raw or final)."""
     subquery = Operation.objects.filter(opdict__in=[19, 20])
     queryset = Cast.objects.filter(porder__status__in=[1, 2],

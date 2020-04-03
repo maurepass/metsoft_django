@@ -43,7 +43,7 @@ class OrdersView(TemplateView):
         return super().dispatch(request, *args, **kwargs)
 
 
-class OrderViewSet(viewsets.ModelViewSet):
+class OrderViewSet(viewsets.ReadOnlyModelViewSet):
     """ Register of orders processed by Technology Department. """
     queryset = Order.objects.all()
     serializer_class = OrderSerializers

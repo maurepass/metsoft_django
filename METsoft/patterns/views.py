@@ -61,7 +61,7 @@ class PatternReportFormView(generic.FormView):
         return render(request, 'patterns/pattern_report_results.html', context)
 
 
-class PatternViewSet(viewsets.ModelViewSet):
+class PatternViewSet(viewsets.ReadOnlyModelViewSet):
     """ Show all patterns in database"""
     queryset = Pattern.objects.all().order_by('-id')
     serializer_class = PatternSerializers

@@ -17,6 +17,6 @@ def redirect_after_login(request):
         return redirect('offers')
 
 
-class LogsViewSet(viewsets.ModelViewSet):
+class LogsViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = UsedViewsLogs.objects.all().order_by('-id')
     serializer_class = LogSerializer

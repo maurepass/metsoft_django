@@ -23,13 +23,13 @@ class OfferNoticesUpdateView(LoginRequiredMixin, UpdateView):
         return reverse('offers')
 
 
-class OfferViewSet(viewsets.ModelViewSet):
+class OfferViewSet(viewsets.ReadOnlyModelViewSet):
     """ All serialized offers"""
     queryset = Offer.objects.all().order_by('-id')
     serializer_class = OfferSerializer
 
 
-class DetailViewSet(viewsets.ModelViewSet):
+class DetailViewSet(viewsets.ReadOnlyModelViewSet):
     """ All serialized details for finished offers (without details in offers currently in work)"""
     queryset = Detail.objects.exclude(offer__status__in=[1]).order_by('-id')  # without "W opracowaniu"
     serializer_class = DetailSerializer
@@ -83,7 +83,7 @@ class OfferPrintView(DetailView):
         return context
 
 
-class MaterialViewSet(viewsets.ModelViewSet):
+class MaterialViewSet(viewsets.ReadOnlyModelViewSet):
     """ All serialize materials """
     queryset = Material.objects.all()
     serializer_class = MaterialSerializer
