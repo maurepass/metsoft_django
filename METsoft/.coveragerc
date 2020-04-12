@@ -1,0 +1,6 @@
+[run]
+omit =
+    */migrations/*
+    METsoft/settings/*
+    METsoft/wsgi.py
+    *tests*
