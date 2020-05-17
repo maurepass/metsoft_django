@@ -10,10 +10,11 @@ User.add_to_class("__str__", get_first_name)
 
 
 class UsedViewsLogs(models.Model):
-    ip = models.CharField(max_length=20)
-    host = models.CharField(max_length=30)
-    report = models.CharField(max_length=50, db_column='raport')
-    created_at = models.DateTimeField(auto_now_add=True)
+    id = models.AutoField(db_column='ID', primary_key=True)
+    ip = models.CharField(db_column='IP', max_length=20, blank=True, null=True)
+    host = models.CharField(max_length=30, blank=True, null=True)
+    report = models.CharField(max_length=50, blank=True, null=True, db_column='raport')
+    created_at = models.DateTimeField()
 
     class Meta:
         db_table = 'logs'
