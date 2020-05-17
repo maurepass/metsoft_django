@@ -9,7 +9,6 @@ class OrderStatus(models.Model):
     created_at = models.DateTimeField()
 
     class Meta:
-        managed = False
         db_table = 'order_statuses'
 
     def __str__(self):
@@ -51,7 +50,6 @@ class Order(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        managed = False
         db_table = 'orders'
 
     def __str__(self):

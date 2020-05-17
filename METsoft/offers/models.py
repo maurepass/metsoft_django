@@ -11,7 +11,6 @@ class Notice(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        managed = False
         db_table = 'notices'
 
 
@@ -21,7 +20,6 @@ class OfferStatus(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        managed = False
         db_table = 'offer_statuses'
         verbose_name_plural = 'Offer statuses'
         ordering = ['-offer_status']
@@ -71,7 +69,6 @@ class Offer(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        managed = False
         db_table = 'offers'
 
     def __str__(self):
@@ -145,7 +142,6 @@ class MaterialGroup(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        managed = False
         db_table = 'material_groups'
         ordering = ['mat_group']
 
@@ -165,7 +161,6 @@ class Material(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        managed = False
         db_table = 'materials'
         ordering = ['material']
 
@@ -183,7 +178,6 @@ class HeatTreatment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        managed = False
         db_table = 'heat_treatments'
         ordering = ['term']
 
@@ -197,7 +191,6 @@ class MachiningType(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        managed = False
         db_table = 'machinings'
         ordering = ['machining']
 
@@ -211,7 +204,6 @@ class PatternTaper(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        managed = False
         db_table = 'pattern_tapers'
 
     def __str__(self):
@@ -224,7 +216,6 @@ class AtestType(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        managed = False
         db_table = 'atest_types'
 
     def __str__(self):
@@ -237,7 +228,6 @@ class OfferPatternStatus(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        managed = False
         db_table = 'offer_pattern_statuses'
         verbose_name_plural = 'Offer pattern statuses'
 
@@ -374,7 +364,6 @@ class Detail(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        managed = False
         db_table = 'details'
 
     def __str__(self):

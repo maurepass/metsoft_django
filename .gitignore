@@ -131,3 +131,7 @@ __pycache__
 /cov_html/
 
 /metsoft-venv/
+/oferty_backup-20200117.sql
+/kokila.sql
+/before_install.txt
+/METsoft/METsoft/settings/secrets/development.json
