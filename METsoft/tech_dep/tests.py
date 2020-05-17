@@ -18,7 +18,7 @@ def fixture_status():
     return status
 
 
-@pytest.fixture(name='order')
+@pytest.fixture(name="order")
 def fixture_order(tech_memb, status):
     order = Order(
         numer_met="test_met",
@@ -35,7 +35,10 @@ def test_order_status_str(status):
 
 
 def test_order_str(order):
-    assert str(order) == f"{order.numer_met} {order.company} {order.cast_name} {order.tech_memb} {order.status}"
+    assert (
+        str(order)
+        == f"{order.numer_met} {order.company} {order.cast_name} {order.tech_memb} {order.status}"
+    )
 
 
 def test_get_working_time_if_false(order):

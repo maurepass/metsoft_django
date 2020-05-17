@@ -20,15 +20,13 @@ from django.urls import include, path
 from django.views.generic import RedirectView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('users.urls')),
-    path('offers/', include('offers.urls')),
-    path('patterns/', include('patterns.urls')),
-    path('reports/', include('prod_reports.urls')),
-    path('tech/', include('tech_dep.urls')),
-
+    path("admin/", admin.site.urls),
+    path("", include("users.urls")),
+    path("offers/", include("offers.urls")),
+    path("patterns/", include("patterns.urls")),
+    path("reports/", include("prod_reports.urls")),
+    path("tech/", include("tech_dep.urls")),
     # old urls maintenance
-    path('kokila/raporty/', RedirectView.as_view(url='/reports/reports_list')),
-    path('modele/', RedirectView.as_view(url='/patterns/')),
-
+    path("kokila/raporty/", RedirectView.as_view(url="/reports/reports_list")),
+    path("modele/", RedirectView.as_view(url="/patterns/")),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

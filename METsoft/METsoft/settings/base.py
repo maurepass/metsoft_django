@@ -33,64 +33,62 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django.contrib.humanize',
-
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "django.contrib.humanize",
     # third part apps
-    'rest_framework',
-    'crispy_forms',
-    'django_extensions',
-    'django_inlinecss',
-
+    "rest_framework",
+    "crispy_forms",
+    "django_extensions",
+    "django_inlinecss",
     # my apps
-    'offers.apps.OffersConfig',
-    'patterns.apps.PatternsConfig',
-    'prod_reports.apps.ProdReportsConfig',
-    'tech_dep.apps.TechDepConfig',
-    'users.apps.UsersConfig',
+    "offers.apps.OffersConfig",
+    "patterns.apps.PatternsConfig",
+    "prod_reports.apps.ProdReportsConfig",
+    "tech_dep.apps.TechDepConfig",
+    "users.apps.UsersConfig",
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'users.middleware.UsedViewsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "users.middleware.UsedViewsMiddleware",
 ]
 
-ROOT_URLCONF = 'METsoft.urls'
+ROOT_URLCONF = "METsoft.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'METsoft.wsgi.application'
+WSGI_APPLICATION = "METsoft.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASE_ROUTERS = ['prod_reports.routers.ProdReportsRouter']
+DATABASE_ROUTERS = ["prod_reports.routers.ProdReportsRouter"]
 
 
 # Password validation
@@ -98,26 +96,20 @@ DATABASE_ROUTERS = ['prod_reports.routers.ProdReportsRouter']
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
 ]
 
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = 'pl'
+LANGUAGE_CODE = "pl"
 
-TIME_ZONE = 'Europe/Warsaw'
+TIME_ZONE = "Europe/Warsaw"
 
 USE_I18N = True
 
@@ -129,24 +121,22 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = "/static/"
 
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+CRISPY_TEMPLATE_PACK = "bootstrap4"
 
-LOGIN_REDIRECT_URL = 'redirect-after-login'
-LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = "redirect-after-login"
+LOGIN_URL = "login"
 
 REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': (
-        'rest_framework.renderers.JSONRenderer',
-        'rest_framework.renderers.BrowsableAPIRenderer',
-        'rest_framework_datatables.renderers.DatatablesRenderer',
+    "DEFAULT_RENDERER_CLASSES": (
+        "rest_framework.renderers.JSONRenderer",
+        "rest_framework.renderers.BrowsableAPIRenderer",
+        "rest_framework_datatables.renderers.DatatablesRenderer",
     ),
-    'DEFAULT_FILTER_BACKENDS': (
-        'rest_framework_datatables.filters.DatatablesFilterBackend',
+    "DEFAULT_FILTER_BACKENDS": (
+        "rest_framework_datatables.filters.DatatablesFilterBackend",
     ),
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework_datatables.pagination.DatatablesPageNumberPagination',
-    'PAGE_SIZE': 50,
+    "DEFAULT_PAGINATION_CLASS": "rest_framework_datatables.pagination.DatatablesPageNumberPagination",
+    "PAGE_SIZE": 50,
 }
-
-

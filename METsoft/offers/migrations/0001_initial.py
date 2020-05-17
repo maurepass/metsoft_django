@@ -16,178 +16,420 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='AtestType',
+            name="AtestType",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('atest', models.CharField(max_length=50)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("atest", models.CharField(max_length=50)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+            ],
+            options={"db_table": "atest_types",},
+        ),
+        migrations.CreateModel(
+            name="HeatTreatment",
+            fields=[
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("term", models.CharField(max_length=50)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+            ],
+            options={"db_table": "heat_treatments", "ordering": ["term"],},
+        ),
+        migrations.CreateModel(
+            name="MachiningType",
+            fields=[
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("machining", models.CharField(default=4, max_length=50)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+            ],
+            options={"db_table": "machinings", "ordering": ["machining"],},
+        ),
+        migrations.CreateModel(
+            name="MaterialGroup",
+            fields=[
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("mat_group", models.IntegerField()),
+                ("description", models.CharField(max_length=100)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+            ],
+            options={"db_table": "material_groups", "ordering": ["mat_group"],},
+        ),
+        migrations.CreateModel(
+            name="Notice",
+            fields=[
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("content", models.TextField(verbose_name="Uwagi")),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+            ],
+            options={"db_table": "notices",},
+        ),
+        migrations.CreateModel(
+            name="OfferPatternStatus",
+            fields=[
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("status", models.CharField(default=1, max_length=50)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
             ],
             options={
-                'db_table': 'atest_types',
+                "verbose_name_plural": "Offer pattern statuses",
+                "db_table": "offer_pattern_statuses",
             },
         ),
         migrations.CreateModel(
-            name='HeatTreatment',
+            name="OfferStatus",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('term', models.CharField(max_length=50)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("offer_status", models.CharField(default=1, max_length=30)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
             ],
             options={
-                'db_table': 'heat_treatments',
-                'ordering': ['term'],
+                "verbose_name_plural": "Offer statuses",
+                "db_table": "offer_statuses",
+                "ordering": ["-offer_status"],
             },
         ),
         migrations.CreateModel(
-            name='MachiningType',
+            name="PatternTaper",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('machining', models.CharField(default=4, max_length=50)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("taper", models.CharField(max_length=50)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
             ],
-            options={
-                'db_table': 'machinings',
-                'ordering': ['machining'],
-            },
+            options={"db_table": "pattern_tapers",},
         ),
         migrations.CreateModel(
-            name='MaterialGroup',
+            name="Offer",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('mat_group', models.IntegerField()),
-                ('description', models.CharField(max_length=100)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("offer_no", models.CharField(max_length=20, verbose_name="Nr oferty")),
+                ("client", models.CharField(max_length=100, verbose_name="Klient")),
+                (
+                    "date_tech_in",
+                    models.DateField(
+                        blank=True,
+                        default=django.utils.timezone.now,
+                        null=True,
+                        verbose_name="Data wpływu do WZT",
+                    ),
+                ),
+                ("date_tech_out", models.DateField(blank=True, null=True)),
+                ("date_mark_out", models.DateField(blank=True, null=True)),
+                ("positions_amount", models.IntegerField(default=0)),
+                ("days_amount", models.IntegerField(blank=True, null=True)),
+                (
+                    "notices",
+                    models.TextField(blank=True, null=True, verbose_name="Uwagi"),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "status",
+                    models.ForeignKey(
+                        default=1,
+                        on_delete=django.db.models.deletion.DO_NOTHING,
+                        to="offers.OfferStatus",
+                    ),
+                ),
+                (
+                    "user_mark",
+                    models.ForeignKey(
+                        default=19,
+                        limit_choices_to={"groups__name": "marketing"},
+                        on_delete=django.db.models.deletion.DO_NOTHING,
+                        related_name="offer_mark",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="Marketingowiec",
+                    ),
+                ),
+                (
+                    "user_tech",
+                    models.ForeignKey(
+                        default=4,
+                        limit_choices_to={"groups__name": "technologia"},
+                        on_delete=django.db.models.deletion.DO_NOTHING,
+                        related_name="offer_tech",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="Technolog",
+                    ),
+                ),
             ],
-            options={
-                'db_table': 'material_groups',
-                'ordering': ['mat_group'],
-            },
+            options={"db_table": "offers",},
         ),
         migrations.CreateModel(
-            name='Notice',
+            name="Material",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('content', models.TextField(verbose_name='Uwagi')),
-                ('updated_at', models.DateTimeField(auto_now=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("material", models.CharField(max_length=100, verbose_name="Materiał")),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "mat_group",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="offers.MaterialGroup",
+                        verbose_name="Grupa materiałowa",
+                    ),
+                ),
             ],
-            options={
-                'db_table': 'notices',
-            },
+            options={"db_table": "materials", "ordering": ["material"],},
         ),
         migrations.CreateModel(
-            name='OfferPatternStatus',
+            name="Detail",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('status', models.CharField(default=1, max_length=50)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "cast_name",
+                    models.CharField(
+                        max_length=50, null=True, verbose_name="Nazwa odlewu"
+                    ),
+                ),
+                (
+                    "drawing_no",
+                    models.CharField(
+                        max_length=50, null=True, verbose_name="Nr rysunku"
+                    ),
+                ),
+                (
+                    "draw_weight",
+                    models.IntegerField(
+                        blank=True, null=True, verbose_name="Ciężar rysunkowy [kg]"
+                    ),
+                ),
+                (
+                    "cast_weight",
+                    models.IntegerField(
+                        blank=True,
+                        null=True,
+                        verbose_name="Ciężar surowego odlewu [kg]",
+                    ),
+                ),
+                (
+                    "pieces_amount",
+                    models.CharField(
+                        blank=True,
+                        default=1,
+                        max_length=100,
+                        null=True,
+                        verbose_name="Ilość sztuk",
+                    ),
+                ),
+                (
+                    "detail_yield",
+                    models.IntegerField(
+                        blank=True, db_column="yeld", null=True, verbose_name="Uzysk"
+                    ),
+                ),
+                (
+                    "difficulty",
+                    models.IntegerField(
+                        blank=True,
+                        choices=[(1, 1), (2, 2), (3, 3)],
+                        default=2,
+                        null=True,
+                        verbose_name="Stopień trudności",
+                    ),
+                ),
+                (
+                    "pattern",
+                    models.CharField(
+                        blank=True, max_length=50, null=True, verbose_name="Model"
+                    ),
+                ),
+                (
+                    "heat_treat",
+                    models.CharField(
+                        blank=True,
+                        max_length=50,
+                        null=True,
+                        verbose_name="Obróbka cieplna",
+                    ),
+                ),
+                (
+                    "tolerances",
+                    models.CharField(
+                        blank=True, max_length=50, null=True, verbose_name="Tolerancje"
+                    ),
+                ),
+                (
+                    "tapers",
+                    models.CharField(
+                        blank=True, max_length=50, null=True, verbose_name="Pochylenia"
+                    ),
+                ),
+                (
+                    "atest",
+                    models.CharField(
+                        blank=True,
+                        default="3.1 wg PN-EN 10204",
+                        max_length=50,
+                        null=True,
+                        verbose_name="Atest",
+                    ),
+                ),
+                (
+                    "required",
+                    models.CharField(
+                        blank=True, max_length=50, null=True, verbose_name="Odbiór na"
+                    ),
+                ),
+                (
+                    "quality_class",
+                    models.CharField(
+                        blank=True,
+                        default="VT – poziom 4 wg ISO 11971:2008",
+                        max_length=50,
+                        null=True,
+                        verbose_name="Klasa jakości",
+                    ),
+                ),
+                (
+                    "boxes",
+                    models.CharField(
+                        blank=True,
+                        max_length=50,
+                        null=True,
+                        verbose_name="Skrzynki formierskie",
+                    ),
+                ),
+                (
+                    "others",
+                    models.CharField(
+                        blank=True, max_length=50, null=True, verbose_name="Inne"
+                    ),
+                ),
+                ("fr_mold_work", models.FloatField(blank=True, null=True)),
+                ("fr_mold_mat", models.FloatField(blank=True, null=True)),
+                ("fr_fettling", models.FloatField(blank=True, null=True)),
+                ("fr_welding", models.FloatField(blank=True, null=True)),
+                ("fr_heating", models.FloatField(blank=True, null=True)),
+                ("fr_scrap", models.IntegerField(blank=True, null=True)),
+                (
+                    "fr_chromite",
+                    models.IntegerField(
+                        blank=True, null=True, verbose_name="Ilość chromitu [%]"
+                    ),
+                ),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                (
+                    "machining",
+                    models.ForeignKey(
+                        default=5,
+                        on_delete=django.db.models.deletion.DO_NOTHING,
+                        to="offers.MachiningType",
+                        verbose_name="Obróbka mechaniczna",
+                    ),
+                ),
+                (
+                    "mat",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.DO_NOTHING,
+                        to="offers.Material",
+                        verbose_name="Materiał",
+                    ),
+                ),
+                (
+                    "offer",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.DO_NOTHING,
+                        to="offers.Offer",
+                    ),
+                ),
             ],
-            options={
-                'verbose_name_plural': 'Offer pattern statuses',
-                'db_table': 'offer_pattern_statuses',
-            },
-        ),
-        migrations.CreateModel(
-            name='OfferStatus',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('offer_status', models.CharField(default=1, max_length=30)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-            ],
-            options={
-                'verbose_name_plural': 'Offer statuses',
-                'db_table': 'offer_statuses',
-                'ordering': ['-offer_status'],
-            },
-        ),
-        migrations.CreateModel(
-            name='PatternTaper',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('taper', models.CharField(max_length=50)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-            ],
-            options={
-                'db_table': 'pattern_tapers',
-            },
-        ),
-        migrations.CreateModel(
-            name='Offer',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('offer_no', models.CharField(max_length=20, verbose_name='Nr oferty')),
-                ('client', models.CharField(max_length=100, verbose_name='Klient')),
-                ('date_tech_in', models.DateField(blank=True, default=django.utils.timezone.now, null=True, verbose_name='Data wpływu do WZT')),
-                ('date_tech_out', models.DateField(blank=True, null=True)),
-                ('date_mark_out', models.DateField(blank=True, null=True)),
-                ('positions_amount', models.IntegerField(default=0)),
-                ('days_amount', models.IntegerField(blank=True, null=True)),
-                ('notices', models.TextField(blank=True, null=True, verbose_name='Uwagi')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('status', models.ForeignKey(default=1, on_delete=django.db.models.deletion.DO_NOTHING, to='offers.OfferStatus')),
-                ('user_mark', models.ForeignKey(default=19, limit_choices_to={'groups__name': 'marketing'}, on_delete=django.db.models.deletion.DO_NOTHING, related_name='offer_mark', to=settings.AUTH_USER_MODEL, verbose_name='Marketingowiec')),
-                ('user_tech', models.ForeignKey(default=4, limit_choices_to={'groups__name': 'technologia'}, on_delete=django.db.models.deletion.DO_NOTHING, related_name='offer_tech', to=settings.AUTH_USER_MODEL, verbose_name='Technolog')),
-            ],
-            options={
-                'db_table': 'offers',
-            },
-        ),
-        migrations.CreateModel(
-            name='Material',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('material', models.CharField(max_length=100, verbose_name='Materiał')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('mat_group', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='offers.MaterialGroup', verbose_name='Grupa materiałowa')),
-            ],
-            options={
-                'db_table': 'materials',
-                'ordering': ['material'],
-            },
-        ),
-        migrations.CreateModel(
-            name='Detail',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('cast_name', models.CharField(max_length=50, null=True, verbose_name='Nazwa odlewu')),
-                ('drawing_no', models.CharField(max_length=50, null=True, verbose_name='Nr rysunku')),
-                ('draw_weight', models.IntegerField(blank=True, null=True, verbose_name='Ciężar rysunkowy [kg]')),
-                ('cast_weight', models.IntegerField(blank=True, null=True, verbose_name='Ciężar surowego odlewu [kg]')),
-                ('pieces_amount', models.CharField(blank=True, default=1, max_length=100, null=True, verbose_name='Ilość sztuk')),
-                ('detail_yield', models.IntegerField(blank=True, db_column='yeld', null=True, verbose_name='Uzysk')),
-                ('difficulty', models.IntegerField(blank=True, choices=[(1, 1), (2, 2), (3, 3)], default=2, null=True, verbose_name='Stopień trudności')),
-                ('pattern', models.CharField(blank=True, max_length=50, null=True, verbose_name='Model')),
-                ('heat_treat', models.CharField(blank=True, max_length=50, null=True, verbose_name='Obróbka cieplna')),
-                ('tolerances', models.CharField(blank=True, max_length=50, null=True, verbose_name='Tolerancje')),
-                ('tapers', models.CharField(blank=True, max_length=50, null=True, verbose_name='Pochylenia')),
-                ('atest', models.CharField(blank=True, default='3.1 wg PN-EN 10204', max_length=50, null=True, verbose_name='Atest')),
-                ('required', models.CharField(blank=True, max_length=50, null=True, verbose_name='Odbiór na')),
-                ('quality_class', models.CharField(blank=True, default='VT – poziom 4 wg ISO 11971:2008', max_length=50, null=True, verbose_name='Klasa jakości')),
-                ('boxes', models.CharField(blank=True, max_length=50, null=True, verbose_name='Skrzynki formierskie')),
-                ('others', models.CharField(blank=True, max_length=50, null=True, verbose_name='Inne')),
-                ('fr_mold_work', models.FloatField(blank=True, null=True)),
-                ('fr_mold_mat', models.FloatField(blank=True, null=True)),
-                ('fr_fettling', models.FloatField(blank=True, null=True)),
-                ('fr_welding', models.FloatField(blank=True, null=True)),
-                ('fr_heating', models.FloatField(blank=True, null=True)),
-                ('fr_scrap', models.IntegerField(blank=True, null=True)),
-                ('fr_chromite', models.IntegerField(blank=True, null=True, verbose_name='Ilość chromitu [%]')),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('machining', models.ForeignKey(default=5, on_delete=django.db.models.deletion.DO_NOTHING, to='offers.MachiningType', verbose_name='Obróbka mechaniczna')),
-                ('mat', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='offers.Material', verbose_name='Materiał')),
-                ('offer', models.ForeignKey(on_delete=django.db.models.deletion.DO_NOTHING, to='offers.Offer')),
-            ],
-            options={
-                'db_table': 'details',
-            },
+            options={"db_table": "details",},
         ),
     ]

@@ -1,8 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from .models import (Detail, MachiningType, Material, MaterialGroup, Offer,
-                     OfferStatus)
+from .models import Detail, MachiningType, Material, MaterialGroup, Offer, OfferStatus
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -10,13 +9,16 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('id', 'first_name',)
+        fields = (
+            "id",
+            "first_name",
+        )
 
 
 class StatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = OfferStatus
-        fields = ('id', 'offer_status')
+        fields = ("id", "offer_status")
 
 
 class OfferSerializer(serializers.ModelSerializer):
@@ -26,15 +28,24 @@ class OfferSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Offer
-        fields = ('id', 'offer_no', 'client', 'user_mark', 'user_tech', 'date_tech_in',
-                  'date_tech_out', 'positions_amount', 'status', 'get_days_amount')
+        fields = (
+            "id",
+            "offer_no",
+            "client",
+            "user_mark",
+            "user_tech",
+            "date_tech_in",
+            "date_tech_out",
+            "positions_amount",
+            "status",
+            "get_days_amount",
+        )
 
 
 class MaterialGroupSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = MaterialGroup
-        fields = '__all__'
+        fields = "__all__"
 
 
 class MaterialSerializer(serializers.ModelSerializer):
@@ -42,14 +53,13 @@ class MaterialSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Material
-        fields = ['id', 'material', 'mat_group']
+        fields = ["id", "material", "mat_group"]
 
 
 class MachiningSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = MachiningType
-        fields = ['id', 'machining']
+        fields = ["id", "machining"]
 
 
 class DetailSerializer(serializers.ModelSerializer):
@@ -59,6 +69,22 @@ class DetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Detail
-        fields = ['id', 'offer', 'cast_name', 'drawing_no', 'mat', 'cast_weight', 'pieces_amount', 'detail_yield',
-                  'difficulty', 'pattern', 'heat_treat', 'machining', 'tolerances', 'tapers', 'atest', 'required',
-                  'quality_class']
+        fields = [
+            "id",
+            "offer",
+            "cast_name",
+            "drawing_no",
+            "mat",
+            "cast_weight",
+            "pieces_amount",
+            "detail_yield",
+            "difficulty",
+            "pattern",
+            "heat_treat",
+            "machining",
+            "tolerances",
+            "tapers",
+            "atest",
+            "required",
+            "quality_class",
+        ]

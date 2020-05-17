@@ -3,30 +3,30 @@ from django.urls import reverse
 
 
 class ProdReportsTest(TestCase):
-    databases = {'kokila', 'default'}
+    databases = {"kokila", "default"}
 
     # @classmethod
     # def setUpTestData(cls):
     #     pass
 
     def test_url_execution_time(self):
-        response = self.client.get(reverse('execution-time'))
+        response = self.client.get(reverse("execution-time"))
         self.assertEqual(response.status_code, 200)
 
     def test_url_finished(self):
-        response = self.client.get(reverse('finished'))
+        response = self.client.get(reverse("finished"))
         self.assertEqual(response.status_code, 200)
 
     def test_url_pouring(self):
-        response = self.client.get(reverse('pouring'))
+        response = self.client.get(reverse("pouring"))
         self.assertEqual(response.status_code, 200)
 
     def test_url_nonconformity(self):
-        response = self.client.get(reverse('nonconformity'))
+        response = self.client.get(reverse("nonconformity"))
         self.assertEqual(response.status_code, 200)
 
     def test_url_remarks(self):
-        response = self.client.get(reverse('remarks'))
+        response = self.client.get(reverse("remarks"))
         self.assertEqual(response.status_code, 200)
 
     # def test_url_weight_per_client(self):
@@ -42,7 +42,7 @@ class ProdReportsTest(TestCase):
     #     self.assertEqual(response.status_code, 200)
 
     def test_url_casting_weights(self):
-        response = self.client.get(reverse('casting-weights'))
+        response = self.client.get(reverse("casting-weights"))
         self.assertEqual(response.status_code, 200)
 
     # def test_url_monitoring_in_work(self):
@@ -54,23 +54,23 @@ class ProdReportsTest(TestCase):
     #     self.assertEqual(response.status_code, 200)
 
     def test_url_casts_in_stock(self):
-        response = self.client.get(reverse('casts-in-stock'))
+        response = self.client.get(reverse("casts-in-stock"))
         self.assertEqual(response.status_code, 200)
 
     def test_url_molding(self):
-        response = self.client.get(reverse('molding'))
+        response = self.client.get(reverse("molding"))
         self.assertEqual(response.status_code, 200)
 
     def test_url_non_destructive_testing(self):
-        response = self.client.get(reverse('non-destructive-testing'))
+        response = self.client.get(reverse("non-destructive-testing"))
         self.assertEqual(response.status_code, 200)
 
     def test_url_machining(self):
-        response = self.client.get(reverse('machining'))
+        response = self.client.get(reverse("machining"))
         self.assertEqual(response.status_code, 200)
 
     def test_url_yields(self):
-        response = self.client.get(reverse('yields'))
+        response = self.client.get(reverse("yields"))
         self.assertEqual(response.status_code, 200)
 
     # def test_url_inserted_data(self):
@@ -78,5 +78,5 @@ class ProdReportsTest(TestCase):
     #     self.assertEqual(response.status_code, 200)
 
     def test_url_reports_list(self):
-        response = self.client.get(reverse('reports-list'))
+        response = self.client.get(reverse("reports-list"))
         self.assertEqual(response.status_code, 200)

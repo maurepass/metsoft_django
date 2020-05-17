@@ -7,21 +7,31 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='UsedViewsLogs',
+            name="UsedViewsLogs",
             fields=[
-                ('id', models.AutoField(db_column='ID', primary_key=True, serialize=False)),
-                ('ip', models.CharField(blank=True, db_column='IP', max_length=20, null=True)),
-                ('host', models.CharField(blank=True, max_length=30, null=True)),
-                ('report', models.CharField(blank=True, db_column='raport', max_length=50, null=True)),
-                ('created_at', models.DateTimeField()),
+                (
+                    "id",
+                    models.AutoField(db_column="ID", primary_key=True, serialize=False),
+                ),
+                (
+                    "ip",
+                    models.CharField(
+                        blank=True, db_column="IP", max_length=20, null=True
+                    ),
+                ),
+                ("host", models.CharField(blank=True, max_length=30, null=True)),
+                (
+                    "report",
+                    models.CharField(
+                        blank=True, db_column="raport", max_length=50, null=True
+                    ),
+                ),
+                ("created_at", models.DateTimeField()),
             ],
-            options={
-                'db_table': 'logs',
-            },
+            options={"db_table": "logs",},
         ),
     ]

@@ -4,11 +4,11 @@ from rest_framework import routers
 from . import views
 
 router = routers.DefaultRouter()
-router.register(r'orders', views.OrderViewSet, 'orders')
+router.register(r"orders", views.OrderViewSet, "orders")
 
 urlpatterns = [
-    re_path('^api/', include(router.urls)),
-    path('orders/', views.OrdersView.as_view(), name='orders-index'),
-    path('<int:pk>/update/', views.OrderUpdateView.as_view(), name='order-update'),
-    path('wzt-daily-report/', views.WZTDailyReport.as_view(), name='wzt-daily-report')
+    re_path("^api/", include(router.urls)),
+    path("orders/", views.OrdersView.as_view(), name="orders-index"),
+    path("<int:pk>/update/", views.OrderUpdateView.as_view(), name="order-update"),
+    path("wzt-daily-report/", views.WZTDailyReport.as_view(), name="wzt-daily-report"),
 ]

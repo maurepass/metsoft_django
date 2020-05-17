@@ -7,11 +7,11 @@ from django.utils import timezone
 
 
 class Notice(models.Model):
-    content = models.TextField(verbose_name='Uwagi')
+    content = models.TextField(verbose_name="Uwagi")
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'notices'
+        db_table = "notices"
 
 
 class OfferStatus(models.Model):
@@ -20,63 +20,56 @@ class OfferStatus(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'offer_statuses'
-        verbose_name_plural = 'Offer statuses'
-        ordering = ['-offer_status']
+        db_table = "offer_statuses"
+        verbose_name_plural = "Offer statuses"
+        ordering = ["-offer_status"]
 
     def __str__(self):
         return self.offer_status
 
 
 class Offer(models.Model):
-    offer_no = models.CharField(max_length=20, verbose_name='Nr oferty')
-    client = models.CharField(max_length=100, verbose_name='Klient')
+    offer_no = models.CharField(max_length=20, verbose_name="Nr oferty")
+    client = models.CharField(max_length=100, verbose_name="Klient")
     user_mark = models.ForeignKey(
         User,
-        related_name='%(class)s_mark',
+        related_name="%(class)s_mark",
         on_delete=models.DO_NOTHING,
-        limit_choices_to={'groups__name': 'marketing'},
-        verbose_name='Marketingowiec',
+        limit_choices_to={"groups__name": "marketing"},
+        verbose_name="Marketingowiec",
         default=19,
     )
     user_tech = models.ForeignKey(
         User,
-        related_name='%(class)s_tech',
+        related_name="%(class)s_tech",
         on_delete=models.DO_NOTHING,
-        limit_choices_to={'groups__name': 'technologia'},
-        verbose_name='Technolog',
+        limit_choices_to={"groups__name": "technologia"},
+        verbose_name="Technolog",
         default=4,
     )
     date_tech_in = models.DateField(
-        null=True, blank=True,
-        verbose_name='Data wpływu do WZT',
-        default=timezone.now
+        null=True, blank=True, verbose_name="Data wpływu do WZT", default=timezone.now
     )
     date_tech_out = models.DateField(null=True, blank=True)
     date_mark_out = models.DateField(null=True, blank=True)
     positions_amount = models.IntegerField(default=0)
-    status = models.ForeignKey(
-        OfferStatus,
-        on_delete=models.DO_NOTHING,
-        default=1
-    )
+    status = models.ForeignKey(OfferStatus, on_delete=models.DO_NOTHING, default=1)
     days_amount = models.IntegerField(null=True, blank=True)
-    notices = models.TextField(
-        null=True, blank=True,
-        verbose_name='Uwagi',
-    )
+    notices = models.TextField(null=True, blank=True, verbose_name="Uwagi",)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'offers'
+        db_table = "offers"
 
     def __str__(self):
-        return '{} -- {} -- {}'.format(self.offer_no, self.client, self.positions_amount)
+        return "{} -- {} -- {}".format(
+            self.offer_no, self.client, self.positions_amount
+        )
 
     @staticmethod
     def get_absolute_url():
-        return reverse('offers')
+        return reverse("offers")
 
     def get_days_amount(self):
         """ When offers is during preparation calculate current amount of days """
@@ -96,7 +89,7 @@ class Offer(models.Model):
     @staticmethod
     def string_from_list(attr_list):
         temp_dict = {}
-        end_str = ''
+        end_str = ""
 
         # sorting list by value
         for index, item in enumerate(attr_list, start=1):
@@ -107,10 +100,10 @@ class Offer(models.Model):
 
         # making string from sorted list
         for key in temp_dict:
-            end_str += '{}: '.format(key)
+            end_str += "{}: ".format(key)
             for value in temp_dict[key]:
-                end_str += '{},'.format(value)
-            end_str = end_str.rstrip(',') + '; '
+                end_str += "{},".format(value)
+            end_str = end_str.rstrip(",") + "; "
 
         return end_str
 
@@ -128,10 +121,10 @@ class Offer(models.Model):
             atest.append(detail.atest)
 
         return {
-            'machining': self.string_from_list(machining),
-            'tolerances': self.string_from_list(tolerances),
-            'tapers': self.string_from_list(tapers),
-            'atest': self.string_from_list(atest)
+            "machining": self.string_from_list(machining),
+            "tolerances": self.string_from_list(tolerances),
+            "tapers": self.string_from_list(tapers),
+            "atest": self.string_from_list(atest),
         }
 
 
@@ -142,34 +135,34 @@ class MaterialGroup(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = 'material_groups'
-        ordering = ['mat_group']
+        db_table = "material_groups"
+        ordering = ["mat_group"]
 
     def __str__(self):
-        return '{} :: {}'.format(self.mat_group, self.description)
+        return "{} :: {}".format(self.mat_group, self.description)
 
 
 class Material(models.Model):
-    material = models.CharField(max_length=100, verbose_name='Materiał')
+    material = models.CharField(max_length=100, verbose_name="Materiał")
     mat_group = models.ForeignKey(
         MaterialGroup,
         on_delete=models.SET_NULL,
         null=True,
-        verbose_name='Grupa materiałowa'
+        verbose_name="Grupa materiałowa",
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'materials'
-        ordering = ['material']
+        db_table = "materials"
+        ordering = ["material"]
 
     def __str__(self):
         return self.material
 
     @staticmethod
     def get_absolute_url():
-        return reverse('materials')
+        return reverse("materials")
 
 
 class HeatTreatment(models.Model):
@@ -178,21 +171,21 @@ class HeatTreatment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'heat_treatments'
-        ordering = ['term']
+        db_table = "heat_treatments"
+        ordering = ["term"]
 
     def __str__(self):
         return self.term
 
 
 class MachiningType(models.Model):
-    machining = models.CharField(max_length=50, default=4)  #check this default value
+    machining = models.CharField(max_length=50, default=4)  # check this default value
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'machinings'
-        ordering = ['machining']
+        db_table = "machinings"
+        ordering = ["machining"]
 
     def __str__(self):
         return self.machining
@@ -204,7 +197,7 @@ class PatternTaper(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'pattern_tapers'
+        db_table = "pattern_tapers"
 
     def __str__(self):
         return self.taper
@@ -216,7 +209,7 @@ class AtestType(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'atest_types'
+        db_table = "atest_types"
 
     def __str__(self):
         return self.atest
@@ -228,127 +221,82 @@ class OfferPatternStatus(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'offer_pattern_statuses'
-        verbose_name_plural = 'Offer pattern statuses'
+        db_table = "offer_pattern_statuses"
+        verbose_name_plural = "Offer pattern statuses"
 
     def __str__(self):
         return self.status
 
 
 class Detail(models.Model):
-    offer = models.ForeignKey(
-        Offer,
-        on_delete=models.DO_NOTHING
-    )
+    offer = models.ForeignKey(Offer, on_delete=models.DO_NOTHING)
     cast_name = models.CharField(
-        max_length=50,
-        blank=False,
-        null=True,
-        verbose_name='Nazwa odlewu'
+        max_length=50, blank=False, null=True, verbose_name="Nazwa odlewu"
     )
     drawing_no = models.CharField(
-        max_length=50,
-        blank=False,
-        null=True,
-        verbose_name='Nr rysunku'
+        max_length=50, blank=False, null=True, verbose_name="Nr rysunku"
     )
     mat = models.ForeignKey(
-        Material,
-        on_delete=models.DO_NOTHING,
-        verbose_name='Materiał'
+        Material, on_delete=models.DO_NOTHING, verbose_name="Materiał"
     )
     draw_weight = models.IntegerField(
-        blank=True,
-        null=True,
-        verbose_name='Ciężar rysunkowy [kg]'
+        blank=True, null=True, verbose_name="Ciężar rysunkowy [kg]"
     )
     cast_weight = models.IntegerField(
-        blank=True,
-        null=True,
-        verbose_name='Ciężar surowego odlewu [kg]'
+        blank=True, null=True, verbose_name="Ciężar surowego odlewu [kg]"
     )
     pieces_amount = models.CharField(
-        max_length=100,
-        blank=True,
-        null=True,
-        verbose_name='Ilość sztuk',
-        default=1
+        max_length=100, blank=True, null=True, verbose_name="Ilość sztuk", default=1
     )
     detail_yield = models.IntegerField(
-        blank=True,
-        null=True,
-        verbose_name='Uzysk',
-        db_column='yeld'
+        blank=True, null=True, verbose_name="Uzysk", db_column="yeld"
     )
     difficulty = models.IntegerField(
         blank=True,
         null=True,
-        verbose_name='Stopień trudności',
+        verbose_name="Stopień trudności",
         default=2,
-        choices=((1, 1), (2, 2), (3, 3))
+        choices=((1, 1), (2, 2), (3, 3)),
     )
     pattern = models.CharField(
-        max_length=50,
-        blank=True,
-        null=True,
-        verbose_name='Model'
+        max_length=50, blank=True, null=True, verbose_name="Model"
     )
     heat_treat = models.CharField(
-        max_length=50,
-        blank=True,
-        null=True,
-        verbose_name='Obróbka cieplna'
+        max_length=50, blank=True, null=True, verbose_name="Obróbka cieplna"
     )
     machining = models.ForeignKey(
         MachiningType,
         on_delete=models.DO_NOTHING,
-        verbose_name='Obróbka mechaniczna',
-        default=5
+        verbose_name="Obróbka mechaniczna",
+        default=5,
     )
     tolerances = models.CharField(
-        max_length=50,
-        blank=True,
-        null=True,
-        verbose_name='Tolerancje'
+        max_length=50, blank=True, null=True, verbose_name="Tolerancje"
     )
     tapers = models.CharField(
-        max_length=50,
-        blank=True,
-        null=True,
-        verbose_name='Pochylenia'
+        max_length=50, blank=True, null=True, verbose_name="Pochylenia"
     )
     atest = models.CharField(
         max_length=50,
         blank=True,
         null=True,
-        verbose_name='Atest',
-        default='3.1 wg PN-EN 10204'
+        verbose_name="Atest",
+        default="3.1 wg PN-EN 10204",
     )
     required = models.CharField(
-        max_length=50,
-        blank=True,
-        null=True,
-        verbose_name='Odbiór na',
+        max_length=50, blank=True, null=True, verbose_name="Odbiór na",
     )
     quality_class = models.CharField(
         max_length=50,
         blank=True,
         null=True,
-        verbose_name='Klasa jakości',
-        default='VT – poziom 4 wg ISO 11971:2008'
+        verbose_name="Klasa jakości",
+        default="VT – poziom 4 wg ISO 11971:2008",
     )
     boxes = models.CharField(
-        max_length=50,
-        blank=True,
-        null=True,
-        verbose_name='Skrzynki formierskie'
+        max_length=50, blank=True, null=True, verbose_name="Skrzynki formierskie"
     )
-    others = models.CharField(
-        max_length=50,
-        blank=True,
-        null=True,
-        verbose_name='Inne'
-    )
+    others = models.CharField(max_length=50, blank=True, null=True, verbose_name="Inne")
     fr_mold_work = models.FloatField(blank=True, null=True)
     fr_mold_mat = models.FloatField(blank=True, null=True)
     fr_fettling = models.FloatField(blank=True, null=True)
@@ -356,18 +304,16 @@ class Detail(models.Model):
     fr_heating = models.FloatField(blank=True, null=True)
     fr_scrap = models.IntegerField(blank=True, null=True)
     fr_chromite = models.IntegerField(
-        blank=True,
-        null=True,
-        verbose_name='Ilość chromitu [%]'
+        blank=True, null=True, verbose_name="Ilość chromitu [%]"
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'details'
+        db_table = "details"
 
     def __str__(self):
-        return '{} {} {}'.format(self.cast_name, self.drawing_no, self.cast_weight)
+        return "{} {} {}".format(self.cast_name, self.drawing_no, self.cast_weight)
 
     def get_absolute_url(self):
-        return reverse('offer-details', kwargs={'pk': self.offer.id})
+        return reverse("offer-details", kwargs={"pk": self.offer.id})
